@@ -3,7 +3,7 @@
 Nouvelle identité de la marque québécoise **1608 / Mille-Six-Cent-Huit**, issue de l'ancien projet Fièrement Québécois.
 
 ## Aperçu
-Le fichier [index.html](./index.html) contient une prévisualisation autonome complète, avec les images intégrées, pour faciliter le déploiement sur GitHub Pages.
+Le fichier [index.html](./index.html) contient la boutique. `enhancements.css` et `enhancements.js` ajoutent la mise en page éditoriale, une sélection des tailles interactive et la galerie HORIZON. Les images de HORIZON sont dans `assets/`.
 
 **Site en prévisualisation seulement : aucun paiement réel n'est activé.** Le panier et les fiches produits sont interactifs mais il faut configurer un système de paiement, le traitement et l'expédition des commandes avant de vendre.
 
@@ -13,12 +13,13 @@ Dans le dépôt : **Settings → Pages → Build and deployment → Deploy from 
 Après activation, l'adresse prévue est :
 https://lbdev777.github.io/1608qc/
 
-Les changements futurs à `index.html` sur la branche `main` seront publiés automatiquement après le déploiement GitHub Pages.
+Les changements futurs au code sur la branche `main` seront publiés automatiquement après le déploiement GitHub Pages.
 
-## Produit d'exemple
+## Catalogue de démonstration
 - TERRAIN 1608 — CAMO : 89,00 $ CA (prix proposé)
+- HORIZON 1608 — NOIR : 69,00 $ CA (prix proposé)
 - Tailles S–2XL, à confirmer avec le fournisseur
-- Images avant et arrière fournies par le propriétaire
+- Photos avant et arrière fournies par le propriétaire. Assets HORIZON dans `assets/`.
 - Vérifier prix fournisseur, impression double, livraison, politique de retour et guide des tailles avant l'ouverture des ventes
 
 ## Hébergement
