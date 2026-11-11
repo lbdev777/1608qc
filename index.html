@@ -52,12 +52,12 @@
 @media(max-width:960px){.hero-terrain{height:540px;min-height:0}.terrain-hero-copy{padding-left:38px}.terrain-hero-foot{left:38px}.terrain-hero-copy h1{font-size:clamp(70px,9.6vw,124px)}.terrain-intro{font-size:13px}}
 @media(max-width:760px){.hero-terrain{height:auto;min-height:0;display:flex;flex-direction:column-reverse}.terrain-hero-image{height:330px}.terrain-hero-image img{height:100%;width:auto;max-width:100%;mix-blend-mode:multiply}.terrain-hero-copy{padding:35px 25px 66px;min-height:360px}.terrain-hero-copy h1{font-size:85px;margin:5px 0 23px}.terrain-kicker{font-size:10px;margin:0 0 7px}.terrain-intro{font-size:12px}.terrain-hero-foot{left:25px;bottom:20px}.terrain-hero-price{margin:4px 0 19px}.terrain-hero-image>span{bottom:12px;right:15px}.benefits{padding:17px 8px}.benefits .benefit{padding:0 5px;min-height:56px}.benefits .benefit b{font-size:8px}.benefits .benefit span{font-size:8px}.featured-terrain{padding-top:64px;padding-bottom:22px}.featured-heading{margin-bottom:25px}.featured-heading h2{font-size:54px}.featured-heading>p:last-child{font-size:12px}.featured-pictures{gap:8px}.featured-pictures figcaption{left:9px;bottom:10px;font-size:8px}.featured-bottom{gap:12px;align-items:flex-start;padding:16px 0}.featured-bottom>span{font-size:10px;max-width:140px}.featured-bottom button{font-size:10px;white-space:nowrap}.products-section{padding-top:40px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-visual{aspect-ratio:1}.product-details .price{font-size:12px}.product-note{font-size:9px}.product-name{font-size:12px}.modal-art{height:275px;min-height:0}.modal-thumbnails{padding:5px 0 11px}.modal-thumbnails button{min-width:65px}.modal-thumbnails img{width:60px;height:60px}.modal-info h2{font-size:32px}.modal-info{padding-top:21px}.modal-specs{padding:10px 0}}
 @media(max-width:390px){.terrain-hero-copy h1{font-size:75px}.featured-heading h2{font-size:48px}.featured-bottom button span{margin-left:4px}}
-</style>
+</style><link rel="stylesheet" href="enhancements.css">
   
 </head>
 <body>
   <a class="skip" href="#produits">Aller aux produits</a>
-  <div class="announcement"><span>NOUVEAU — TERRAIN 1608</span><i></i><span>EXPÉDITION AU CANADA</span><i></i><span>CONÇU AU QUÉBEC</span></div>
+  <div class="announcement"><span>1608 / DEUX PIÈCES. UNE DIRECTION.</span><i></i><span>EXPÉDITION AU CANADA</span><i></i><span>CONÇU AU QUÉBEC</span></div>
   <header class="header" id="haut">
     <a class="brand" href="#haut" aria-label="1608, accueil"><span class="brand-numerals">16<span class="brand-gap">0</span>8<span class="fleur">⚜</span></span><span class="brand-caption">MILLE-SIX-CENT-HUIT</span></a>
     <nav class="desktop-nav" aria-label="Navigation principale">
@@ -104,7 +104,7 @@
     </section>
 
     <section class="products-section wrapper" id="produits" aria-labelledby="products-heading">
-      <div class="section-heading"><div><p class="section-tag">1608 / EN LIGNE</p><h2 id="products-heading">LA COLLECTION</h2></div><span class="catalogue-count">001 PIÈCE</span></div>
+      <div class="section-heading"><div><p class="section-tag">1608 / EN LIGNE</p><h2 id="products-heading">LA COLLECTION</h2></div><span class="catalogue-count">002 PIÈCES</span></div>
       <div class="product-grid" id="grille-produits"></div>
       <p class="catalogue-clarity">Visuels de présentation. La texture et le placement exact des impressions peuvent varier légèrement selon la production.</p>
     </section>
@@ -173,6 +173,18 @@ const PRODUCTS = Object.freeze([
     sizes: ['S', 'M', 'L', 'XL', '2XL'],
     description: 'Camouflage forêt foncé, coupe boxy et marquage 1608 discret à l’avant. Au dos, un paysage de montagnes et de conifères dessiné en blanc cassé. Une pièce qui se suffit à elle-même.',
     details: '350 g/m² · 65 % coton / 35 % polyester · coupe ample et épaules tombantes · poche avant · impressions à l’avant et au dos.'
+  }
+,
+  {
+    id: 'horizon-noir',
+    name: 'HORIZON 1608 — NOIR',
+    price: 6900,
+    compareAt: null,
+    image: 'assets/horizon-front.svg',
+    images: ['assets/horizon-front.svg','assets/horizon-back.svg'],
+    sizes: ['S','M','L','XL','2XL'],
+    description: 'Noir intégral, logo script 1608 à l’avant et globe graphique au dos. Une silhouette oversized, une signature discrète devant et assumée derrière.',
+    details: 'Coton ouaté à capuche · coupe oversized · poche kangourou · imprimé avant/arrière. Composition et grammage exacts à confirmer avant les commandes.'
   }
 ]);
 const SIZES = ['S','M','L','XL','2XL'];
@@ -332,5 +344,5 @@ el('mobile-menu').querySelectorAll('a').forEach(a=>a.addEventListener('click',()
 updateCart();
 if(new URLSearchParams(location.search).get('paiement')==='annule'){toast('Paiement annulé. Votre panier a été conservé.');}
 if(new URLSearchParams(location.search).get('paiement')==='succes'){cart=[];persist();updateCart();toast('Retour de la page de paiement. Consultez votre courriel pour la confirmation.');}
-</script></body>
+</script><script src="enhancements.js"></script></body>
 </html>
