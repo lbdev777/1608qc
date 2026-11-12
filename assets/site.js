@@ -32,7 +32,7 @@ return `<a class="skip-link" href="#main">Aller au contenu</a>
 </div></div><nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigation mobile"><a href="index.html#collection">LA COLLECTION</a><a href="index.html#notre-histoire">NOTRE HISTOIRE</a><a href="index.html#questions">QUESTIONS FRÉQUENTES</a></nav></header>`;
 }
 function footer(){
-return `<footer class="site-footer"><div class="container"><div class="footer-main"><div><div class="footer-logo">1608.</div><p>Une marque indépendante imaginée au Québec.</p></div><div class="footer-links"><div><a href="index.html#collection">Collection</a><a href="index.html#notre-histoire">À propos</a></div><div><a href="index.html#questions">FAQ</a><a href="mailto:contact@1608qc.com">Nous écrire</a></div></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} 1608 — MILLE-SIX-CENT-HUIT</span><span>CONÇU AU QUÉBEC · EXPÉRIENCE DE DÉMONSTRATION</span></div></div></footer>`;
+return `<footer class="site-footer"><div class="container"><div class="footer-main"><div><div class="footer-logo">1608.</div><p>Une marque indépendante imaginée au Québec.</p></div><div class="footer-links"><div><a href="index.html#collection">Collection</a><a href="index.html#notre-histoire">À propos</a></div><div><a href="index.html#questions">FAQ</a><a href="index.html#questions">Informations</a></div></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} 1608 — MILLE-SIX-CENT-HUIT</span><span>CONÇU AU QUÉBEC · EXPÉRIENCE DE DÉMONSTRATION</span></div></div></footer>`;
 }
 function card(p) {
 const n=String(P.indexOf(p)+1).padStart(3,'0');
