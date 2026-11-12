@@ -28,10 +28,12 @@
     <section class="checkout-section" aria-labelledby="payment-title"><div class="checkout-section-head"><span>03</span><h2 id="payment-title">MODE DE PAIEMENT</h2></div>
       <div class="payment-options" role="radiogroup" aria-label="Mode de paiement envisagé">
        <label class="payment-method"><input type="radio" name="payment-method" value="interac" checked><span class="payment-radio" aria-hidden="true"></span><span class="method-copy"><b>DÉBIT INTERAC</b><small>Via Apple Pay ou Google Pay, si votre banque et votre appareil sont admissibles.</small></span><span class="method-state">À ACTIVER</span></label>
+       <label class="payment-method"><input type="radio" name="payment-method" value="transfer"><span class="payment-radio" aria-hidden="true"></span><span class="method-copy"><b>VIREMENT INTERAC — DEMANDE DE PAIEMENT</b><small>Option envisagée avec un fournisseur de demandes de paiement Interac pour entreprises. Aucune instruction de virement manuel n'est envoyée.</small></span><span class="method-state">À CONFIGURER</span></label>
        <label class="payment-method"><input type="radio" name="payment-method" value="card"><span class="payment-radio" aria-hidden="true"></span><span class="method-copy"><b>CARTE DE PAIEMENT</b><small>Paiement hébergé chez notre fournisseur, une fois la boutique activée.</small></span><span class="method-state">À ACTIVER</span></label>
       </div>
       <div class="payment-explainer" data-payment-explainer aria-live="polite">Interac Débit en ligne fonctionne notamment par portefeuille numérique sur les appareils et banques participants. Ce n'est pas la même chose qu'un virement Interac.</div>
-      <div class="checkout-assurance"><div><span aria-hidden="true">⌁</span><b>CONNEXION HTTPS</b><p>Navigation chiffrée sur le site hébergé en HTTPS.</p></div><div><span aria-hidden="true">◎</span><b>PAS DE DONNÉES BANCAIRES ICI</b><p>1608 ne vous demande aucun numéro de carte ni code bancaire.</p></div></div>
+      <div class="checkout-assurance"><div><span aria-hidden="true">⌁</span><b>CONNEXION HTTPS</b><p>Connexion chiffrée au site. Vérifiez toujours l'adresse affichée dans votre navigateur.</p></div><div><span aria-hidden="true">◎</span><b>PAS DE MOT DE PASSE BANCAIRE</b><p>1608 ne demande ni votre mot de passe bancaire ni votre code de vérification.</p></div></div>
+      <p class="payment-trust-note">À l'ouverture des ventes, la confirmation, les frais de livraison, les taxes et les conditions de retour seront présentés <strong>avant</strong> le paiement. Aucune certification ou garantie bancaire n'est revendiquée ici.</p>
     </section>
    </div>
    <aside class="checkout-summary" aria-labelledby="summary-heading">
