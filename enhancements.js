@@ -18,7 +18,7 @@
       stage.appendChild(second);
     }
     const badge=stage?.querySelector('.product-label');
-    if(badge)badge.textContent=i===0?'1608 / 001':'1608 / 002';
+    if(badge)badge.textContent=`1608 / ${String(i+1).padStart(3,'0')}`;
     const quick=document.createElement('span');
     quick.className='product-quickview';quick.innerHTML='VOIR LES DÉTAILS <b aria-hidden="true">↗</b>';
     stage?.appendChild(quick);
@@ -30,7 +30,7 @@
       details.insertBefore(top,name);top.append(name,price);
     }
     const note=details?.querySelector('.product-note');
-    if(note)note.textContent=i===0?'COUPE BOXY · CAMO FORÊT':'COUPE OVERSIZED · NOIR';
+    if(note)note.textContent=i===0?'COUPE BOXY · CAMO FORÊT':i===1?'COUPE OVERSIZED · NOIR':'BRODERIE · COUPE BOXY';
     const opener=card.querySelector('button');
     if(opener)opener.setAttribute('aria-label','Voir '+p.name+' — '+money(p.price));
   });
@@ -49,7 +49,7 @@
         <div class="horizon-price">69,00 $ CAD <small>· S — 2XL</small></div>
         <button class="horizon-cta" id="horizon-open" type="button">DÉCOUVRIR HORIZON <span aria-hidden="true">↗</span></button>
       </div>
-      <div class="horizon-bottomline"><span>MILLE-SIX-CENT-HUIT</span><span>02 / 02</span></div>
+      <div class="horizon-bottomline"><span>MILLE-SIX-CENT-HUIT</span><span>02 / 03</span></div>
     </div>
     <div class="horizon-gallery" aria-label="Photographies du coton ouaté HORIZON 1608">
       <button class="horizon-shot" type="button" data-horizon-view="0" aria-label="Vue avant de HORIZON 1608"><img src="${horizon.images[0]}" alt="Coton ouaté noir, logo blanc 1608 sur la poitrine" loading="lazy" width="320" height="320"><span>01 / DEVANT <b>↗</b></span></button>
@@ -112,9 +112,9 @@
   }));
 
   const count=document.querySelector('.catalogue-count');
-  if(count)count.textContent='002 PIÈCES';
+  if(count)count.textContent=`${String(PRODUCTS.length).padStart(3,'0')} PIÈCES`;
   const announcement=document.querySelector('.announcement span');
-  if(announcement)announcement.textContent='1608 / DEUX PIÈCES. UNE DIRECTION.';
+  if(announcement)announcement.textContent='1608 / TROIS PIÈCES. UNE DIRECTION.';
 
   // Prévisualisation clairement annoncée : ne jamais feindre d'avoir encaissé une commande.
   const checkoutButton=byId('checkout-button');
@@ -128,7 +128,7 @@
   const footerNote=document.querySelector('.drawer-footer>p');
   if(footerNote)footerNote.textContent='Aperçu interactif. Frais et livraison confirmés avant l’ouverture des commandes.';
   const questions=document.querySelectorAll('.faq-items details');
-  if(questions[1])questions[1].querySelector('p').textContent='Les deux modèles sont proposés en tailles S à 2XL. Le guide de mesures exact sera publié avant l’ouverture des ventes.';
+  if(questions[1])questions[1].querySelector('p').textContent='Les trois modèles sont proposés en tailles S à 2XL. Le guide de mesures exact sera publié avant l’ouverture des ventes.';
   document.querySelectorAll('.product-full-button').forEach(btn=>btn.addEventListener('pointerdown',()=>{
     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)
       btn.animate([{transform:'scale(1)'},{transform:'scale(.992)'},{transform:'scale(1)'}],{duration:180});
