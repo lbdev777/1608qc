@@ -41,8 +41,10 @@ function render(){
 function updatePayButton(){
  const button=$('[data-pay-button]');
  const hasItems=cart.length>0;
- button.disabled=!ready||!hasItems;
- button.textContent=ready&&hasItems?'CONTINUER VERS LE PAIEMENT ↗':ready?'AJOUTER UN ARTICLE':'PAIEMENT NON ACTIVÉ ↗';
+ const method=document.querySelector('input[name="payment-method"]:checked')?.value || 'interac';
+ const methodAvailable=method!=='transfer' && (method!=='interac'||Boolean(window.__interacWalletsReady));
+ button.disabled=!ready||!hasItems||!methodAvailable;
+ button.textContent=!ready?'PAIEMENT NON ACTIVÉ ↗':!hasItems?'AJOUTER UN ARTICLE':!methodAvailable?'MODE DE PAIEMENT À CONFIGURER':'CONTINUER VERS LE PAIEMENT ↗';
  button.setAttribute('aria-label',button.textContent.trim());
 }
 async function detectGateway(){
@@ -53,7 +55,7 @@ async function detectGateway(){
   if(!response.ok)return;
   const status=await response.json();
   if(status?.ready!==true)return;
-  ready=true;updatePayButton();
+  ready=true;window.__interacWalletsReady=status.interacWalletsReady===true;updatePayButton();
   $('[data-pay-status]').textContent='Le paiement sera traité sur une page Stripe hébergée. Le montant total, incluant les frais et taxes applicables, sera affiché avant toute autorisation.';
   // Only advertise payment methods actually enabled by the payment provider.
   const interac=document.querySelector('input[name="payment-method"][value="interac"]')?.closest('label');
@@ -65,6 +67,8 @@ async function detectGateway(){
 }
 async function redirectToHostedPayment(){
  if(!ready||cart.length===0)return;
+ const method=document.querySelector('input[name="payment-method"]:checked')?.value;
+ if(method==='transfer'||(method==='interac'&&!window.__interacWalletsReady))return;
  const button=$('[data-pay-button]');button.disabled=true;button.textContent='REDIRECTION SÉCURISÉE…';
  try{
   const response=await fetch('api/create-checkout-session',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:cart.map(({id,size,qty})=>({id,size,qty}))})});
@@ -89,8 +93,11 @@ document.addEventListener('DOMContentLoaded',()=>{
  document.querySelectorAll('input[name="payment-method"]').forEach(input=>input.addEventListener('change',()=>{
   const explainer=$('[data-payment-explainer]');
   explainer.textContent=input.value==='interac'
-   ?'Débit Interac fonctionne via Apple Pay ou Google Pay, selon la banque et l’appareil du client. Ce n’est pas un virement Interac.'
-   :'Une fois activé, le paiement bancaire sera saisi sur la page sécurisée du fournisseur et non sur 1608.';
+   ?'Interac Débit en ligne peut fonctionner via Apple Pay ou Google Pay, selon la banque et l’appareil. Ce n’est pas un virement Interac.'
+   :input.value==='transfer'
+   ?'Le service Interac e-Transfer Business Request Money doit être activé par une banque ou un fournisseur participant. Aucun virement direct n’est demandé ici.'
+   :'Une fois activé, le paiement sera saisi sur la page sécurisée du fournisseur et non sur 1608.';
+  updatePayButton();
  }));
 });
 })();
