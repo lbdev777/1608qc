@@ -97,6 +97,14 @@ const results=P.filter(p=>[p.name,p.variant,p.fit,p.material].join(' ').toLowerC
 el.innerHTML=results.length?results.map(p=>`<a class="search-result" href="${productUrl(p.id)}"><img src="${p.photos[0]}" alt=""><span>${p.name}<small>${p.variant}</small></span><b>${currency(p.price)}</b></a>`).join(''):'<p>Aucune pièce trouvée.</p>';
 }
 function initHome(){
+const gallery=$('[data-campaign-gallery]');
+if(gallery){
+ const images=$('[data-campaign-image]',gallery);
+ // Never display a broken or mismatched image while media uploads are incomplete.
+ Promise.all(images.map(img=>new Promise((resolve,reject)=>{
+   const probe=new Image();probe.onload=resolve;probe.onerror=reject;probe.src=img.getAttribute('src');
+ }))).then(()=>{gallery.hidden=false}).catch(()=>{gallery.hidden=true});
+}
 const grid=$('[data-product-grid]');if(!grid)return;
 const count=$('[data-collection-count]');if(count)count.textContent=String(P.length).padStart(2,'0')+' PIÈCES';
 function draw(filter){const filtered=filter==='all'?P:P.filter(p=>p.category===filter);grid.innerHTML=filtered.map(card).join('');}
