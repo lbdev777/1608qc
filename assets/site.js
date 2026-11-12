@@ -47,7 +47,7 @@ document.body.insertAdjacentHTML('beforeend',`
 <aside class="drawer" data-cart-drawer role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cart-heading">
  <div class="drawer-head"><h2 id="cart-heading">VOTRE PANIER <span data-drawer-count></span></h2><button type="button" data-overlay-close aria-label="Fermer le panier">×</button></div>
  <div class="drawer-body" data-cart-lines></div>
- <div class="drawer-footer"><div class="drawer-total"><span>SOUS-TOTAL</span><strong data-cart-total>0 $</strong></div><button class="button dark" type="button" data-checkout-info>PAIEMENT EN PRÉPARATION <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
+ <div class="drawer-footer"><div class="drawer-total"><span>SOUS-TOTAL</span><strong data-cart-total>0 $</strong></div><button class="button dark" type="button" data-checkout-info>PASSER À LA CAISSE <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
 </aside>
 <div class="search-panel" data-search-panel role="dialog" aria-modal="true" aria-hidden="true" aria-label="Recherche de produits"><div class="search-head"><input type="search" data-search-input placeholder="Rechercher une pièce…" aria-label="Rechercher une pièce" autocomplete="off"><button type="button" data-overlay-close aria-label="Fermer la recherche">×</button></div><div class="search-results" data-search-results></div></div>
 <div class="toast" data-toast role="status" aria-live="polite"></div>`);
@@ -181,7 +181,7 @@ if(e.target.closest('[data-overlay-close]')||e.target.closest('[data-backdrop]')
 const menu=e.target.closest('[data-menu-toggle]');if(menu){const nav=$('[data-mobile-nav]');const next=nav.hidden;nav.hidden=!next;menu.setAttribute('aria-expanded',String(next));return}
 const change=e.target.closest('[data-cart-change]');if(change){const [i,n]=change.dataset.cartChange.split(':').map(Number);const line=cart[i];if(!line)return;line.qty+=n;if(line.qty<=0)cart.splice(i,1);save();syncCart();return}
 const remove=e.target.closest('[data-cart-remove]');if(remove){cart.splice(Number(remove.dataset.cartRemove),1);save();syncCart();return}
-if(e.target.closest('[data-checkout-info]')){toast('La caisse est en préparation. Aucune commande n’est encaissée.');return}
+if(e.target.closest('[data-checkout-info]')){location.href='checkout.html';return}
 });
 $('[data-search-input]')?.addEventListener('input',e=>search(e.target.value));
 document.addEventListener('keydown',e=>{
@@ -190,6 +190,13 @@ if(e.key==='Tab'&&activeOverlay){const root=activeOverlay==='cart'?$('[data-cart
 });
 $('[data-mobile-nav]')?.addEventListener('click',e=>{if(e.target.closest('a'))$('[data-mobile-nav]').hidden=true});
 }
+window.addEventListener('1608:cart-changed',()=>{
+ try{
+  const saved=JSON.parse(localStorage.getItem('1608-cart-v2')||'[]');
+  cart=Array.isArray(saved)?saved.filter(x=>productById(x.id)&&productById(x.id).sizes.includes(x.size)&&Number.isInteger(x.qty)&&x.qty>=1&&x.qty<=10):[];
+ }catch(_){cart=[];}
+ syncCart();
+});
 document.addEventListener('DOMContentLoaded',()=>{
 mountShell();syncCart();listeners();
 if(document.body.dataset.page==='product')initProduct();else initHome();
