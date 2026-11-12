@@ -40,64 +40,24 @@ function render(){
 }
 function updatePayButton(){
  const button=$('[data-pay-button]');
- const hasItems=cart.length>0;
- const method=document.querySelector('input[name="payment-method"]:checked')?.value || 'interac';
- const methodAvailable=method!=='transfer' && (method!=='interac'||Boolean(window.__interacWalletsReady));
- button.disabled=!ready||!hasItems||!methodAvailable;
- button.textContent=!ready?'PAIEMENT NON ACTIVÉ ↗':!hasItems?'AJOUTER UN ARTICLE':!methodAvailable?'MODE DE PAIEMENT À CONFIGURER':'CONTINUER VERS LE PAIEMENT ↗';
+ // En attendant l'ouverture d'un vrai compte marchand et la connexion serveur.
+ button.disabled=true;
+ button.textContent=cart.length?'DEMANDE INTERAC À ACTIVER ↗':'AJOUTER UN ARTICLE';
  button.setAttribute('aria-label',button.textContent.trim());
 }
-async function detectGateway(){
- // GitHub Pages is a static preview, not an API server.
- if(location.hostname.endsWith('github.io'))return;
- try{
-  const response=await fetch('api/payment-status',{headers:{'Accept':'application/json'},cache:'no-store',credentials:'same-origin'});
-  if(!response.ok)return;
-  const status=await response.json();
-  if(status?.ready!==true)return;
-  ready=true;window.__interacWalletsReady=status.interacWalletsReady===true;updatePayButton();
-  $('[data-pay-status]').textContent='Le paiement sera traité sur une page Stripe hébergée. Le montant total, incluant les frais et taxes applicables, sera affiché avant toute autorisation.';
-  // Only advertise payment methods actually enabled by the payment provider.
-  const interac=document.querySelector('input[name="payment-method"][value="interac"]')?.closest('label');
-  if(interac&&status.interacWalletsReady===true)interac.querySelector('.method-state').textContent='SELON ADMISSIBILITÉ';
-  else if(interac){interac.hidden=true;const card=document.querySelector('input[name="payment-method"][value="card"]');card.checked=true;}
-  document.querySelector('input[name="payment-method"][value="card"]')?.closest('label')?.querySelector('.method-state').replaceChildren(document.createTextNode('DISPONIBLE'));
-  const alert=$('.checkout-alert');if(alert)alert.hidden=true;
- }catch(e){/* Remain in safe preview state. */}
-}
-async function redirectToHostedPayment(){
- if(!ready||cart.length===0)return;
- const method=document.querySelector('input[name="payment-method"]:checked')?.value;
- if(method==='transfer'||(method==='interac'&&!window.__interacWalletsReady))return;
- const button=$('[data-pay-button]');button.disabled=true;button.textContent='REDIRECTION SÉCURISÉE…';
- try{
-  const response=await fetch('api/create-checkout-session',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:cart.map(({id,size,qty})=>({id,size,qty}))})});
-  const data=await response.json();
-  if(!response.ok||typeof data.url!=='string')throw new Error(data?.error||'La caisse est momentanément indisponible.');
-  const url=new URL(data.url);
-  if(url.protocol!=='https:'||url.hostname!=='checkout.stripe.com')throw new Error('Adresse de paiement non reconnue.');
-  window.location.assign(url.href);
- }catch(error){
-  $('[data-pay-status]').textContent='Impossible de démarrer le paiement. Aucun montant n’a été débité. Réessaie plus tard.';
-  updatePayButton();
- }
-}
 document.addEventListener('DOMContentLoaded',()=>{
- render();save();detectGateway();
+ render();save();
  document.addEventListener('click',event=>{
   const qty=event.target.closest('[data-cqty]');
-  if(qty){const [i,delta]=qty.dataset.cqty.split(':').map(Number);const item=cart[i];if(!item)return;item.qty+=delta;if(item.qty<=0)cart.splice(i,1);else if(item.qty>10)item.qty=10;save();render();return;}
-  const remove=event.target.closest('[data-cremove]');if(remove){cart.splice(Number(remove.dataset.cremove),1);save();render();return;}
-  if(event.target.closest('[data-pay-button]'))redirectToHostedPayment();
+  if(qty){
+   const [i,delta]=qty.dataset.cqty.split(':').map(Number);
+   const item=cart[i];if(!item)return;
+   item.qty+=delta;
+   if(item.qty<=0)cart.splice(i,1);else if(item.qty>10)item.qty=10;
+   save();render();return;
+  }
+  const remove=event.target.closest('[data-cremove]');
+  if(remove){cart.splice(Number(remove.dataset.cremove),1);save();render();return;}
  });
- document.querySelectorAll('input[name="payment-method"]').forEach(input=>input.addEventListener('change',()=>{
-  const explainer=$('[data-payment-explainer]');
-  explainer.textContent=input.value==='interac'
-   ?'Interac Débit en ligne peut fonctionner via Apple Pay ou Google Pay, selon la banque et l’appareil. Ce n’est pas un virement Interac.'
-   :input.value==='transfer'
-   ?'Le service Interac e-Transfer Business Request Money doit être activé par une banque ou un fournisseur participant. Aucun virement direct n’est demandé ici.'
-   :'Une fois activé, le paiement sera saisi sur la page sécurisée du fournisseur et non sur 1608.';
-  updatePayButton();
- }));
 });
 })();
