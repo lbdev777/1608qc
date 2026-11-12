@@ -30,7 +30,7 @@
       details.insertBefore(top,name);top.append(name,price);
     }
     const note=details?.querySelector('.product-note');
-    if(note)note.textContent=i===0?'COUPE BOXY · CAMO FORÊT':i===1?'COUPE OVERSIZED · NOIR':i===2?'BRODERIE · COUPE BOXY':'RAGLAN · MARINE / IVOIRE';
+    if(note){const tags={'terrain-camo':'COUPE BOXY · CAMO FORÊT','horizon-noir':'COUPE OVERSIZED · NOIR','signature-brode':'BRODERIE · COUPE BOXY','contraste-marine':'RAGLAN · MARINE / IVOIRE','archive-denim':'DENIM DÉLAVÉ · COUPE LARGE','heritage-noir':'HEAVYWEIGHT · MANCHES IMPRIMÉES'};note.textContent=tags[p.id]||'1608 / COLLECTION';}
     const opener=card.querySelector('button');
     if(opener)opener.setAttribute('aria-label','Voir '+p.name+' — '+money(p.price));
   });
@@ -49,7 +49,7 @@
         <div class="horizon-price">69,00 $ CAD <small>· S — 2XL</small></div>
         <button class="horizon-cta" id="horizon-open" type="button">DÉCOUVRIR HORIZON <span aria-hidden="true">↗</span></button>
       </div>
-      <div class="horizon-bottomline"><span>MILLE-SIX-CENT-HUIT</span><span>02 / 04</span></div>
+      <div class="horizon-bottomline"><span>MILLE-SIX-CENT-HUIT</span><span>02 / ${String(PRODUCTS.length).padStart(2,'0')}</span></div>
     </div>
     <div class="horizon-gallery" aria-label="Photographies du coton ouaté HORIZON 1608">
       <button class="horizon-shot" type="button" data-horizon-view="0" aria-label="Vue avant de HORIZON 1608"><img src="${horizon.images[0]}" alt="Coton ouaté noir, logo blanc 1608 sur la poitrine" loading="lazy" width="320" height="320"><span>01 / DEVANT <b>↗</b></span></button>
@@ -114,7 +114,7 @@
   const count=document.querySelector('.catalogue-count');
   if(count)count.textContent=`${String(PRODUCTS.length).padStart(3,'0')} PIÈCES`;
   const announcement=document.querySelector('.announcement span');
-  if(announcement)announcement.textContent='1608 / QUATRE PIÈCES. UNE DIRECTION.';
+  if(announcement)announcement.textContent='1608 / SIX PIÈCES. UNE DIRECTION.';
 
   // Prévisualisation clairement annoncée : ne jamais feindre d'avoir encaissé une commande.
   const checkoutButton=byId('checkout-button');
@@ -128,7 +128,7 @@
   const footerNote=document.querySelector('.drawer-footer>p');
   if(footerNote)footerNote.textContent='Aperçu interactif. Frais et livraison confirmés avant l’ouverture des commandes.';
   const questions=document.querySelectorAll('.faq-items details');
-  if(questions[1])questions[1].querySelector('p').textContent='Les quatre modèles sont proposés en tailles S à 2XL. Le guide de mesures exact sera publié avant l’ouverture des ventes.';
+  if(questions[1])questions[1].querySelector('p').textContent='Les six pièces sont proposées en tailles S à 2XL. Le guide de mesures exact sera publié avant l’ouverture des ventes.';
   document.querySelectorAll('.product-full-button').forEach(btn=>btn.addEventListener('pointerdown',()=>{
     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)
       btn.animate([{transform:'scale(1)'},{transform:'scale(.992)'},{transform:'scale(1)'}],{duration:180});
