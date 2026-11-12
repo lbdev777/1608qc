@@ -10,3 +10,10 @@
 @media(max-width:1050px){.checkout-layout{grid-template-columns:minmax(0,1fr) minmax(300px,.75fr);gap:30px}.checkout-progress{display:none}.checkout-item{grid-template-columns:95px 1fr auto;gap:12px}}
 @media(max-width:760px){.checkout-main{padding-bottom:65px}.checkout-intro{margin:16px 0 25px}.checkout-intro h1{font-size:clamp(48px,10vw,70px)}.checkout-alert{margin-bottom:28px}.checkout-layout{grid-template-columns:1fr;gap:28px}.checkout-summary{position:static;order:-1;padding:23px}.checkout-section-head{padding:18px 0 20px}.checkout-section{padding-bottom:26px}.checkout-item{grid-template-columns:100px 1fr auto;gap:12px}.checkout-item-photo{width:100px}.checkout-assurance{margin-top:21px}.method-state{font-size:8px}.checkout-section-head a{font-size:10px}}
 @media(max-width:420px){.checkout-item{grid-template-columns:80px 1fr auto}.checkout-item-photo{width:80px}.checkout-item h3{font-size:12px}.checkout-item-price{font-size:11px}.method-state{max-width:57px;white-space:normal;text-align:right}.checkout-assurance{gap:12px}}
+
+/* Clarté du paiement: pas de faux badges, pas de promesses de protection non vérifiées. */
+.payment-trust-note{font-size:11px;line-height:1.7;color:#656b62;border-top:1px solid #d1d4cd;margin:22px 0 0;padding:17px 0 0}
+.payment-trust-note strong{color:#252823}
+.payment-method:has(input[value="transfer"]){background:#f4f4f0}
+.payment-method:has(input[value="transfer"]:checked){background:#fff;border-color:#2d302a}
+.checkout-pay:disabled{font-size:10px;letter-spacing:.065em}
