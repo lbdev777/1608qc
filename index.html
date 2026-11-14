@@ -15,6 +15,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/site.css"><link rel="stylesheet" href="assets/home.css">
 <link rel="stylesheet" href="assets/qc-polish.css?v=edition-02">
+<link rel="stylesheet" href="assets/hm-shop.css?v=hm-1">
 <script src="assets/catalog.js" defer></script>
 <script src="assets/site.js?v=edition-02" defer></script>
 <script src="assets/qc-polish.js?v=edition-02" defer></script>
@@ -22,38 +23,40 @@
 <body data-page="home">
 <div data-site-header></div>
 <main id="main">
-<section class="ed-intro" aria-labelledby="ed-intro-heading">
- <div class="ed-intro-main">
-  <div class="ed-intro-top"><span>1608 / MILLE-SIX-CENT-HUIT</span><span>QUÉBEC, CANADA</span></div>
-  <h1 id="ed-intro-heading">1608<span class="ed-intro-mark">.</span></h1>
-  <div class="ed-intro-bottom">
-   <p>Des vêtements imaginés ici.<br>La suite se porte partout.</p>
-   <a href="#collection" class="ed-text-link">VOIR LA COLLECTION <span aria-hidden="true">↘</span></a>
-  </div>
- </div>
- <div class="ed-intro-pieces">
-  <a href="produit-uniforme-zip.html" class="ed-piece ed-piece-one" aria-label="Voir le coton ouaté UNIFORME ZIP">
-   <div class="ed-piece-photo"><img src="assets/b628367f22434b5bb29ac5968e05b077.webp" alt="Coton ouaté zippé UNIFORME noir délavé" width="700" height="700" fetchpriority="high"></div>
-   <div class="ed-piece-caption"><span>UNIFORME ZIP</span><span>89 $ <b aria-hidden="true">↗</b></span></div>
-  </a>
-  <a href="produit-contraste-marine.html" class="ed-piece ed-piece-two" aria-label="Voir le coton ouaté CONTRASTE">
-   <div class="ed-piece-photo"><img src="assets/369259aed9eb45dabaf0d5381f59a522.webp" alt="Coton ouaté CONTRASTE, bleu marine et ivoire" width="700" height="700"></div>
-   <div class="ed-piece-caption"><span>CONTRASTE</span><span>89 $ <b aria-hidden="true">↗</b></span></div>
-  </a>
- </div>
+<section class="hm-hero" aria-label="À la une">
+ <a class="hm-banner hm-banner-a" href="produit-orbite-noir.html">
+  <div class="hm-banner-photo"><img src="assets/cb08506f9e9f4d24a062305fbe3a0427.webp" alt="ORBITE, coton ouaté noir avec fleurs de lys sur la poitrine" width="900" height="900" fetchpriority="high"></div>
+  <div class="hm-banner-copy"><span class="hm-tag">NOUVEAU</span><h1>ORBITE.</h1><p>Le coton ouaté noir, logo 1608 entouré de fleurs de lys. Un graphisme orbital au dos.</p><span class="hm-btn">Magasiner · 89 $</span></div>
+ </a>
+ <a class="hm-banner hm-banner-b" href="produit-uniforme-zip.html">
+  <div class="hm-banner-photo hm-duo"><img src="assets/b628367f22434b5bb29ac5968e05b077.webp" alt="UNIFORME ZIP, noir délavé" width="700" height="700"><img src="assets/e5a25fb4c850489785a491f805092f4a.webp" alt="UNIFORME JOGGER, noir" width="700" height="700"></div>
+  <div class="hm-banner-copy"><span class="hm-tag hm-tag-dark">−15 % LE DUO</span><h2>L’UNIFORME.</h2><p>Zip et jogger assortis. Le rabais s’applique automatiquement au panier.</p><span class="hm-btn">Voir l’ensemble</span></div>
+ </a>
 </section>
-<div class="ed-cue"><span>COLLECTION / 01</span><span>NEUF PIÈCES. AUCUNE DE TROP.</span><span>FAITES DÉFILER ↓</span></div>
-<section class="ed-shop container" id="collection" aria-labelledby="ed-shop-heading">
+<nav class="hm-cats" aria-label="Catégories">
+ <a href="index.html?cat=hoodies#collection"><img src="assets/9fe74b8725ae46c4b48458ce342efb62.webp" alt="" loading="lazy" width="400" height="400"><span>Cotons ouatés</span></a>
+ <a href="index.html?cat=denim#collection"><img src="assets/a759c522e675400aaceb6aabeb5356d6.webp" alt="" loading="lazy" width="400" height="400"><span>Denim</span></a>
+ <a href="index.html?cat=pants#collection"><img src="assets/e5a25fb4c850489785a491f805092f4a.webp" alt="" loading="lazy" width="400" height="400"><span>Pantalons</span></a>
+ <a href="#l-uniforme"><img src="assets/e18d77ba9c5c427eb264409ffacbb8ed.webp" alt="" loading="lazy" width="400" height="400"><span>L’uniforme</span></a>
+</nav>
+<section class="ed-shop container hm-shop" id="collection" aria-labelledby="ed-shop-heading">
  <div class="ed-head">
   <div><span class="ed-label">LA COLLECTION — 1608</span><h2 id="ed-shop-heading">Toutes les pièces<span>.</span></h2></div>
-  <span class="ed-count" data-collection-count>09 PIÈCES</span>
+  <span class="ed-count" data-collection-count aria-live="polite">09 PIÈCES</span>
  </div>
- <div class="filter-row ed-filters" role="group" aria-label="Filtrer les produits">
-  <button type="button" data-filter="all" aria-pressed="true">Tous</button>
-  <button type="button" data-filter="hoodies" aria-pressed="false">Cotons ouatés</button>
-  <button type="button" data-filter="denim" aria-pressed="false">Denim</button>
-  <button type="button" data-filter="pants" aria-pressed="false">Pantalons</button>
+ <div class="hm-toolbar">
+  <div class="hm-chips" role="group" aria-label="Catégorie">
+   <button type="button" data-filter="all" aria-pressed="true">Tous</button>
+   <button type="button" data-filter="hoodies" aria-pressed="false">Cotons ouatés</button>
+   <button type="button" data-filter="denim" aria-pressed="false">Denim</button>
+   <button type="button" data-filter="pants" aria-pressed="false">Pantalons</button>
+   <button type="button" data-filter="wish" aria-pressed="false">Favoris <span data-wish-count></span></button>
+  </div>
+  <label class="hm-sort">Trier <select data-sort aria-label="Trier les pièces"><option value="default">Sélection</option><option value="asc">Prix croissant</option><option value="desc">Prix décroissant</option></select></label>
  </div>
+ <div class="hm-sizes" role="group" aria-label="Filtrer par taille"><span>Taille</span>
+  <button type="button" data-size-filter="S" aria-pressed="false">S</button><button type="button" data-size-filter="M" aria-pressed="false">M</button><button type="button" data-size-filter="L" aria-pressed="false">L</button><button type="button" data-size-filter="XL" aria-pressed="false">XL</button><button type="button" data-size-filter="2XL" aria-pressed="false">2XL</button>
+  <button type="button" class="hm-clear" data-clear-filters>Tout effacer</button></div>
  <div class="product-grid ed-products" data-product-grid></div>
 </section>
 <section class="ed-pair" id="l-uniforme" aria-labelledby="ed-pair-title">

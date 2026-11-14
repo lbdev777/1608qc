@@ -1,0 +1,99 @@
+/* 1608 / Boutique « grille pratique » : bandeau d'infos, bannières, catégories,
+   filtres, ajout rapide, favoris. Rien de plus que des fonctions réelles du site. */
+:root{--hm-ink:#121311;--hm-line:#d9dbd5;--hm-accent:#3d536b;--hm-red:#b3261e}
+/* Bandeau d'infos */
+.hm-bar{background:var(--hm-ink);color:#fff;font-size:11px;font-weight:650;letter-spacing:.02em;display:flex;justify-content:center;gap:clamp(18px,3.4vw,56px);padding:0 16px;min-height:34px;align-items:center;text-align:center}
+.hm-bar span{white-space:nowrap}
+.hm-bar span:first-child{opacity:.72}
+@media(max-width:1000px){.hm-bar span:nth-child(n+3){display:none}}
+@media(max-width:700px){
+  .hm-bar{display:block;position:relative;height:34px;overflow:hidden;padding:0}
+  .hm-bar span{display:block!important;position:absolute;inset:0;line-height:34px;font-size:10px;opacity:0;animation:hm-cycle 12s infinite}
+  .hm-bar span:nth-child(1){animation-delay:0s}.hm-bar span:nth-child(2){animation-delay:3s}.hm-bar span:nth-child(3){animation-delay:6s}.hm-bar span:nth-child(4){animation-delay:9s}
+}
+@keyframes hm-cycle{0%,3%{opacity:0;transform:translateY(8px)}6%,22%{opacity:1;transform:none}25%,100%{opacity:0;transform:translateY(-8px)}}
+/* En-tête : navigation par catégories */
+.nav-main{gap:clamp(14px,2vw,28px)}
+.nav-main a{font-size:13px;white-space:nowrap}
+@media(max-width:1180px){.nav-main{display:none}.menu-button{display:flex}}
+/* Bannières d'accueil */
+.hm-hero{display:grid;grid-template-columns:1.25fr 1fr;gap:2px;background:#fff;max-width:1920px;margin:0 auto}
+.hm-banner{position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;height:clamp(480px,62vh,640px);background:#e9ebe7;overflow:hidden;color:var(--hm-ink)}
+.hm-banner-b{background:#dfe3e3}
+.hm-banner-photo{display:flex;align-items:center;justify-content:center;padding:clamp(18px,3vw,44px) clamp(18px,3vw,44px) 0;min-height:0;overflow:hidden}
+.hm-banner-photo img{height:100%;width:auto;max-width:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform .8s cubic-bezier(.22,.8,.24,1)}
+.hm-banner-photo img{transform:scale(1.28)}
+.hm-duo img{transform:scale(1.14)}
+.hm-banner:hover .hm-banner-photo img{transform:scale(1.34)}
+.hm-banner:hover .hm-duo img{transform:scale(1.2)}
+.hm-duo{gap:0}.hm-duo img{width:50%;height:100%}
+.hm-banner-copy{padding:clamp(18px,2.4vw,34px);display:grid;gap:10px;justify-items:start}
+.hm-banner h1,.hm-banner h2{font:900 clamp(46px,6vw,104px)/.9 Impact,"Arial Narrow",Arial,sans-serif;letter-spacing:-.01em;margin:0;text-transform:uppercase}
+.hm-banner p{font-size:clamp(13px,1.1vw,16px);line-height:1.5;margin:0;max-width:440px;color:#383d37}
+.hm-tag{background:var(--hm-ink);color:#fff;font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 10px}
+.hm-tag-dark{background:var(--hm-red)}
+.hm-btn{display:inline-flex;align-items:center;min-height:46px;padding:0 24px;background:var(--hm-ink);color:#fff;font-size:13px;font-weight:700;margin-top:4px;transition:background .25s,transform .25s}
+.hm-banner:hover .hm-btn{background:var(--hm-accent)}
+/* Catégories */
+.hm-cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;max-width:1920px;margin:2px auto 0}
+.hm-cats a{position:relative;display:block;aspect-ratio:1.5;background:#e9ebe7;overflow:hidden}
+.hm-cats img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:14px;transition:transform .6s cubic-bezier(.22,.8,.24,1)}
+.hm-cats img{transform:scale(1.12)}
+.hm-cats a:hover img{transform:scale(1.2)}
+.hm-cats span{position:absolute;left:0;bottom:0;background:#fff;padding:9px 16px;font-size:14px;font-weight:750}
+/* Barre d'outils */
+.hm-shop{padding-top:56px}
+.hm-toolbar{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--hm-ink);border-bottom:1px solid var(--hm-line);padding:14px 0;margin-top:22px}
+.hm-chips{display:flex;gap:8px;flex-wrap:wrap}
+.hm-chips button,.hm-sizes button{border:1px solid var(--hm-line);background:#fff;color:var(--hm-ink);min-height:38px;padding:0 15px;font-size:13px;font-weight:650;border-radius:0;transition:background .2s,color .2s,border-color .2s}
+.hm-chips button:hover,.hm-sizes button:hover{border-color:var(--hm-ink)}
+.hm-chips button[aria-pressed="true"],.hm-sizes button[aria-pressed="true"]{background:var(--hm-ink);color:#fff;border-color:var(--hm-ink)}
+.hm-sort{font-size:13px;font-weight:650;display:flex;align-items:center;gap:8px}
+.hm-sort select{min-height:38px;border:1px solid var(--hm-line);background:#fff;padding:0 10px;font:inherit;font-weight:600}
+.hm-sizes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 0 22px;border-bottom:1px solid var(--hm-line);margin-bottom:26px}
+.hm-sizes>span{font-size:13px;font-weight:700;margin-right:6px}
+.hm-sizes button{min-width:46px;padding:0 10px}
+.hm-sizes .hm-clear{border:0;background:none;text-decoration:underline;color:#586058;margin-left:auto;min-width:0}
+.hm-sizes .hm-clear:hover{color:var(--hm-ink);background:none}
+/* Grille : 4 colonnes, 2 sur mobile */
+.hm-shop .product-grid,.hm-shop .ed-products{grid-template-columns:repeat(4,minmax(0,1fr));gap:30px 14px}
+.grid-empty{grid-column:1/-1;padding:56px 0;text-align:center;color:#5c635b;font-size:15px}
+.hm-shop .product-card{position:relative}
+.hm-shop .product-visual{aspect-ratio:.86}
+.hm-shop .product-visual img{padding:10px}
+.hm-shop .card-copy{padding:11px 1px 0}
+.hm-shop .card-title h3{font-size:15px;font-weight:750;letter-spacing:0}
+.hm-shop .card-title b{font-size:14px}
+.hm-shop .card-sub{font-size:12px;margin-top:3px;text-transform:capitalize}
+/* Favoris */
+.wish{position:absolute;top:10px;right:10px;z-index:4;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-items:center;transition:transform .25s,background .2s}
+.wish svg{width:20px;height:20px;fill:none;stroke:var(--hm-ink);stroke-width:1.8;stroke-linejoin:round;transition:fill .2s,stroke .2s}
+.wish:hover{transform:scale(1.1)}
+.wish[aria-pressed="true"] svg{fill:var(--hm-red);stroke:var(--hm-red)}
+/* Ajout rapide */
+.quick{position:absolute;left:0;right:0;top:0;aspect-ratio:.86;pointer-events:none;z-index:3}
+.quick-toggle{z-index:2;pointer-events:auto;position:absolute;right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;border:0;background:var(--hm-ink);color:#fff;font-size:24px;line-height:1;display:grid;place-items:center;transition:transform .3s,background .2s}
+.quick-toggle:hover{background:var(--hm-accent);transform:scale(1.08)}
+.quick.is-open .quick-toggle{transform:rotate(45deg)}
+.quick-panel{pointer-events:auto;position:absolute;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);padding:12px 62px 12px 12px;display:grid;gap:8px;transform:translateY(102%);opacity:0;transition:transform .35s cubic-bezier(.22,.8,.24,1),opacity .25s;visibility:hidden}
+.quick.is-open .quick-panel{transform:none;opacity:1;visibility:visible}
+@media(hover:hover){.product-card:hover .quick-panel{transform:none;opacity:1;visibility:visible}}
+.quick-title{font-size:11px;font-weight:750;letter-spacing:.04em;text-transform:uppercase;color:#555}
+.quick-sizes{display:flex;flex-wrap:wrap;gap:6px}
+.quick-sizes button{min-width:38px;height:36px;border:1px solid var(--hm-line);background:#fff;font-size:13px;font-weight:700;transition:background .15s,color .15s,border-color .15s}
+.quick-sizes button:hover{background:var(--hm-ink);color:#fff;border-color:var(--hm-ink)}
+.card-open,.card-index{display:none}
+/* Tablette / mobile */
+@media(max-width:1100px){.hm-shop .product-grid,.hm-shop .ed-products{grid-template-columns:repeat(3,minmax(0,1fr))}.hm-hero{grid-template-columns:1fr}.hm-banner{height:auto;min-height:0}.hm-banner-photo{height:min(62vw,460px)}}
+@media(max-width:760px){
+  .hm-shop .product-grid,.hm-shop .ed-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 8px}
+  .hm-banner-photo{height:min(78vw,380px)}.hm-banner-copy{padding:18px}
+  .hm-cats{grid-template-columns:repeat(2,minmax(0,1fr))}.hm-cats a{aspect-ratio:1.25}
+  .hm-toolbar{gap:12px}.hm-chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -2px;padding-bottom:4px;max-width:100%;scrollbar-width:none}.hm-chips button{white-space:nowrap}
+  .hm-sort{width:100%;justify-content:space-between}.hm-sort select{flex:1;max-width:60%}
+  .quick-panel{padding-right:56px}.quick-sizes button{min-width:34px;height:34px}
+  .hm-shop .card-title{flex-direction:column;gap:2px}
+}
+@media(prefers-reduced-motion:reduce){.hm-bar span{animation:none}.hm-bar span:first-child{opacity:1}}
+/* Correctif : le logo 1608 restait masqué sous 480 px (ancienne règle « .wordmark span »). */
+@media(max-width:480px){.wordmark .wordmark-number{display:inline}.wordmark .wordmark-sub{display:none}}

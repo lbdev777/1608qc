@@ -33,16 +33,17 @@ const iconBag='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1 1
 const iconMenu='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>';
 function header(){
 return `<a class="skip-link" href="#main">Aller au contenu</a>
+<div class="hm-bar" role="region" aria-label="Informations"><span>Aperçu de la collection · commandes pas encore ouvertes</span><span>Duo −10 % · Trio −15 % sur des modèles différents</span><span>Total, livraison et taxes confirmés avant de payer</span><span>Imaginé au Québec</span></div>
 <header class="site-header"><div class="header-inner">
 <a class="wordmark" href="index.html" aria-label="1608, accueil"><span class="wordmark-number">1608</span><span class="wordmark-sub">MILLE-SIX-CENT-HUIT</span></a>
-<nav class="nav-main" aria-label="Navigation"><a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a></nav>
+<nav class="nav-main" aria-label="Navigation"><a href="index.html#collection">Tout voir</a><a href="index.html?cat=hoodies#collection">Cotons ouatés</a><a href="index.html?cat=denim#collection">Denim</a><a href="index.html?cat=pants#collection">Pantalons</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a></nav>
 <div class="header-actions">
 <button class="header-icon" type="button" data-search-open aria-label="Rechercher">${iconSearch}</button>
 <button class="header-icon" type="button" data-cart-open aria-label="Ouvrir le panier">${iconBag}<span class="bag-count" data-cart-count hidden>0</span></button>
 <button class="header-icon menu-button" type="button" data-menu-toggle aria-label="Ouvrir le menu" aria-expanded="false">${iconMenu}</button>
 </div></div>
 <nav class="mobile-nav" data-mobile-nav hidden aria-label="Menu mobile">
-<a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a>
+<a href="index.html#collection">Tout voir</a><a href="index.html?cat=hoodies#collection">Cotons ouatés</a><a href="index.html?cat=denim#collection">Denim</a><a href="index.html?cat=pants#collection">Pantalons</a><a href="index.html#l-uniforme">L'uniforme</a>
 <a href="index.html#notre-histoire">La marque</a><a href="index.html#questions">Infos</a>
 </nav></header>`;
 }
@@ -54,18 +55,23 @@ return `<footer class="site-footer ed-footer">
 </div>
 <div class="ed-footer-bottom"><span>© ${new Date().getFullYear()} 1608</span><span>QUÉBEC, CANADA</span><span>Boutique en aperçu — aucun paiement accepté</span></div></footer>`;
 }
+function wishList(){try{return JSON.parse(localStorage.getItem('1608-wish')||'[]')}catch(_){return []}}
+function saveWish(list){try{localStorage.setItem('1608-wish',JSON.stringify(list))}catch(_){}}
+const iconHeart='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5S3.5 15 3.5 9.2A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.5 2.6C20.5 15 12 20.5 12 20.5Z"></path></svg>';
 function card(p){
-const n=String(P.indexOf(p)+1).padStart(2,'0');
-return `<article class="product-card" data-category="${p.category}">
-<a href="${productUrl(p.id)}" aria-label="Découvrir ${p.name}, ${p.variant}, ${currency(p.price)}">
+const liked=wishList().includes(p.id);
+return `<article class="product-card" data-category="${p.category}" data-id="${p.id}">
+<a class="card-link" href="${productUrl(p.id)}" aria-label="Découvrir ${p.name}, ${p.variant}, ${currency(p.price)}">
 <div class="product-visual">
-<span class="card-index">${n} / 09</span>
 <img class="product-primary" src="${p.photos[0]}" alt="${p.name} — devant" loading="lazy" decoding="async" width="900" height="900">
-<img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async" width="900" height="900">
-<span class="card-open">Voir les détails <span aria-hidden="true">↗</span></span></div>
-<div class="card-copy"><div class="card-meta"><span>${p.variant}</span><span>${p.ref}</span></div>
-<div class="card-title"><h3>${p.name.replace(' 1608','')}</h3><b>${currency(p.price)}</b></div>
-<p class="card-sub">${p.fit}</p></div></a></article>`;
+<img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async" width="900" height="900"></div>
+<div class="card-copy"><div class="card-title"><h3>${p.name.replace(' 1608','')}</h3><b>${currency(p.price)}</b></div>
+<p class="card-sub">${p.variant.toLowerCase()}</p></div></a>
+<button class="wish" type="button" data-wish="${p.id}" aria-pressed="${liked}" aria-label="${liked?'Retirer des favoris':'Ajouter aux favoris'} : ${p.name}">${iconHeart}</button>
+<div class="quick" data-quick="${p.id}">
+<button class="quick-toggle" type="button" data-quick-toggle aria-expanded="false" aria-label="Ajout rapide : ${p.name}"><span aria-hidden="true">+</span></button>
+<div class="quick-panel" role="group" aria-label="Choisir une taille pour ${p.name}"><span class="quick-title">Ajout rapide · taille</span><div class="quick-sizes">${p.sizes.map(z=>`<button type="button" data-quick-size="${p.id}:${z}" aria-label="Ajouter ${p.name} en taille ${z} au panier">${z}</button>`).join('')}</div></div>
+</div></article>`;
 }
 function mountShell(){
 const h=$('[data-site-header]'),f=$('[data-site-footer]');if(h)h.innerHTML=header();if(f)f.innerHTML=footer();
@@ -151,9 +157,43 @@ if(gallery){
 }
 const grid=$('[data-product-grid]');if(!grid)return;
 const count=$('[data-collection-count]');if(count)count.textContent=String(P.length).padStart(2,'0')+' PIÈCES';
-function draw(filter){const filtered=filter==='all'?P:P.filter(p=>p.category===filter);grid.innerHTML=filtered.map(card).join('');}
-draw('all');
-$$('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{$$('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));draw(btn.dataset.filter)}));
+const state={cat:'all',sort:'default',sizes:[]};
+const params=new URLSearchParams(location.search);
+if(['hoodies','denim','pants','wish'].includes(params.get('cat')))state.cat=params.get('cat');
+function visible(){
+ let list=P.filter(p=>state.cat==='all'||(state.cat==='wish'?wishList().includes(p.id):p.category===state.cat));
+ if(state.sizes.length)list=list.filter(p=>state.sizes.some(z=>p.sizes.includes(z)));
+ if(state.sort==='asc')list=[...list].sort((x,y)=>x.price-y.price);
+ if(state.sort==='desc')list=[...list].sort((x,y)=>y.price-x.price);
+ return list;
+}
+function draw(){
+ const list=visible();
+ grid.innerHTML=list.length?list.map(card).join(''):'<p class="grid-empty">'+(state.cat==='wish'?'Aucun favori pour l’instant. Touche le cœur sur une pièce pour la garder ici.':'Aucune pièce ne correspond à ces filtres.')+'</p>';
+ if(count)count.textContent=String(list.length).padStart(2,'0')+(list.length>1?' PIÈCES':' PIÈCE');
+ $$('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===state.cat)));
+ $$('[data-size-filter]').forEach(b=>b.setAttribute('aria-pressed',String(state.sizes.includes(b.dataset.sizeFilter))));
+ const w=$('[data-wish-count]');if(w)w.textContent=wishList().length?'('+wishList().length+')':'';
+}
+draw();
+$$('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{state.cat=btn.dataset.filter;draw()}));
+$$('[data-size-filter]').forEach(btn=>btn.addEventListener('click',()=>{const z=btn.dataset.sizeFilter;state.sizes=state.sizes.includes(z)?state.sizes.filter(x=>x!==z):[...state.sizes,z];draw()}));
+$('[data-sort]')?.addEventListener('change',e=>{state.sort=e.target.value;draw()});
+$('[data-clear-filters]')?.addEventListener('click',()=>{state.cat='all';state.sort='default';state.sizes=[];const so=$('[data-sort]');if(so)so.value='default';draw()});
+grid.addEventListener('click',e=>{
+ const wish=e.target.closest('[data-wish]');
+ if(wish){const id=wish.dataset.wish;let l=wishList();const on=!l.includes(id);l=on?[...l,id]:l.filter(x=>x!==id);saveWish(l);
+  wish.setAttribute('aria-pressed',String(on));toast(on?'Ajouté aux favoris.':'Retiré des favoris.');
+  const w=$('[data-wish-count]');if(w)w.textContent=l.length?'('+l.length+')':'';
+  if(state.cat==='wish')draw();return}
+ const tog=e.target.closest('[data-quick-toggle]');
+ if(tog){const q=tog.closest('.quick');const open=!q.classList.contains('is-open');$$('.quick.is-open',grid).forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-quick-toggle]').setAttribute('aria-expanded','false')});
+  if(open){q.classList.add('is-open');tog.setAttribute('aria-expanded','true')}return}
+ const sz=e.target.closest('[data-quick-size]');
+ if(sz){const [id,size]=sz.dataset.quickSize.split(':');addToCart(id,size,1);
+  const q=sz.closest('.quick');q?.classList.remove('is-open');q?.querySelector('[data-quick-toggle]')?.setAttribute('aria-expanded','false')}
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.quick'))$$('.quick.is-open',grid).forEach(x=>{x.classList.remove('is-open');x.querySelector('[data-quick-toggle]').setAttribute('aria-expanded','false')})});
 }
 function updateGallery(i){
 if(!selectedProduct)return;
