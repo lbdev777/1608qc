@@ -101,12 +101,22 @@ $('[data-backdrop]')?.classList.remove('is-open');document.body.style.overflow='
 if(restore&&lastFocus?.isConnected)lastFocus.focus();
 }
 }
+/* Validation atomique : jamais une moitié d'ensemble ajoutée si l'autre taille atteint 10. */
+function addItemsToCart(items,message){
+ const next=cart.map(line=>({...line}));
+ for(const item of items){
+  const product=productById(item.id);
+  if(!product||!product.sizes.includes(item.size)||!Number.isInteger(item.qty)||item.qty<1||item.qty>10)return false;
+  const existing=next.find(line=>line.id===item.id&&line.size===item.size);
+  if(existing){
+   if(existing.qty+item.qty>10){toast('Maximum 10 exemplaires par taille.');return false;}
+   existing.qty+=item.qty;
+  }else next.push({...item});
+ }
+ cart=next;save();syncCart();openOverlay('cart');toast(message);return true;
+}
 function addToCart(id,size,qty){
-const p=productById(id);if(!p||!p.sizes.includes(size)||!Number.isInteger(qty)||qty<1||qty>10)return false;
-const existing=cart.find(line=>line.id===id&&line.size===size);
-if(existing){if(existing.qty+qty>10){toast('Maximum 10 exemplaires par taille.');return false}existing.qty+=qty}
-else cart.push({id,size,qty});
-save();syncCart();openOverlay('cart');toast('Pièce ajoutée au panier.');return true;
+ return addItemsToCart([{id,size,qty}],'Pièce ajoutée au panier.');
 }
 function search(query){
 const el=$('[data-search-results]');if(!el)return;
@@ -139,6 +149,46 @@ if(main)main.setAttribute('aria-label','Agrandir la vue '+(i===0?'avant':'arriè
 const idx=$('[data-gallery-index]');if(idx)idx.textContent=`${String(i+1).padStart(2,'0')} / 02`;
 $$('[data-gallery-thumb]').forEach(btn=>btn.setAttribute('aria-pressed',String(Number(btn.dataset.galleryThumb)===i)));
 if(main)main.classList.remove('zoomed');
+}
+
+/* Une seule promotion lisible par fiche; la remise vient du calcul du vrai panier. */
+function renderProductOffer(p){
+ const matching=p.pairedWith&&productById(p.pairedWith);
+ if(!matching){
+  return `<aside class="collection-benefit">
+    <div><span class="collection-benefit-kicker">1608 / ENSEMBLES</span>
+      <p><strong>PLUSIEURS PIÈCES. UN MEILLEUR PRIX.</strong><span>2 modèles = −10 % &nbsp; / &nbsp; 3 modèles = −15 %.</span></p></div>
+    <a href="index.html#collection" aria-label="Découvrir les autres modèles">EXPLORER <span aria-hidden="true">↗</span></a>
+   </aside>`;
+ }
+ const pricing=priceCart([{id:p.id,qty:1},{id:matching.id,qty:1}]);
+ const pairName=matching.id==='uniforme-zip'?'ZIP':'JOGGER';
+ return `<section class="outfit-offer" aria-label="Offre ensemble ${p.name} et ${matching.name}">
+  <div class="outfit-heading"><span>1608 / L'ENSEMBLE UNIFORME</span><strong>−${pricing.percent} % ENSEMBLE</strong></div>
+  <div class="outfit-main">
+   <a class="outfit-image" href="${productUrl(matching.id)}" aria-label="Voir ${matching.name}">
+    <img src="${matching.photos[0]}" alt="${matching.name}, pièce assortie" loading="lazy" width="250" height="250">
+   </a>
+   <div class="outfit-details">
+    <h2>LE LOOK<br>COMPLET.</h2>
+    <span class="outfit-items">UNIFORME ZIP + UNIFORME JOGGER</span>
+    <div class="outfit-prices"><del>${currency(pricing.subtotal)}</del><strong>${currency(pricing.total)}</strong></div>
+    <span class="outfit-savings">ÉCONOMISE ${currency(pricing.discount)} SUR LES DEUX PIÈCES</span>
+   </div>
+  </div>
+  <div class="outfit-controls">
+   <div class="outfit-size-group"><label for="outfit-paired-size">TAILLE DU ${pairName} ASSORTI</label>
+    <select id="outfit-paired-size" data-outfit-size>
+      <option value="">Choisir une taille</option>
+      ${matching.sizes.map(size=>`<option value="${size}">${size}</option>`).join('')}
+    </select></div>
+   <button class="outfit-add" type="button" data-add-outfit>AJOUTER L'ENSEMBLE <span aria-hidden="true">↗</span></button>
+  </div>
+  <p class="outfit-error" role="status" data-outfit-error></p>
+  <div class="outfit-foot"><span>1 DE CHAQUE · TAILLES AU CHOIX · AVANT TAXES ET LIVRAISON</span>
+    <a href="${productUrl(matching.id)}">VOIR LE ${pairName} <span aria-hidden="true">↗</span></a>
+  </div>
+ </section>`;
 }
 function initProduct(){
 const id=document.body.dataset.productId || new URLSearchParams(location.search).get('id');
@@ -182,10 +232,13 @@ target.innerHTML=`
     <div class="purchase-row"><div class="quantity"><button type="button" data-qty-minus aria-label="Diminuer quantité">−</button><span data-quantity>1</span><button type="button" data-qty-plus aria-label="Augmenter quantité">+</button></div>
       <button class="button dark" type="button" data-add-main>AJOUTER AU PANIER <span class="button-arrow" aria-hidden="true">↗</span></button>
     </div>
-    ${p.pairedWith? `<div class="matching-piece"><div><span>1608 / L'ENSEMBLE</span><strong>LE LOOK COMPLET. −15 %.</strong><p>Ajoute le ${productById(p.pairedWith).name} au panier pour obtenir 15 % de rabais sur tes articles.</p><a href="${productUrl(p.pairedWith)}">VOIR LA PIÈCE ASSORTIE ↗</a></div><img src="${productById(p.pairedWith).photos[0]}" alt="${productById(p.pairedWith).name}" loading="lazy" width="180" height="180"></div>` : ''}
-    <p class="product-bundle-offer"><strong>LE DUO. −10 %.</strong><span>Combine deux modèles différents. Trois ou plus ? Le rabais passe à −15 % automatiquement.</span><a href="index.html#collection">COMPOSER UN ENSEMBLE ↗</a></p>
-    <p class="preview-note">Compose ton panier sans paiement immédiat. Les commandes et les frais de livraison seront confirmés avant toute vente.</p>
-    <div class="proof-grid"><div><span>01 / ORIGINE</span><b>IMAGINÉ AU QUÉBEC</b></div><div><span>02 / COUPE</span><b>${p.fit}</b></div><div><span>03 / DÉTAIL</span><b>${p.material}</b></div><div><span>04 / DISPONIBILITÉ</span><b>AVANT-VENTE NON OUVERTE</b></div></div>
+    ${renderProductOffer(p)}
+    <p class="preview-note">La collection est en aperçu : aucun paiement n'est accepté. Livraison et taxes applicables à confirmer avant l'ouverture.</p>
+    <div class="product-specs" aria-label="Informations sur la pièce">
+      <div><span>CONCEPTION</span><strong>IMAGINÉ AU QUÉBEC</strong></div>
+      <div><span>COUPE</span><strong>${p.fit}</strong></div>
+      <div><span>DÉTAIL</span><strong>${p.material}</strong></div>
+    </div>
     <div class="product-accordion">
       <details><summary>DÉTAILS DE LA PIÈCE</summary><ul>${p.features.map(x=>`<li>${x}</li>`).join('')}</ul></details>
       <details data-size-guide><summary>GUIDE DES TAILLES</summary><p>Tailles proposées : ${p.sizes.join(' / ')}. Les mesures exactes du fabricant seront affichées avant l’ouverture des commandes. Pour l’instant, les tailles ne constituent pas une recommandation personnalisée.</p></details>
@@ -216,12 +269,42 @@ const related=P.filter(x=>x.id!==p.id).sort((a,b)=>(a.category===p.category?-1:1
 const relatedGrid=$('[data-related-grid]');if(relatedGrid)relatedGrid.innerHTML=related.map(card).join('');
 $$('[data-gallery-thumb]').forEach(btn=>btn.addEventListener('click',()=>updateGallery(Number(btn.dataset.galleryThumb))));
 $('[data-gallery-main]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('zoomed'));
-$$('[data-size]').forEach(btn=>btn.addEventListener('click',()=>{chosenSize=btn.dataset.size;$$('[data-size]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));$('[data-size-error]').textContent='';const feedback=$('[data-size-feedback]');if(feedback)feedback.textContent='TAILLE '+chosenSize+' SÉLECTIONNÉE ✓';}));
+$$('[data-size]').forEach(btn=>btn.addEventListener('click',()=>{
+ chosenSize=btn.dataset.size;
+ $$('[data-size]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+ $('[data-size-error]').textContent='';
+ const feedback=$('[data-size-feedback]');if(feedback)feedback.textContent='TAILLE '+chosenSize+' SÉLECTIONNÉE ✓';
+ const pairSelect=$('[data-outfit-size]');
+ if(pairSelect&&!pairSelect.value&&[...pairSelect.options].some(option=>option.value===chosenSize))pairSelect.value=chosenSize;
+ const pairError=$('[data-outfit-error]');if(pairError)pairError.textContent='';
+}));
 $('[data-guide-open]')?.addEventListener('click',()=>{const details=$('[data-size-guide]');details.open=true;details.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});});
 $('[data-qty-minus]')?.addEventListener('click',()=>{quantity=Math.max(1,quantity-1);$('[data-quantity]').textContent=quantity});
 $('[data-qty-plus]')?.addEventListener('click',()=>{quantity=Math.min(10,quantity+1);$('[data-quantity]').textContent=quantity});
 function purchase(){if(!chosenSize){$('[data-size-error]').textContent='Choisis une taille avant d’ajouter au panier.';$('[data-size-list-placeholder]')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});$$('[data-size]')[0]?.focus();return}addToCart(p.id,chosenSize,quantity)}
 $('[data-add-main]')?.addEventListener('click',purchase);
+$('[data-outfit-size]')?.addEventListener('change',()=>{
+ const error=$('[data-outfit-error]');if(error)error.textContent='';
+});
+$('[data-add-outfit]')?.addEventListener('click',()=>{
+ const pair=productById(p.pairedWith);
+ if(!pair)return;
+ if(!chosenSize){
+  $('[data-size-error]').textContent='Choisis d’abord ta taille pour cette pièce.';
+  $('[data-size-list-placeholder]')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});
+  $$('[data-size]')[0]?.focus();
+  return;
+ }
+ const sizeControl=$('[data-outfit-size]');
+ const pairSize=sizeControl?.value;
+ if(!pairSize||!pair.sizes.includes(pairSize)){
+  $('[data-outfit-error]').textContent='Choisis la taille de la pièce assortie.';
+  sizeControl?.focus();return;
+ }
+ if(addItemsToCart([{id:p.id,size:chosenSize,qty:1},{id:pair.id,size:pairSize,qty:1}],'Ensemble ajouté. Remise appliquée au panier.')){
+  $('[data-outfit-error]').textContent='';
+ }
+});
 const sticky=$('[data-mobile-product]');if(sticky){sticky.hidden=false;sticky.innerHTML=`<span>${p.name}<strong>${currency(p.price)}</strong></span><button class="button dark" type="button" data-add-mobile>AJOUTER ↗</button>`;sticky.querySelector('[data-add-mobile]').addEventListener('click',purchase);}
 }
 function listeners(){
