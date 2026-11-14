@@ -1,4 +1,4 @@
-/* Mesures fabricant / SIGNATURE 1608. Ne charge que sur cette fiche. */
+/* Guides de tailles fournisseur 1608 / chaque fiche charge uniquement son guide. */
 .sizeguide-modal{padding:0;border:0;width:min(1010px,calc(100% - 28px));max-height:min(92dvh,950px);overflow:auto;background:#fbfbf8;color:#171d17;box-shadow:0 30px 100px #0007;overscroll-behavior:contain}
 .sizeguide-modal::backdrop{background:#0b120bdc;backdrop-filter:blur(4px)}
 .sizeguide-head{padding:32px clamp(18px,4vw,44px) 23px;border-bottom:1px solid #dbe1d7;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
