@@ -14,7 +14,7 @@
       rows:[['S',62,62,68,53],['M',64,64,70,54],['L',66,66,72,55],['XL',68,68,74,56],['2XL',70,70,76,57]]
     },
     'horizon-noir':{
-      name:'HORIZON 1608',ref:'RO0286',type:'standard',
+      name:'HORIZON 1608',ref:'R00286',type:'standard',
       columns:['LONGUEUR','ÉPAULES','POITRINE À PLAT','MANCHES'],
       rows:[['S',70,65,66,53.5],['M',72,67,68,54.5],['L',74,69,70,55.5],['XL',76,71,72,56.5],['2XL',78,73,74,57.5]]
     },

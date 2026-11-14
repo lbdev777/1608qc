@@ -22,7 +22,7 @@ window.STORE_PRODUCTS = Object.freeze([
     photos:['assets/6a1acf7402a04ced88bf9d9334aa40a2.webp','assets/602c6f2b7a8c48eb94d47467b7a53e45.webp'],
     description:"Un logo signé 1608 devant. Une autre perspective derrière. Le globe blanc rencontre une silhouette noire à l’allure intemporelle.",
     features:['Logo script sur la poitrine','Graphisme globe au dos','Coupe oversized','Noir et blanc'],
-    ref:'RO0286',sizes:['S','M','L','XL','2XL']
+    ref:'R00286',sizes:['S','M','L','XL','2XL']
   },
   {
     id:'signature-brode',name:'SIGNATURE 1608',variant:'BRODERIE / NOIR',category:'hoodies',
