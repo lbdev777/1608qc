@@ -5,7 +5,7 @@
 .hm-bar{background:var(--hm-ink);color:#fff;font-size:11px;font-weight:650;letter-spacing:.02em;display:flex;justify-content:center;gap:clamp(18px,3.4vw,56px);padding:0 16px;min-height:34px;align-items:center;text-align:center}
 .hm-bar span{white-space:nowrap}
 .hm-bar span:first-child{opacity:.72}
-@media(max-width:1000px){.hm-bar span:nth-child(n+3){display:none}}
+@media(max-width:1280px){.hm-bar span:nth-child(n+3){display:none}}
 @media(max-width:700px){
   .hm-bar{display:block;position:relative;height:34px;overflow:hidden;padding:0}
   .hm-bar span{display:block!important;position:absolute;inset:0;line-height:34px;font-size:10px;opacity:0;animation:hm-cycle 12s infinite}
