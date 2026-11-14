@@ -74,3 +74,9 @@ button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allow
 
 /* Image zoom is opt-in; never affects touch scrolling outside the image. */
 .gallery-main.zoomed{cursor:zoom-out}.gallery-main.zoomed img{transform:scale(1.65)}
+
+/* Bundle amounts are visible in the drawer on every page, including individual product pages. */
+.drawer-subtotal,.drawer-promo{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:9px;color:#5e685e}
+.drawer-promo{color:#28633d;font-weight:800}
+.drawer-bundle-hint{margin:0 0 14px!important;font-size:11px;color:#697469;line-height:1.5}
+.drawer-footer .drawer-total{margin:8px 0 12px;border-top:1px solid #d8dcd4;padding-top:15px}

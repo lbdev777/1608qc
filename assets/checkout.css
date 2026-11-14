@@ -41,3 +41,7 @@
 .manual-draft p{font-size:11px;color:#636960;line-height:1.6;margin:0 0 10px}
 .manual-draft textarea{resize:vertical;display:block;width:100%;font-size:11px;line-height:1.7;border:1px solid #d0d4cd;color:#353b34;background:#f6f7f4;padding:10px;margin:0 0 12px}
 @media(max-width:560px){.manual-fields{grid-template-columns:1fr}.manual-recipient{padding:19px}.manual-recipient>strong{font-size:17px}.manual-steps>div{gap:12px}}
+
+/* Exact reductions, not estimated amounts. */
+.summary-discount,.summary-discount b{color:#28633d!important;font-weight:800}
+.checkout-bundle-progress{font-size:11px;line-height:1.65;color:#657265;margin:7px 0 15px}
