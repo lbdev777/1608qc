@@ -99,9 +99,9 @@ el.innerHTML=results.length?results.map(p=>`<a class="search-result" href="${pro
 function initHome(){
 const gallery=$('[data-campaign-gallery]');
 if(gallery){
- const images=$('[data-campaign-image]',gallery);
+ const images=$$('[data-campaign-image]',gallery);
  // Never display a broken or mismatched image while media uploads are incomplete.
- Promise.all(images.map(img=>new Promise((resolve,reject)=>{
+ if(images.length) Promise.all(images.map(img=>new Promise((resolve,reject)=>{
    const probe=new Image();probe.onload=resolve;probe.onerror=reject;probe.src=img.getAttribute('src');
  }))).then(()=>{gallery.hidden=false}).catch(()=>{gallery.hidden=true});
 }
@@ -128,6 +128,13 @@ if(!p){$('#main').innerHTML='<div class="container" style="padding:100px 0 180px
 selectedProduct=p;chosenSize=null;quantity=1;
 document.title=`${p.name} — ${p.variant} | 1608`;
 const meta=$('meta[name="description"]');if(meta)meta.content=p.description;
+const setSocialMeta=(selector,value)=>{const el=$(selector);if(el)el.content=value;};
+setSocialMeta('meta[property="og:title"]',p.name+' — '+p.variant+' | 1608');
+setSocialMeta('meta[property="og:description"]',p.description);
+setSocialMeta('meta[property="og:image"]',new URL(p.photos[0],document.baseURI).href);
+setSocialMeta('meta[property="og:url"]',new URL('produit.html?id='+encodeURIComponent(p.id),document.baseURI).href);
+const canonical=$('link[rel="canonical"]');
+if(canonical)canonical.href=new URL('produit.html?id='+encodeURIComponent(p.id),document.baseURI).href;
 const index=String(P.indexOf(p)+1).padStart(3,'0');
 const target=$('[data-product-shell]');
 target.innerHTML=`
@@ -199,6 +206,6 @@ window.addEventListener('1608:cart-changed',()=>{
 });
 document.addEventListener('DOMContentLoaded',()=>{
 mountShell();syncCart();listeners();
-if(document.body.dataset.page==='product')initProduct();else initHome();
+if(document.body.dataset.page==='product')initProduct();else if(document.body.dataset.page==='home')initHome();
 });
 })();
