@@ -52,7 +52,7 @@ function render(){
  $('[data-bundle-discount-row]').hidden=!pricing.percent;
  $('[data-bundle-discount-label]').textContent='Rabais ensemble / −'+pricing.percent+' %';
  $('[data-bundle-discount-value]').textContent='−'+money(pricing.discount);
- $('[data-bundle-progress]').textContent=pricing.percent===15?'TRIO ACTIVÉ / −15 %':pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR −15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
+ $('[data-bundle-progress]').textContent=pricing.percent===15?(pricing.models===2?'DUO UNIFORME ACTIVÉ / −15 %':'TRIO ACTIVÉ / −15 %'):pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR −15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
  $('[data-pay-button]').disabled=!canRequest||cart.length===0;
  $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'PRÉPARER MA DEMANDE ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
  $('[data-pay-status]').textContent=canRequest

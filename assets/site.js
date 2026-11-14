@@ -10,6 +10,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const productUrl = id => 'produit-'+encodeURIComponent(id)+'.html';
 const productById = id => P.find(p=>p.id===id);
 const productStories={
+'orbite-noir':{title:'LE CENTRE DE GRAVITÉ.',copy:'Devant, les fleurs de lys encadrent 1608. Derrière, une orbite, un globe et notre signature QC/CA. Deux vues, une identité qui reste en tête.'},
 'terrain-camo':{title:"SORTIR DU CADRE.",copy:"Devant, la signature reste discrète. Derrière, un paysage prend toute la place. Le camouflage forêt rencontre une coupe boxy."},
 'horizon-noir':{title:"DEUX FACES. UNE SIGNATURE.",copy:"Un logo devant, un globe derrière. HORIZON prend une silhouette noire essentielle et lui donne sa perspective."},
 'signature-brode':{title:"RIEN À AJOUTER.",copy:"Le lettrage brodé fait tout le travail. Un détail blanc sur noir, une coupe boxy et un dos volontairement uni."},
@@ -48,7 +49,7 @@ return `<footer class="site-footer"><div class="container"><div class="footer-ma
 function card(p) {
 const n=String(P.indexOf(p)+1).padStart(3,'0');
 return `<article class="product-card" data-category="${p.category}"><a href="${productUrl(p.id)}" aria-label="Voir la fiche de ${p.name}, ${p.variant} — ${currency(p.price)}">
-<div class="product-visual"><span class="card-index">1608 / ${n}</span><img class="product-primary" src="${p.photos[0]}" alt="${p.name} — vue avant" loading="lazy" width="900" height="900"><img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" width="900" height="900"><span class="card-open">DÉCOUVRIR LA PIÈCE <span aria-hidden="true">↗</span></span></div>
+<div class="product-visual"><span class="card-index">1608 / ${n}</span>${p.isNew?'<span class="card-new">NOUVEAUTÉ</span>':''}<img class="product-primary" src="${p.photos[0]}" alt="${p.name} — vue avant" loading="lazy" width="900" height="900"><img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" width="900" height="900"><span class="card-open">DÉCOUVRIR LA PIÈCE <span aria-hidden="true">↗</span></span></div>
 <div class="card-copy"><div class="card-meta"><span>${p.fit}</span><span>${p.material}</span></div><div class="card-title"><h3>${p.name}</h3><b>${currency(p.price)}</b></div><p class="card-sub">${p.variant}</p></div></a></article>`;
 }
 function mountShell(){
@@ -76,7 +77,7 @@ $('[data-cart-subtotal]').textContent=currency(pricing.subtotal);
 $('[data-cart-promo]').hidden=!pricing.percent;
 $('[data-cart-promo-label]').textContent='ENSEMBLE 1608 / −'+pricing.percent+' %';
 $('[data-cart-discount]').textContent='−'+currency(pricing.discount);
-$('[data-cart-bundle-hint]').textContent=pricing.percent===15?'TRIO ACTIVÉ / 15 % SUR LES ARTICLES':pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR 15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
+$('[data-cart-bundle-hint]').textContent=pricing.percent===15?(pricing.models===2?'DUO UNIFORME ACTIVÉ / 15 % SUR LES ARTICLES':'TRIO ACTIVÉ / 15 % SUR LES ARTICLES'):pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR 15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
 if(!cart.length){el.innerHTML='<div class="drawer-empty"><strong>Votre panier est vide.</strong><p>Explorez les pièces de la collection 1608.</p><a href="index.html#collection" class="button outline" data-overlay-close>VOIR LA COLLECTION ↗</a></div>';return;}
 el.innerHTML=cart.map((line,i)=>{const p=productById(line.id);if(!p)return '';return `
 <div class="cart-line"><a href="${productUrl(p.id)}"><img src="${p.photos[0]}" alt="${p.name}"></a><div><a href="${productUrl(p.id)}"><h3>${p.name}</h3></a><p>${p.variant} · TAILLE ${line.size}</p><strong>${currency(p.price*line.qty)}</strong>
@@ -166,6 +167,7 @@ target.innerHTML=`
     </div>
   </div>
   <div class="product-info">
+    ${p.isNew?'<div class="product-new">NOUVELLE PIÈCE / COLLECTION 1608</div>':''}
     <span class="product-number">COLLECTION 1608 / ${index} SUR ${String(P.length).padStart(3,'0')}</span>
     <h1 class="display">${p.name}</h1>
     <div class="product-variant">${p.variant}</div>

@@ -32,3 +32,12 @@ Les quatre images ajoutées à GitHub le 13 novembre 2026 forment deux produits 
 - `uniforme-jogger` : pantalon coordonné, images avant/dos.
 Les descriptions proviennent des visuels; les compositions et mesures exactes doivent être confirmées avant lancement.
 Le ZIP + JOGGER bénéficie de 15 % sur les articles lorsqu'ils sont tous les deux dans le panier, sans cumul avec les autres promotions.
+
+
+## ORBITE 1608 — nouvelle pièce
+- `produit-orbite-noir.html` : page produit dédiée, noire, deux vues vérifiées dans `assets/`.
+- Avant : `assets/cb08506f9e9f4d24a062305fbe3a0427.webp`; dos : `assets/e07bf23c434a460b9634a7b5fd4fa1cb.webp`.
+- Prix affiché : 89 $ CAD, tarif de vente proposé à valider avec la marge finale.
+- Tailles affichées : S, M, L, XL (d'après les options visibles du fournisseur; disponibilité et mesures à confirmer).
+- Entre dans les offres duo / trio existantes, sans réduction additionnelle cumulable.
+- Aucune commande Interac n'est activée tant que les coordonnées de paiement ne sont pas confirmées.

@@ -1,6 +1,14 @@
 /* 1608 — catalogue vivant. Prix en cents CAD, visuels des produits fournis par la marque. */
 window.STORE_PRODUCTS = Object.freeze([
   {
+    id:'orbite-noir', name:'ORBITE 1608', variant:'NOIR / QC·CA', category:'hoodies',
+    price:8900, fit:'COUPE OVERSIZED', material:'MOLLETON NOIR',
+    photos:['assets/cb08506f9e9f4d24a062305fbe3a0427.webp','assets/e07bf23c434a460b9634a7b5fd4fa1cb.webp'],
+    description:"Un logo 1608 encadré de fleurs de lys sur la poitrine. Au dos, un grand graphisme orbital dessine notre signature QC/CA. Un hoodie noir oversized qui change de perspective selon l’angle.",
+    features:['Coupe oversized','1608 et fleurs de lys sur la poitrine','Grand graphisme orbital blanc au dos','Capuche à cordon contrastant'],
+    ref:'RW0058',sizes:['S','M','L','XL'],isNew:true
+  },
+  {
     id:'terrain-camo', name:'TERRAIN 1608', variant:'CAMOUFLAGE FORÊT', category:'hoodies',
     price:8900, fit:'COUPE BOXY', material:'TEXTURE GAUFRÉE',
     photos:['assets/terrain-front.webp','assets/terrain-back.webp'],

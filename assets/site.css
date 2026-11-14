@@ -80,3 +80,9 @@ button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allow
 .drawer-promo{color:#28633d;font-weight:800}
 .drawer-bundle-hint{margin:0 0 14px!important;font-size:11px;color:#697469;line-height:1.5}
 .drawer-footer .drawer-total{margin:8px 0 12px;border-top:1px solid #d8dcd4;padding-top:15px}
+
+/* 1608 / product drop labels — subtle, always truthful. */
+.card-new{position:absolute;z-index:4;top:12px;right:12px;background:#171917;color:#f8f8f5;font-size:9px;letter-spacing:.12em;font-weight:750;padding:9px 11px;pointer-events:none}
+.product-new{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:800;letter-spacing:.13em;color:#365843;margin-bottom:12px}
+.product-new:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#365843}
+@media(max-width:760px){.card-new{top:9px;right:8px;padding:7px 8px;font-size:8px;letter-spacing:.05em}}
