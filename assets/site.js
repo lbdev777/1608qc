@@ -278,7 +278,22 @@ $$('[data-size]').forEach(btn=>btn.addEventListener('click',()=>{
  if(pairSelect&&!pairSelect.value&&[...pairSelect.options].some(option=>option.value===chosenSize))pairSelect.value=chosenSize;
  const pairError=$('[data-outfit-error]');if(pairError)pairError.textContent='';
 }));
-$('[data-guide-open]')?.addEventListener('click',()=>{const details=$('[data-size-guide]');details.open=true;details.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});});
+$('[data-guide-open]')?.addEventListener('click',event=>{
+ event.preventDefault();
+ const modal=document.querySelector('[data-sizeguide-modal]');
+ if(modal){
+  if(!modal.open && typeof modal.showModal==='function')modal.showModal();
+  else if(!modal.open)modal.setAttribute('open','');
+  return;
+ }
+ const hasVerifiedGuide=['signature-brode','terrain-camo','horizon-noir','contraste-marine'].includes(p.id);
+ if(hasVerifiedGuide){
+  toast('Le guide des tailles se charge. Actualise la page si nécessaire.');
+  return;
+ }
+ const details=$('[data-size-guide]');
+ if(details){details.open=true;details.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});}
+});
 $('[data-qty-minus]')?.addEventListener('click',()=>{quantity=Math.max(1,quantity-1);$('[data-quantity]').textContent=quantity});
 $('[data-qty-plus]')?.addEventListener('click',()=>{quantity=Math.min(10,quantity+1);$('[data-quantity]').textContent=quantity});
 function purchase(){if(!chosenSize){$('[data-size-error]').textContent='Choisis une taille avant d’ajouter au panier.';$('[data-size-list-placeholder]')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});$$('[data-size]')[0]?.focus();return}addToCart(p.id,chosenSize,quantity)}
