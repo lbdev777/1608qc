@@ -33,51 +33,48 @@ const iconBag='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1 1
 const iconMenu='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>';
 function header(){
 return `<a class="skip-link" href="#main">Aller au contenu</a>
-<div class="site-announcement"><span>⚜</span> 1608 — UNE MARQUE DE VÊTEMENTS IMAGINÉE AU QUÉBEC <span>⚜</span></div>
 <header class="site-header"><div class="header-inner">
-<a class="wordmark" href="index.html" aria-label="1608, accueil"><span class="wordmark-number">1608</span><span class="wordmark-sub">MILLE<br>SIX CENT HUIT</span></a>
-<nav class="nav-main" aria-label="Navigation principale">
-<a href="index.html#collection">LA COLLECTION</a><a href="index.html#l-uniforme">L’UNIFORME</a><a href="index.html#notre-histoire">D’ICI</a></nav>
+<a class="wordmark" href="index.html" aria-label="1608, accueil"><span class="wordmark-number">1608</span><span class="wordmark-sub">MILLE-SIX-CENT-HUIT</span></a>
+<nav class="nav-main" aria-label="Navigation"><a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a></nav>
 <div class="header-actions">
-<button class="header-icon" type="button" data-search-open aria-label="Rechercher dans la collection">${iconSearch}</button>
-<button class="header-icon" type="button" data-cart-open aria-label="Ouvrir mon panier">${iconBag}<span class="bag-count" data-cart-count hidden>0</span></button>
+<button class="header-icon" type="button" data-search-open aria-label="Rechercher">${iconSearch}</button>
+<button class="header-icon" type="button" data-cart-open aria-label="Ouvrir le panier">${iconBag}<span class="bag-count" data-cart-count hidden>0</span></button>
 <button class="header-icon menu-button" type="button" data-menu-toggle aria-label="Ouvrir le menu" aria-expanded="false">${iconMenu}</button>
 </div></div>
-<nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigation mobile">
-<a href="index.html#collection">LA COLLECTION <span>↗</span></a><a href="index.html#l-uniforme">L’UNIFORME <span>↗</span></a><a href="index.html#notre-histoire">NOTRE HISTOIRE <span>↗</span></a><a href="index.html#questions">INFOS <span>↗</span></a>
+<nav class="mobile-nav" data-mobile-nav hidden aria-label="Menu mobile">
+<a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a>
+<a href="index.html#notre-histoire">La marque</a><a href="index.html#questions">Infos</a>
 </nav></header>`;
 }
 function footer(){
-return `<footer class="site-footer atelier-footer">
-<div class="atelier-footer-top">
-<div><span class="atelier-footer-overline">1608 / MILLE-SIX-CENT-HUIT</span><p>Imaginé ici.<br>Porté partout.</p></div>
-<nav class="atelier-footer-nav" aria-label="Liens de bas de page"><a href="index.html#collection">COLLECTION ↗</a><a href="index.html#l-uniforme">L'UNIFORME ↗</a><a href="index.html#notre-histoire">LA MARQUE ↗</a><a href="index.html#questions">INFOS ↗</a></nav>
+return `<footer class="site-footer ed-footer">
+<div class="ed-footer-main">
+<div><a class="ed-footer-logo" href="index.html" aria-label="1608, retour à l'accueil">1608.</a><p>Mille-Six-Cent-Huit<br>Une marque indépendante du Québec.</p></div>
+<nav aria-label="Pied de page"><a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a><a href="index.html#questions">Informations</a></nav>
 </div>
-<div class="atelier-footer-mark" aria-label="1608">1608<span aria-hidden="true">⚜</span></div>
-<div class="atelier-footer-bottom"><span>© ${new Date().getFullYear()} 1608 — MILLE-SIX-CENT-HUIT</span><span>QUÉBEC / CANADA</span><span>COLLECTION EN PRÉVISUALISATION — AUCUN PAIEMENT ACCEPTÉ</span></div>
-</footer>`;
+<div class="ed-footer-bottom"><span>© ${new Date().getFullYear()} 1608</span><span>QUÉBEC, CANADA</span><span>Boutique en aperçu — aucun paiement accepté</span></div></footer>`;
 }
 function card(p){
 const n=String(P.indexOf(p)+1).padStart(2,'0');
 return `<article class="product-card" data-category="${p.category}">
-<a href="${productUrl(p.id)}" aria-label="Voir la fiche de ${p.name} — ${p.variant}, ${currency(p.price)}">
+<a href="${productUrl(p.id)}" aria-label="Découvrir ${p.name}, ${p.variant}, ${currency(p.price)}">
 <div class="product-visual">
-<span class="card-index">NO. ${n} / 1608</span>
-${p.isNew?'<span class="card-new">NOUVEAU</span>':''}
-<img class="product-primary" src="${p.photos[0]}" alt="${p.name}, vue avant" loading="lazy" decoding="async" width="900" height="900">
+<span class="card-index">${n} / 09</span>
+<img class="product-primary" src="${p.photos[0]}" alt="${p.name} — devant" loading="lazy" decoding="async" width="900" height="900">
 <img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async" width="900" height="900">
-<span class="card-open">VOIR LA PIÈCE <span aria-hidden="true">↗</span></span>
-</div>
-<div class="card-copy"><div class="card-meta"><span>${p.fit}</span><span>${p.ref}</span></div><div class="card-title"><h3>${p.name}</h3><b>${currency(p.price)}</b></div><p class="card-sub">${p.variant}</p></div></a></article>`;
+<span class="card-open">Voir les détails <span aria-hidden="true">↗</span></span></div>
+<div class="card-copy"><div class="card-meta"><span>${p.variant}</span><span>${p.ref}</span></div>
+<div class="card-title"><h3>${p.name.replace(' 1608','')}</h3><b>${currency(p.price)}</b></div>
+<p class="card-sub">${p.fit}</p></div></a></article>`;
 }
 function mountShell(){
 const h=$('[data-site-header]'),f=$('[data-site-footer]');if(h)h.innerHTML=header();if(f)f.innerHTML=footer();
 document.body.insertAdjacentHTML('beforeend',`
 <div class="backdrop" data-backdrop></div>
 <aside class="drawer" data-cart-drawer role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cart-heading">
- <div class="drawer-head"><h2 id="cart-heading">VOTRE PANIER <span data-drawer-count></span></h2><button type="button" data-overlay-close aria-label="Fermer le panier">×</button></div>
+ <div class="drawer-head"><h2 id="cart-heading">Votre panier <span data-drawer-count></span></h2><button type="button" data-overlay-close aria-label="Fermer le panier">×</button></div>
  <div class="drawer-body" data-cart-lines></div>
- <div class="drawer-footer"><div class="drawer-subtotal"><span>ARTICLES</span><b data-cart-subtotal>0 $</b></div><div class="drawer-promo" data-cart-promo hidden><span data-cart-promo-label>RABAIS ENSEMBLE</span><b data-cart-discount>−0 $</b></div><div class="drawer-total"><span>TOTAL DES ARTICLES</span><strong data-cart-total>0 $</strong></div><p class="drawer-bundle-hint" data-cart-bundle-hint>2 modèles différents = −10 % · 3 modèles = −15 %.</p><button class="button dark" type="button" data-checkout-info>PASSER À LA CAISSE <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
+ <div class="drawer-footer"><div class="drawer-subtotal"><span>ARTICLES</span><b data-cart-subtotal>0 $</b></div><div class="drawer-promo" data-cart-promo hidden><span data-cart-promo-label>RABAIS ENSEMBLE</span><b data-cart-discount>−0 $</b></div><div class="drawer-total"><span>TOTAL DES ARTICLES</span><strong data-cart-total>0 $</strong></div><button class="button dark" type="button" data-checkout-info>Voir le récapitulatif <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
 </aside>
 <div class="search-panel" data-search-panel role="dialog" aria-modal="true" aria-hidden="true" aria-label="Recherche de produits"><div class="search-head"><input type="search" data-search-input placeholder="Rechercher une pièce…" aria-label="Rechercher une pièce" autocomplete="off"><button type="button" data-overlay-close aria-label="Fermer la recherche">×</button></div><div class="search-results" data-search-results></div></div>
 <div class="toast" data-toast role="status" aria-live="polite"></div>`);
@@ -95,8 +92,8 @@ $('[data-cart-subtotal]').textContent=currency(pricing.subtotal);
 $('[data-cart-promo]').hidden=!pricing.percent;
 $('[data-cart-promo-label]').textContent='ENSEMBLE 1608 / −'+pricing.percent+' %';
 $('[data-cart-discount]').textContent='−'+currency(pricing.discount);
-$('[data-cart-bundle-hint]').textContent=pricing.percent===15?(pricing.models===2?'DUO UNIFORME ACTIVÉ / 15 % SUR LES ARTICLES':'TRIO ACTIVÉ / 15 % SUR LES ARTICLES'):pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR 15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
-if(!cart.length){el.innerHTML='<div class="drawer-empty"><strong>Votre panier est vide.</strong><p>Explorez les pièces de la collection 1608.</p><a href="index.html#collection" class="button outline" data-overlay-close>VOIR LA COLLECTION ↗</a></div>';return;}
+
+if(!cart.length){el.innerHTML='<div class="drawer-empty"><strong>Votre panier est vide.</strong><p>Explorez les pièces de la collection 1608.</p><a href="index.html#collection" class="button outline" data-overlay-close>Voir la collection ↗</a></div>';return;}
 el.innerHTML=cart.map((line,i)=>{const p=productById(line.id);if(!p)return '';return `
 <div class="cart-line"><a href="${productUrl(p.id)}"><img src="${p.photos[0]}" alt="${p.name}"></a><div><a href="${productUrl(p.id)}"><h3>${p.name}</h3></a><p>${p.variant} · TAILLE ${line.size}</p><strong>${currency(p.price*line.qty)}</strong>
 <div class="cart-line-actions"><button type="button" data-cart-change="${i}:-1" aria-label="Diminuer la quantité">−</button><span>${line.qty}</span><button type="button" data-cart-change="${i}:1" aria-label="Augmenter la quantité">+</button><button type="button" class="cart-remove" data-cart-remove="${i}">Retirer</button></div></div></div>`;}).join('');
@@ -172,13 +169,7 @@ if(main)main.classList.remove('zoomed');
 /* Une seule promotion lisible par fiche; la remise vient du calcul du vrai panier. */
 function renderProductOffer(p){
  const matching=p.pairedWith&&productById(p.pairedWith);
- if(!matching){
-  return `<aside class="collection-benefit">
-    <div><span class="collection-benefit-kicker">1608 / ENSEMBLES</span>
-      <p><strong>PLUSIEURS PIÈCES. UN MEILLEUR PRIX.</strong><span>2 modèles = −10 % &nbsp; / &nbsp; 3 modèles = −15 %.</span></p></div>
-    <a href="index.html#collection" aria-label="Découvrir les autres modèles">EXPLORER <span aria-hidden="true">↗</span></a>
-   </aside>`;
- }
+ if(!matching)return '';
  const pricing=priceCart([{id:p.id,qty:1},{id:matching.id,qty:1}]);
  const pairName=matching.id==='uniforme-zip'?'ZIP':'JOGGER';
  return `<section class="outfit-offer" aria-label="Offre ensemble ${p.name} et ${matching.name}">
@@ -236,13 +227,13 @@ target.innerHTML=`
   </div>
   <div class="product-info">
     ${p.isNew?'<div class="product-new">NOUVELLE PIÈCE / COLLECTION 1608</div>':''}
-    <span class="product-number">1608 / PIÈCE ${index} — ${String(P.length).padStart(3,'0')} · RÉF. ${p.ref}</span>
+    <span class="product-number">1608 / COLLECTION 01 — RÉF. ${p.ref}</span>
     <h1 class="display">${p.name}</h1>
     <div class="product-variant">${p.variant} <span class="product-madehere">· IMAGINÉ AU QUÉBEC</span></div>
     <div class="product-price">${currency(p.price)} <span style="font-size:11px;color:#777;font-weight:500">CAD</span></div>
     <p class="product-desc">${p.description}</p>
     <div class="product-facts"><span>${p.fit}</span><span>${p.material}</span><span>IMAGINÉ AU QUÉBEC</span></div>
-    <div class="option-label"><span>01 / CHOISIR UNE TAILLE</span><button type="button" class="text-link" data-guide-open>Guide des tailles</button></div>
+    <div class="option-label"><span>01 / CHOISIR UNE TAILLE</span><button type="button" class="text-link" data-guide-open>Guide des tailles ↗</button></div>
     <div class="size-list" data-size-list-placeholder role="group" aria-label="Choisir une taille">${p.sizes.map(size=>`<button class="size-option" type="button" data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div>
     <p class="size-feedback" data-size-feedback>SÉLECTIONNE TA TAILLE POUR CONTINUER.</p>
     <p class="size-error" data-size-error role="status"></p>
