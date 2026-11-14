@@ -41,3 +41,17 @@ Le ZIP + JOGGER bénéficie de 15 % sur les articles lorsqu'ils sont tous les de
 - Tailles affichées : S, M, L, XL (d'après les options visibles du fournisseur; disponibilité et mesures à confirmer).
 - Entre dans les offres duo / trio existantes, sans réduction additionnelle cumulable.
 - Aucune commande Interac n'est activée tant que les coordonnées de paiement ne sont pas confirmées.
+
+
+## Références fournisseur (confirmées par le propriétaire, novembre 2026)
+- ORBITE 1608: `RW0058`
+- TERRAIN 1608: `UT0347`
+- HORIZON 1608: `R00286`
+- SIGNATURE 1608: `RU0118`
+- CONTRASTE 1608: `UT0280`
+- ARCHIVE 1608: `MB0036`
+- HÉRITAGE 1608: `RW0016`
+- UNIFORME ZIP 1608: `RU0076`
+- UNIFORME JOGGER 1608: `RU0078`
+
+Ces références identifient les modèles de vêtement. Ne pas transférer leurs guides de tailles entre modèles sans les mesures propres du fabricant.

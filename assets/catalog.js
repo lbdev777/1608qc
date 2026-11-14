@@ -46,7 +46,7 @@ window.STORE_PRODUCTS = Object.freeze([
     photos:['assets/a759c522e675400aaceb6aabeb5356d6.webp','assets/009795ccb75940d0967947b4e9f32de1.webp'],
     description:"Un short long en denim gris délavé. Signature verticale sur la jambe, détails usés et volume assumé. Une pièce qui se remarque sans en faire trop.",
     features:['Denim gris délavé','Lettrage vertical blanc','Coupe large','Poches avant et arrière'],
-    ref:null,sizes:['S','M','L','XL','2XL']
+    ref:'MB0036',sizes:['S','M','L','XL','2XL']
   },
   {
     id:'heritage-noir',name:'HÉRITAGE 1608',variant:'NOIR / GRAPHISME',category:'hoodies',
@@ -54,21 +54,21 @@ window.STORE_PRODUCTS = Object.freeze([
     photos:['assets/9fe74b8725ae46c4b48458ce342efb62.webp','assets/7d1c7f4ba5054b3aa26d3cb72500235c.webp'],
     description:"Une signature compacte sur la poitrine. Des manches et un dos travaillés en contraste. HÉRITAGE assemble les codes 1608 sur un hoodie à présence forte.",
     features:['Coton ouaté heavyweight','Graphismes sur les manches','Impression au dos','Coupe ample'],
-    ref:null,sizes:['S','M','L','XL','2XL']
+    ref:'RW0016',sizes:['S','M','L','XL','2XL']
   },
   {
     id:"uniforme-zip",name:"UNIFORME ZIP 1608",variant:"NOIR DÉLAVÉ / SIGNATURE",category:"hoodies",
     price:8900,fit:"COUPE AMPLE",material:"FERMETURE ÉCLAIR",
     photos:["assets/b628367f22434b5bb29ac5968e05b077.webp","assets/e18d77ba9c5c427eb264409ffacbb8ed.webp"],
     description:"Zip à capuche noir délavé. Signature manuscrite sur la poitrine, grand 1608 au dos et fermeture pleine longueur. À porter seul ou avec le jogger assorti.",
-    features:["Noir à effet délavé","Fermeture éclair pleine longueur","Signature blanche sur la poitrine","Marquage grand format au dos"],ref:null,sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-jogger"
+    features:["Noir à effet délavé","Fermeture éclair pleine longueur","Signature blanche sur la poitrine","Marquage grand format au dos"],ref:'RU0076',sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-jogger"
   },
   {
     id:"uniforme-jogger",name:"UNIFORME JOGGER 1608",variant:"NOIR / SIGNATURE",category:"pants",
     price:6900,fit:"COUPE DÉCONTRACTÉE",material:"TAILLE ÉLASTIQUE",
     photos:["assets/e5a25fb4c850489785a491f805092f4a.webp","assets/d76dd70aeebd4c25ba02bf651df1dbab.webp"],
     description:"Pantalon jogger noir assorti au zip UNIFORME. Signature blanche sur la cuisse, cordon à la taille et chevilles resserrées. Une silhouette coordonnée sans en faire trop.",
-    features:["Pantalon noir","Signature blanche sur la cuisse","Taille élastique avec cordon","Bas de jambe resserrés"],ref:null,sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-zip"
+    features:["Pantalon noir","Signature blanche sur la cuisse","Taille élastique avec cordon","Bas de jambe resserrés"],ref:'RU0078',sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-zip"
   }
 ]);
 window.STORE_CURRENCY = cents => new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:2}).format(cents/100);
