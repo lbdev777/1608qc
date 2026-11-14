@@ -22,9 +22,48 @@
       name:'CONTRASTE 1608',ref:'UT0280',type:'raglan',
       columns:['LONGUEUR','POITRINE À PLAT','MANCHES RAGLAN'],
       rows:[['S',65,63,82],['M',67,65,83.5],['L',69,67,85],['XL',71,69,86.5],['2XL',73,71,88]]
+    },
+    'orbite-noir':{
+      name:'ORBITE 1608',ref:'RW0058',type:'standard',
+      columns:['LONGUEUR','ÉPAULES','POITRINE À PLAT','MANCHES'],
+      rows:[['S',70,61,59,61.5],['M',72,63,61,63],['L',74,65,63,64.5],['XL',76,67,65,66]]
+    },
+    'heritage-noir':{
+      name:'HÉRITAGE 1608',ref:'RW0016',type:'standard',
+      columns:['LONGUEUR','ÉPAULES','POITRINE À PLAT','MANCHES'],
+      rows:[['S',63,57,62,57],['M',64.5,59,64,58],['L',66,61,66,59],['XL',67.5,63,68,60],['2XL',69,65,70,61]]
+    },
+    'uniforme-zip':{
+      name:'UNIFORME ZIP 1608',ref:'RU0076',type:'standard',
+      columns:['LONGUEUR','ÉPAULES','POITRINE À PLAT','MANCHES'],
+      rows:[['S',70,64,65,53],['M',72,66,67,54],['L',74,68,69,55],['XL',76,70,71,56],['2XL',78,72,73,57]]
+    },
+    'archive-denim':{
+      name:'ARCHIVE 1608',ref:'MB0036',type:'shorts',
+      columns:['LONGUEUR','TAILLE À PLAT','HANCHES À PLAT'],
+      rows:[['S',69,35,59],['M',70,37,61],['L',71,39,63],['XL',72,41,65],['2XL',73,43,67]]
+    },
+    'uniforme-jogger':{
+      name:'UNIFORME JOGGER 1608',ref:'RU0078',type:'pants',
+      columns:['LONGUEUR','TAILLE À PLAT','HANCHES À PLAT'],
+      rows:[['S',97,34,56],['M',99,36,58],['L',101,38,60],['XL',103,40,62],['2XL',105,42,64]]
     }
   });
+  function pantsDiagram(short){
+    const legEnd=short?196:268;
+    return '<svg viewBox="0 0 320 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schéma '+(short?'du short':'du pantalon')+' : 1 taille à plat, 2 hanches à plat, 3 longueur.">'+
+      '<g fill="#f4f5f0" stroke="#263027" stroke-width="2" stroke-linejoin="round">'+
+      '<path d="M96 30 H224 L232 56 L'+(short?244:236)+' '+legEnd+' H168 L160 96 L152 '+legEnd+' H'+(short?76:84)+' L88 56Z"/>'+
+      '<path d="M90 48 H230 M160 48 V96" fill="none"/>'+
+      '</g>'+
+      '<g fill="none" stroke="#879d86" stroke-width="3" stroke-linecap="round"><path d="M92 36 H228 M88 90 H232 M62 30 V'+legEnd+'"/></g>'+
+      '<g fill="#283e2b"><circle cx="160" cy="18" r="13"/><circle cx="198" cy="90" r="13"/><circle cx="44" cy="'+Math.round((30+legEnd)/2)+'" r="13"/></g>'+
+      '<g fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="700" text-anchor="middle">'+
+      '<text x="160" y="22">1</text><text x="198" y="94">2</text><text x="44" y="'+(Math.round((30+legEnd)/2)+4)+'">3</text></g></svg>';
+  }
   function diagramFor(type){
+    if(type==='pants')return pantsDiagram(false);
+    if(type==='shorts')return pantsDiagram(true);
     if(type==='raglan'){
       return '<svg viewBox="0 0 320 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schéma raglan : 1 longueur du vêtement, 2 poitrine à plat, 3 longueur de manche raglan.">'+
        '<g fill="#f5f6f2" stroke="#263027" stroke-width="2" stroke-linejoin="round">'+
@@ -63,6 +102,12 @@
       '<li><strong>Poitrine à plat</strong><p>D’un côté à l’autre, juste sous les aisselles. Ce n’est pas le tour de poitrine.</p></li>',
       '<li><strong>Manches raglan</strong><p>Suivre la ligne du schéma, depuis le haut de la manche près du col jusqu’au poignet.</p></li>'
     ];
+    const bottomSteps=[
+      '<li><strong>Taille à plat</strong><p>D’un bord à l’autre, en ligne droite, en haut de la ceinture. Ce n’est pas le tour de taille.</p></li>',
+      '<li><strong>Hanches à plat</strong><p>D’un bord à l’autre, en ligne droite, à l’endroit le plus large des hanches.</p></li>',
+      '<li><strong>Longueur</strong><p>De la ceinture jusqu’au bas de la jambe.</p></li>'
+    ];
+    const isBottom=g.type==='pants'||g.type==='shorts';
     return [
       '<dialog class="sizeguide-modal" data-sizeguide-modal aria-labelledby="sizeguide-title" aria-describedby="sizeguide-description">',
       '<div class="sizeguide-head"><div><span class="sizeguide-overline">1608 / '+g.name+' / '+g.ref+'</span><h2 id="sizeguide-title">GUIDE DES TAILLES<span>.</span></h2></div><button type="button" class="sizeguide-dismiss" data-sizeguide-close aria-label="Fermer le guide">×</button></div>',
@@ -70,7 +115,7 @@
       '<p id="sizeguide-description" class="sizeguide-intro">Mesures du vêtement à plat, fournies pour <strong>'+g.name+'</strong>. Une variation de <strong>1 à 3 cm</strong> est possible.</p>',
       '<div class="sizeguide-tabs" role="group" aria-label="Unités de mesure"><button type="button" data-sizeguide-unit="cm" aria-pressed="true">CENTIMÈTRES</button><button type="button" data-sizeguide-unit="in" aria-pressed="false">POUCES</button></div>',
       '<div class="sizeguide-scroll" role="region" aria-label="Tableau des mesures défilable" tabindex="0"><table class="sizeguide-table"><caption>Mesures du vêtement '+g.name+'</caption><thead><tr><th scope="col">TAILLE</th>'+columns+'</tr></thead><tbody>',entries,'</tbody></table></div>',
-      '<div class="sizeguide-bottom"><div class="sizeguide-how"><h3>COMMENT MESURER</h3><ol>',(g.type==='raglan'?raglanSteps:standardSteps).join(''),'</ol></div><figure class="sizeguide-figure">',diagramFor(g.type),'<figcaption>MESURES À PLAT / SCHÉMA INDICATIF</figcaption></figure></div>',
+      '<div class="sizeguide-bottom"><div class="sizeguide-how"><h3>COMMENT MESURER</h3><ol>',(isBottom?bottomSteps:g.type==='raglan'?raglanSteps:standardSteps).join(''),'</ol></div><figure class="sizeguide-figure">',diagramFor(g.type),'<figcaption>MESURES À PLAT / SCHÉMA INDICATIF</figcaption></figure></div>',
       '<div class="sizeguide-foot"><span>Variation possible de 1 à 3 cm selon la fabrication.</span><button type="button" data-sizeguide-close>FERMER LE GUIDE ↗</button></div>',
       '</div></dialog>'
     ].join('');
