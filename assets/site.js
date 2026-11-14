@@ -33,24 +33,42 @@ const iconBag='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1 1
 const iconMenu='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>';
 function header(){
 return `<a class="skip-link" href="#main">Aller au contenu</a>
-<div class="site-announcement">1608 / VÊTEMENTS CONÇUS AU QUÉBEC — APERÇU DE LA COLLECTION</div>
+<div class="site-announcement"><span>⚜</span> 1608 — UNE MARQUE DE VÊTEMENTS IMAGINÉE AU QUÉBEC <span>⚜</span></div>
 <header class="site-header"><div class="header-inner">
-<a class="wordmark" href="index.html" aria-label="1608 accueil">1608<span>MILLE-SIX-CENT-HUIT</span></a>
-<nav class="nav-main" aria-label="Navigation"><a href="index.html#collection">COLLECTION</a><a href="index.html#notre-histoire">LA MARQUE</a><a href="index.html#questions">FAQ</a></nav>
+<a class="wordmark" href="index.html" aria-label="1608, accueil"><span class="wordmark-number">1608</span><span class="wordmark-sub">MILLE<br>SIX CENT HUIT</span></a>
+<nav class="nav-main" aria-label="Navigation principale">
+<a href="index.html#collection">LA COLLECTION</a><a href="index.html#l-uniforme">L’UNIFORME</a><a href="index.html#notre-histoire">D’ICI</a></nav>
 <div class="header-actions">
-<button class="header-icon" type="button" data-search-open aria-label="Rechercher un produit">${iconSearch}</button>
-<button class="header-icon" type="button" data-cart-open aria-label="Ouvrir le panier">${iconBag}<span class="bag-count" data-cart-count hidden>0</span></button>
+<button class="header-icon" type="button" data-search-open aria-label="Rechercher dans la collection">${iconSearch}</button>
+<button class="header-icon" type="button" data-cart-open aria-label="Ouvrir mon panier">${iconBag}<span class="bag-count" data-cart-count hidden>0</span></button>
 <button class="header-icon menu-button" type="button" data-menu-toggle aria-label="Ouvrir le menu" aria-expanded="false">${iconMenu}</button>
-</div></div><nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigation mobile"><a href="index.html#collection">LA COLLECTION</a><a href="index.html#notre-histoire">NOTRE HISTOIRE</a><a href="index.html#questions">QUESTIONS FRÉQUENTES</a></nav></header>`;
+</div></div>
+<nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigation mobile">
+<a href="index.html#collection">LA COLLECTION <span>↗</span></a><a href="index.html#l-uniforme">L’UNIFORME <span>↗</span></a><a href="index.html#notre-histoire">NOTRE HISTOIRE <span>↗</span></a><a href="index.html#questions">INFOS <span>↗</span></a>
+</nav></header>`;
 }
 function footer(){
-return `<footer class="site-footer"><div class="container"><div class="footer-main"><div><div class="footer-logo">1608.</div><p>Une marque indépendante imaginée au Québec.</p></div><div class="footer-links"><div><a href="index.html#collection">Collection</a><a href="index.html#notre-histoire">À propos</a></div><div><a href="index.html#questions">FAQ</a><a href="index.html#questions">Informations</a></div></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} 1608 — MILLE-SIX-CENT-HUIT</span><span>CONÇU AU QUÉBEC · EXPÉRIENCE DE DÉMONSTRATION</span></div></div></footer>`;
+return `<footer class="site-footer atelier-footer">
+<div class="atelier-footer-top">
+<div><span class="atelier-footer-overline">1608 / MILLE-SIX-CENT-HUIT</span><p>Imaginé ici.<br>Porté partout.</p></div>
+<nav class="atelier-footer-nav" aria-label="Liens de bas de page"><a href="index.html#collection">COLLECTION ↗</a><a href="index.html#l-uniforme">L'UNIFORME ↗</a><a href="index.html#notre-histoire">LA MARQUE ↗</a><a href="index.html#questions">INFOS ↗</a></nav>
+</div>
+<div class="atelier-footer-mark" aria-label="1608">1608<span aria-hidden="true">⚜</span></div>
+<div class="atelier-footer-bottom"><span>© ${new Date().getFullYear()} 1608 — MILLE-SIX-CENT-HUIT</span><span>QUÉBEC / CANADA</span><span>COLLECTION EN PRÉVISUALISATION — AUCUN PAIEMENT ACCEPTÉ</span></div>
+</footer>`;
 }
-function card(p) {
-const n=String(P.indexOf(p)+1).padStart(3,'0');
-return `<article class="product-card" data-category="${p.category}"><a href="${productUrl(p.id)}" aria-label="Voir la fiche de ${p.name}, ${p.variant} — ${currency(p.price)}">
-<div class="product-visual"><span class="card-index">1608 / ${n}</span>${p.isNew?'<span class="card-new">NOUVEAUTÉ</span>':''}<img class="product-primary" src="${p.photos[0]}" alt="${p.name} — vue avant" loading="lazy" width="900" height="900"><img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" width="900" height="900"><span class="card-open">DÉCOUVRIR LA PIÈCE <span aria-hidden="true">↗</span></span></div>
-<div class="card-copy"><div class="card-meta"><span>${p.fit}</span><span>${p.material}</span></div><div class="card-title"><h3>${p.name}</h3><b>${currency(p.price)}</b></div><p class="card-sub">${p.variant}</p></div></a></article>`;
+function card(p){
+const n=String(P.indexOf(p)+1).padStart(2,'0');
+return `<article class="product-card" data-category="${p.category}">
+<a href="${productUrl(p.id)}" aria-label="Voir la fiche de ${p.name} — ${p.variant}, ${currency(p.price)}">
+<div class="product-visual">
+<span class="card-index">NO. ${n} / 1608</span>
+${p.isNew?'<span class="card-new">NOUVEAU</span>':''}
+<img class="product-primary" src="${p.photos[0]}" alt="${p.name}, vue avant" loading="lazy" decoding="async" width="900" height="900">
+<img class="product-alt" src="${p.photos[1]}" alt="" loading="lazy" decoding="async" width="900" height="900">
+<span class="card-open">VOIR LA PIÈCE <span aria-hidden="true">↗</span></span>
+</div>
+<div class="card-copy"><div class="card-meta"><span>${p.fit}</span><span>${p.ref}</span></div><div class="card-title"><h3>${p.name}</h3><b>${currency(p.price)}</b></div><p class="card-sub">${p.variant}</p></div></a></article>`;
 }
 function mountShell(){
 const h=$('[data-site-header]'),f=$('[data-site-footer]');if(h)h.innerHTML=header();if(f)f.innerHTML=footer();
@@ -218,9 +236,9 @@ target.innerHTML=`
   </div>
   <div class="product-info">
     ${p.isNew?'<div class="product-new">NOUVELLE PIÈCE / COLLECTION 1608</div>':''}
-    <span class="product-number">COLLECTION 1608 / ${index} SUR ${String(P.length).padStart(3,'0')}</span>
+    <span class="product-number">1608 / PIÈCE ${index} — ${String(P.length).padStart(3,'0')} · RÉF. ${p.ref}</span>
     <h1 class="display">${p.name}</h1>
-    <div class="product-variant">${p.variant}</div>
+    <div class="product-variant">${p.variant} <span class="product-madehere">· IMAGINÉ AU QUÉBEC</span></div>
     <div class="product-price">${currency(p.price)} <span style="font-size:11px;color:#777;font-weight:500">CAD</span></div>
     <p class="product-desc">${p.description}</p>
     <div class="product-facts"><span>${p.fit}</span><span>${p.material}</span><span>IMAGINÉ AU QUÉBEC</span></div>
@@ -250,7 +268,7 @@ const next=P[(P.indexOf(p)+1)%P.length];
 target.insertAdjacentHTML('beforeend',`
 <section class="product-editorial" aria-labelledby="editorial-title">
  <div class="product-editorial-copy">
-  <span class="eyebrow">1608 / L'INTENTION DERRIÈRE LA PIÈCE</span>
+  <span class="eyebrow">1608 / LE DÉTAIL QUI FAIT LA DIFFÉRENCE</span>
   <h2 class="display" id="editorial-title">${story.title}</h2>
   <p>${story.copy}</p>
   <div class="product-editorial-rule"><span>DEVANT / DOS</span><span>${p.name} — ${p.variant}</span></div>
