@@ -50,3 +50,16 @@ window.STORE_PRODUCTS = Object.freeze([
   }
 ]);
 window.STORE_CURRENCY = cents => new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:2}).format(cents/100);
+
+/* Ensembles 1608 — calcul partagé par panier et caisse. */
+window.STORE_BUNDLE_PRICING=Object.freeze({
+  calculate(lines){
+    const catalog=window.STORE_PRODUCTS||[];
+    const valid=(Array.isArray(lines)?lines:[]).filter(line=>catalog.some(p=>p.id===line.id)&&Number.isInteger(line.qty)&&line.qty>0&&line.qty<=10);
+    const subtotal=valid.reduce((total,line)=>total+catalog.find(p=>p.id===line.id).price*line.qty,0);
+    const models=new Set(valid.map(line=>line.id)).size;
+    const percent=models>=3?15:models>=2?10:0;
+    const discount=Math.round(subtotal*percent/100);
+    return {subtotal,discount,total:subtotal-discount,percent,models};
+  }
+});

@@ -3,6 +3,7 @@
 'use strict';
 const P = window.STORE_PRODUCTS || [];
 const currency = window.STORE_CURRENCY || (c=>`${(c/100).toFixed(2)} $`);
+const priceCart=lines=>window.STORE_BUNDLE_PRICING.calculate(lines);
 const $ = (s,scope=document) => scope.querySelector(s);
 const $$ = (s,scope=document) => [...scope.querySelectorAll(s)];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -55,7 +56,7 @@ document.body.insertAdjacentHTML('beforeend',`
 <aside class="drawer" data-cart-drawer role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cart-heading">
  <div class="drawer-head"><h2 id="cart-heading">VOTRE PANIER <span data-drawer-count></span></h2><button type="button" data-overlay-close aria-label="Fermer le panier">×</button></div>
  <div class="drawer-body" data-cart-lines></div>
- <div class="drawer-footer"><div class="drawer-total"><span>SOUS-TOTAL</span><strong data-cart-total>0 $</strong></div><button class="button dark" type="button" data-checkout-info>PASSER À LA CAISSE <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
+ <div class="drawer-footer"><div class="drawer-subtotal"><span>ARTICLES</span><b data-cart-subtotal>0 $</b></div><div class="drawer-promo" data-cart-promo hidden><span data-cart-promo-label>RABAIS ENSEMBLE</span><b data-cart-discount>−0 $</b></div><div class="drawer-total"><span>TOTAL DES ARTICLES</span><strong data-cart-total>0 $</strong></div><p class="drawer-bundle-hint" data-cart-bundle-hint>2 modèles différents = −10 % · 3 modèles = −15 %.</p><button class="button dark" type="button" data-checkout-info>PASSER À LA CAISSE <span class="button-arrow">↗</span></button><p>Collection en prévisualisation. Aucune commande ni aucun paiement n’est accepté actuellement. Frais et délais à confirmer au lancement.</p></div>
 </aside>
 <div class="search-panel" data-search-panel role="dialog" aria-modal="true" aria-hidden="true" aria-label="Recherche de produits"><div class="search-head"><input type="search" data-search-input placeholder="Rechercher une pièce…" aria-label="Rechercher une pièce" autocomplete="off"><button type="button" data-overlay-close aria-label="Fermer la recherche">×</button></div><div class="search-results" data-search-results></div></div>
 <div class="toast" data-toast role="status" aria-live="polite"></div>`);
@@ -64,11 +65,16 @@ $$('[data-cart-drawer], [data-search-panel]').forEach(panel=>{panel.inert=true;}
 function save(){try{localStorage.setItem('1608-cart-v2',JSON.stringify(cart));}catch(_){}}
 function cartCount(){return cart.reduce((n,x)=>n+x.qty,0)}
 function syncCart(){
-const total=cart.reduce((sum,line)=>{const p=productById(line.id);return sum+(p?p.price*line.qty:0)},0);
+const pricing=priceCart(cart);
 $$('[data-cart-count]').forEach(el=>{const n=cartCount();el.textContent=n;el.hidden=n===0});
 const n=$('[data-drawer-count]');if(n)n.textContent='('+cartCount()+')';
 const el=$('[data-cart-lines]');if(!el)return;
-$('[data-cart-total]').textContent=currency(total);
+$('[data-cart-total]').textContent=currency(pricing.total);
+$('[data-cart-subtotal]').textContent=currency(pricing.subtotal);
+$('[data-cart-promo]').hidden=!pricing.percent;
+$('[data-cart-promo-label]').textContent='ENSEMBLE 1608 / −'+pricing.percent+' %';
+$('[data-cart-discount]').textContent='−'+currency(pricing.discount);
+$('[data-cart-bundle-hint]').textContent=pricing.percent===15?'TRIO ACTIVÉ / 15 % SUR LES ARTICLES':pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR 15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
 if(!cart.length){el.innerHTML='<div class="drawer-empty"><strong>Votre panier est vide.</strong><p>Explorez les pièces de la collection 1608.</p><a href="index.html#collection" class="button outline" data-overlay-close>VOIR LA COLLECTION ↗</a></div>';return;}
 el.innerHTML=cart.map((line,i)=>{const p=productById(line.id);if(!p)return '';return `
 <div class="cart-line"><a href="${productUrl(p.id)}"><img src="${p.photos[0]}" alt="${p.name}"></a><div><a href="${productUrl(p.id)}"><h3>${p.name}</h3></a><p>${p.variant} · TAILLE ${line.size}</p><strong>${currency(p.price*line.qty)}</strong>
@@ -172,6 +178,7 @@ target.innerHTML=`
     <div class="purchase-row"><div class="quantity"><button type="button" data-qty-minus aria-label="Diminuer quantité">−</button><span data-quantity>1</span><button type="button" data-qty-plus aria-label="Augmenter quantité">+</button></div>
       <button class="button dark" type="button" data-add-main>AJOUTER AU PANIER <span class="button-arrow" aria-hidden="true">↗</span></button>
     </div>
+    <p class="product-bundle-offer"><strong>LE DUO. −10 %.</strong><span>Combine deux modèles différents. Trois ou plus ? Le rabais passe à −15 % automatiquement.</span><a href="index.html#collection">COMPOSER UN ENSEMBLE ↗</a></p>
     <p class="preview-note">Compose ton panier sans paiement immédiat. Les commandes et les frais de livraison seront confirmés avant toute vente.</p>
     <div class="proof-grid"><div><span>01 / ORIGINE</span><b>IMAGINÉ AU QUÉBEC</b></div><div><span>02 / COUPE</span><b>${p.fit}</b></div><div><span>03 / DÉTAIL</span><b>${p.material}</b></div><div><span>04 / DISPONIBILITÉ</span><b>AVANT-VENTE NON OUVERTE</b></div></div>
     <div class="product-accordion">

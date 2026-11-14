@@ -44,3 +44,35 @@ body[data-page="home"] .collection{padding-top:40px}
 }
 @media(max-width:400px){.intro-title{font-size:clamp(33px,10.4vw,42px)}.intro-copy{padding:24px 18px 30px}.intro-description{font-size:11px}.intro-cta{font-size:9px;padding:0 12px}}
 @media(prefers-reduced-motion:reduce){.intro-side-product img,.brand-gallery-grid img{transition:none}}
+
+/* Ensembles 1608 : vrai rabais calculé dans le panier, sans prix barrés fictifs. */
+.bundle-feature{display:grid;grid-template-columns:1.04fr .96fr;background:#131513;color:#f7f7f3;min-height:490px;overflow:hidden}
+.bundle-feature-copy{padding:clamp(40px,6vw,100px) clamp(28px,6vw,98px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.bundle-feature-copy .eyebrow{color:#aeb5a9}
+.bundle-feature-copy h2{font-size:clamp(62px,7.1vw,112px);line-height:.89;margin:22px 0 24px;letter-spacing:.005em}
+.bundle-feature-copy>p{color:#c9cec5;font-size:14px;line-height:1.8;max-width:480px;margin:0 0 25px}
+.bundle-discount-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;width:100%;max-width:445px}
+.bundle-discount-grid>div{border:1px solid #525850;padding:15px 18px;display:grid;gap:6px}
+.bundle-discount-grid span{font-size:10px;font-weight:750;letter-spacing:.13em;color:#c6cbc0}
+.bundle-discount-grid strong{font-size:clamp(35px,4vw,55px);line-height:1;font-weight:900;letter-spacing:-.04em}
+.bundle-discount-grid small{font-size:11px;color:#b8c1b4}
+.bundle-cta{margin-top:24px}
+.bundle-feature-copy .bundle-note{font-size:10px;color:#9da79b;margin-top:20px;margin-bottom:0}
+.bundle-feature-visual{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}
+.bundle-feature-tile{position:relative;background:#e5e8e3;min-width:0;overflow:hidden;display:flex;align-items:center}
+.bundle-feature-tile+div{background:#d9ddd7}
+.bundle-feature-tile img{height:100%;width:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform .65s cubic-bezier(.2,.75,.25,1)}
+.bundle-feature-tile:hover img{transform:scale(1.045)}
+.bundle-feature-tile span{position:absolute;bottom:24px;left:18px;font-size:9px;font-weight:750;letter-spacing:.12em;color:#555d54;background:#eef0ebc7;padding:6px 10px}
+.drawer-subtotal,.drawer-promo{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:12px;margin:0 0 9px;color:#5f655e}
+.drawer-promo{color:#316344;font-weight:750}
+.drawer-bundle-hint{margin:0 0 14px!important;font-size:11px;color:#667363}
+.product-bundle-offer{margin:20px 0 3px;border:1px solid #b9c3b5;background:#f1f4ee;padding:16px 18px;display:grid;gap:6px}
+.product-bundle-offer strong{font-size:13px;letter-spacing:.08em;color:#243729}
+.product-bundle-offer>span{font-size:12px;line-height:1.6;color:#58645a}
+.product-bundle-offer a{font-size:10px;font-weight:800;letter-spacing:.09em;text-decoration:underline;text-underline-offset:4px;margin-top:4px;color:#1f3022}
+.checkout-bundle-progress{font-size:11px;line-height:1.55;color:#637064;margin:8px 0 14px}
+.summary-discount,.summary-discount b{color:#25633f!important}
+@media(max-width:900px){.bundle-feature{grid-template-columns:1fr}.bundle-feature-visual{min-height:360px}.bundle-feature-tile img{max-height:500px}}
+@media(max-width:560px){.bundle-feature-copy{padding:57px 24px 46px}.bundle-feature-copy h2{font-size:70px}.bundle-feature-visual{min-height:270px}.bundle-feature-tile span{left:8px;bottom:9px;font-size:8px}.bundle-discount-grid>div{padding:12px}.bundle-discount-grid strong{font-size:37px}}
+@media(prefers-reduced-motion:reduce){.bundle-feature-tile img{transition:none}}

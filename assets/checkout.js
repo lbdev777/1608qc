@@ -5,6 +5,7 @@
 const P=window.STORE_PRODUCTS||[];
 const config=window.STORE_MANUAL_PAYMENT||{interacEmail:'',ordersEmail:'',enabled:false};
 const money=window.STORE_CURRENCY||(c=>new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD'}).format(c/100));
+const priceCart=lines=>window.STORE_BUNDLE_PRICING.calculate(lines);
 const $=selector=>document.querySelector(selector);
 const key='1608-cart-v2';
 const find=id=>P.find(p=>p.id===id);
@@ -20,9 +21,7 @@ function save(){
  try{localStorage.setItem(key,JSON.stringify(cart))}catch(_){}
  window.dispatchEvent(new Event('1608:cart-changed'));
 }
-function subtotal(){
- return cart.reduce((sum,item)=>sum+(find(item.id)?.price||0)*item.qty,0);
-}
+function subtotal(){return priceCart(cart).subtotal;}
 function render(){
  const items=$('[data-checkout-items]'),mini=$('[data-mini-lines]');
  if(!items||!mini)return;
@@ -34,7 +33,7 @@ function render(){
    const p=find(item.id);
    return `<article class="checkout-item">
      <a class="checkout-item-photo" href="produit-${encodeURIComponent(p.id)}.html"><img src="${p.photos[0]}" alt="${p.name} — ${p.variant}" width="120" height="120"></a>
-     <div><a href="produit.html?id=${encodeURIComponent(p.id)}"><h3>${p.name}</h3></a>
+     <div><a href="produit-${encodeURIComponent(p.id)}.html"><h3>${p.name}</h3></a>
        <p>${p.variant} · TAILLE ${item.size}</p>
        <div class="checkout-item-qty" role="group" aria-label="Quantité ${p.name}">
        <button type="button" data-cqty="${i}:-1" aria-label="Diminuer la quantité">−</button><strong>${item.qty}</strong>
@@ -47,8 +46,13 @@ function render(){
    return `<div class="summary-line"><img src="${p.photos[0]}" alt="" loading="lazy"><div><b>${p.name}</b><p>${item.size} · QTÉ ${item.qty}</p></div><strong>${money(p.price*item.qty)}</strong></div>`;
   }).join('');
  }
- $('[data-subtotal]').textContent=money(subtotal());
- $('[data-items-total]').textContent=money(subtotal());
+ const pricing=priceCart(cart);
+ $('[data-subtotal]').textContent=money(pricing.subtotal);
+ $('[data-items-total]').textContent=money(pricing.total);
+ $('[data-bundle-discount-row]').hidden=!pricing.percent;
+ $('[data-bundle-discount-label]').textContent='Rabais ensemble / −'+pricing.percent+' %';
+ $('[data-bundle-discount-value]').textContent='−'+money(pricing.discount);
+ $('[data-bundle-progress]').textContent=pricing.percent===15?'TRIO ACTIVÉ / −15 %':pricing.percent===10?'DUO ACTIVÉ / AJOUTE UN 3E MODÈLE POUR −15 %':'2 modèles différents = −10 % · 3 modèles ou plus = −15 %';
  $('[data-pay-button]').disabled=!canRequest||cart.length===0;
  $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'PRÉPARER MA DEMANDE ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
  $('[data-pay-status]').textContent=canRequest
@@ -100,7 +104,9 @@ function prepareRequest(){
   '',
   ...lines,
   '',
-  'SOUS-TOTAL DES ARTICLES : '+money(subtotal()),
+  'SOUS-TOTAL DES ARTICLES : '+money(priceCart(cart).subtotal),
+  'RABAIS ENSEMBLE ('+priceCart(cart).percent+' %) : −'+money(priceCart(cart).discount),
+  'TOTAL DES ARTICLES APRÈS RABAIS : '+money(priceCart(cart).total),
   'Livraison et taxes applicables : À CONFIRMER AVANT PAIEMENT',
   '',
   'Nom : '+contact.name,
