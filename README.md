@@ -24,3 +24,11 @@ Les changements futurs au code sur la branche `main` seront publiés automatique
 
 ## Hébergement
 GitHub Pages sert l'aperçu statique. Pour encaisser, utiliser un hébergeur et une architecture permettant le paiement côté serveur et un traitement fiable des commandes (par exemple Cloudflare Pages + Functions), après configuration des comptes nécessaires.
+
+
+## UNIFORME ZIP + JOGGER
+Les quatre images ajoutées à GitHub le 13 novembre 2026 forment deux produits assortis :
+- `uniforme-zip` : zip à capuche, images avant/dos;
+- `uniforme-jogger` : pantalon coordonné, images avant/dos.
+Les descriptions proviennent des visuels; les compositions et mesures exactes doivent être confirmées avant lancement.
+Le ZIP + JOGGER bénéficie de 15 % sur les articles lorsqu'ils sont tous les deux dans le panier, sans cumul avec les autres promotions.

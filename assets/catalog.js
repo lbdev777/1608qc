@@ -47,6 +47,20 @@ window.STORE_PRODUCTS = Object.freeze([
     description:"Une signature compacte sur la poitrine. Des manches et un dos travaillés en contraste. HÉRITAGE assemble les codes 1608 sur un hoodie à présence forte.",
     features:['Coton ouaté heavyweight','Graphismes sur les manches','Impression au dos','Coupe ample'],
     ref:null,sizes:['S','M','L','XL','2XL']
+  },
+  {
+    id:"uniforme-zip",name:"UNIFORME ZIP 1608",variant:"NOIR DÉLAVÉ / SIGNATURE",category:"hoodies",
+    price:8900,fit:"COUPE AMPLE",material:"FERMETURE ÉCLAIR",
+    photos:["assets/b628367f22434b5bb29ac5968e05b077.webp","assets/e18d77ba9c5c427eb264409ffacbb8ed.webp"],
+    description:"Zip à capuche noir délavé. Signature manuscrite sur la poitrine, grand 1608 au dos et fermeture pleine longueur. À porter seul ou avec le jogger assorti.",
+    features:["Noir à effet délavé","Fermeture éclair pleine longueur","Signature blanche sur la poitrine","Marquage grand format au dos"],ref:null,sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-jogger"
+  },
+  {
+    id:"uniforme-jogger",name:"UNIFORME JOGGER 1608",variant:"NOIR / SIGNATURE",category:"pants",
+    price:6900,fit:"COUPE DÉCONTRACTÉE",material:"TAILLE ÉLASTIQUE",
+    photos:["assets/e5a25fb4c850489785a491f805092f4a.webp","assets/d76dd70aeebd4c25ba02bf651df1dbab.webp"],
+    description:"Pantalon jogger noir assorti au zip UNIFORME. Signature blanche sur la cuisse, cordon à la taille et chevilles resserrées. Une silhouette coordonnée sans en faire trop.",
+    features:["Pantalon noir","Signature blanche sur la cuisse","Taille élastique avec cordon","Bas de jambe resserrés"],ref:null,sizes:["S","M","L","XL","2XL"],pairedWith:"uniforme-zip"
   }
 ]);
 window.STORE_CURRENCY = cents => new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD',maximumFractionDigits:2}).format(cents/100);
@@ -58,7 +72,8 @@ window.STORE_BUNDLE_PRICING=Object.freeze({
     const valid=(Array.isArray(lines)?lines:[]).filter(line=>catalog.some(p=>p.id===line.id)&&Number.isInteger(line.qty)&&line.qty>0&&line.qty<=10);
     const subtotal=valid.reduce((total,line)=>total+catalog.find(p=>p.id===line.id).price*line.qty,0);
     const models=new Set(valid.map(line=>line.id)).size;
-    const percent=models>=3?15:models>=2?10:0;
+    const matchingLook=valid.some(x=>x.id==='uniforme-zip')&&valid.some(x=>x.id==='uniforme-jogger');
+    const percent=models>=3||matchingLook?15:models>=2?10:0;
     const discount=Math.round(subtotal*percent/100);
     return {subtotal,discount,total:subtotal-discount,percent,models};
   }

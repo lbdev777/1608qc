@@ -17,6 +17,8 @@ const productStories={
 'archive-denim':{title:"LE DENIM, SANS DÉTOUR.",copy:"Un gris délavé, une coupe large et un marquage vertical. ARCHIVE joue sur les proportions, pas sur les artifices."},
 'heritage-noir':{title:"SIGNÉ DE PARTOUT.",copy:"Une signature compacte devant, des manches travaillées et un dos graphique. HÉRITAGE rassemble les codes 1608."}
 };
+productStories['uniforme-zip']={title:'LE ZIP. LA SIGNATURE.',copy:'Un effet délavé, une signature manuscrite et un grand 1608 au dos. Combine-le au jogger coordonné pour faire le look complet.'};
+productStories['uniforme-jogger']={title:'LA SILHOUETTE COMPLÈTE.',copy:'Une jambe ample, une signature discrète et les bons détails. Le jogger vient compléter le zip UNIFORME 1608.'};
 let cart=[];
 try {
   const saved=JSON.parse(localStorage.getItem('1608-cart-v2')||'[]');
@@ -178,6 +180,7 @@ target.innerHTML=`
     <div class="purchase-row"><div class="quantity"><button type="button" data-qty-minus aria-label="Diminuer quantité">−</button><span data-quantity>1</span><button type="button" data-qty-plus aria-label="Augmenter quantité">+</button></div>
       <button class="button dark" type="button" data-add-main>AJOUTER AU PANIER <span class="button-arrow" aria-hidden="true">↗</span></button>
     </div>
+    ${p.pairedWith? `<div class="matching-piece"><div><span>1608 / L'ENSEMBLE</span><strong>LE LOOK COMPLET. −15 %.</strong><p>Ajoute le ${productById(p.pairedWith).name} au panier pour obtenir 15 % de rabais sur tes articles.</p><a href="${productUrl(p.pairedWith)}">VOIR LA PIÈCE ASSORTIE ↗</a></div><img src="${productById(p.pairedWith).photos[0]}" alt="${productById(p.pairedWith).name}" loading="lazy" width="180" height="180"></div>` : ''}
     <p class="product-bundle-offer"><strong>LE DUO. −10 %.</strong><span>Combine deux modèles différents. Trois ou plus ? Le rabais passe à −15 % automatiquement.</span><a href="index.html#collection">COMPOSER UN ENSEMBLE ↗</a></p>
     <p class="preview-note">Compose ton panier sans paiement immédiat. Les commandes et les frais de livraison seront confirmés avant toute vente.</p>
     <div class="proof-grid"><div><span>01 / ORIGINE</span><b>IMAGINÉ AU QUÉBEC</b></div><div><span>02 / COUPE</span><b>${p.fit}</b></div><div><span>03 / DÉTAIL</span><b>${p.material}</b></div><div><span>04 / DISPONIBILITÉ</span><b>AVANT-VENTE NON OUVERTE</b></div></div>
