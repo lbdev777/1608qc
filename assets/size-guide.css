@@ -1,0 +1,39 @@
+/* Mesures fabricant / SIGNATURE 1608. Ne charge que sur cette fiche. */
+.sizeguide-modal{padding:0;border:0;width:min(1010px,calc(100% - 28px));max-height:min(92dvh,950px);overflow:auto;background:#fbfbf8;color:#171d17;box-shadow:0 30px 100px #0007;overscroll-behavior:contain}
+.sizeguide-modal::backdrop{background:#0b120bdc;backdrop-filter:blur(4px)}
+.sizeguide-head{padding:32px clamp(18px,4vw,44px) 23px;border-bottom:1px solid #dbe1d7;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.sizeguide-overline{display:block;font-size:10px;color:#758a76;font-weight:800;letter-spacing:.16em;margin-bottom:11px}
+.sizeguide-head h2{font:900 clamp(30px,4.2vw,52px)/.95 Impact,"Arial Narrow",Arial,sans-serif;margin:0}
+.sizeguide-head h2 span{color:#68856e}
+.sizeguide-dismiss{border:1px solid #cbd2c8;background:transparent;width:37px;height:37px;flex-shrink:0;font-size:25px;line-height:1;color:#556254}
+.sizeguide-dismiss:hover{background:#172217;color:#fff}
+.sizeguide-body{padding:0 clamp(18px,4vw,44px) 30px}
+.sizeguide-intro{font-size:13px;line-height:1.65;color:#576257;margin:23px 0 19px}
+.sizeguide-intro strong{color:#19231a}
+.sizeguide-tabs{display:flex;gap:25px;border-bottom:1px solid #d7ddd3;margin-bottom:12px}
+.sizeguide-tabs button{background:none;border:0;border-bottom:2px solid transparent;color:#7d877c;font-size:11px;font-weight:800;letter-spacing:.1em;padding:12px 1px;margin-bottom:-1px}
+.sizeguide-tabs button[aria-pressed="true"]{color:#19241b;border-bottom-color:#19241b}
+.sizeguide-tabs button:hover{color:#19241b}
+.sizeguide-scroll{overflow:auto;max-width:100%}
+.sizeguide-table{width:100%;border-collapse:collapse;text-align:center;table-layout:fixed;min-width:600px;font-size:12px}
+.sizeguide-table caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.sizeguide-table th,.sizeguide-table td{padding:14px 9px;border-bottom:1px solid #dce2d8}
+.sizeguide-table thead{background:#e9eee7;font-size:10px;letter-spacing:.035em;color:#556154}
+.sizeguide-table thead th,.sizeguide-table tbody th{font-weight:800}
+.sizeguide-table tbody tr:nth-child(even){background:#f5f7f2}
+.sizeguide-bottom{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;border-top:1px solid #dbe1d7;margin-top:25px;padding-top:26px}
+.sizeguide-how h3{font:900 25px Impact,"Arial Narrow",Arial,sans-serif;margin:0 0 22px}
+.sizeguide-how ol{list-style:none;padding:0;margin:0;counter-reset:measure;display:grid;gap:15px}
+.sizeguide-how li{counter-increment:measure;display:grid;grid-template-columns:25px minmax(0,1fr);column-gap:12px;align-items:start}
+.sizeguide-how li::before{content:counter(measure);grid-row:1 / span 2;display:grid;place-items:center;width:24px;height:24px;background:#29442e;color:#fff;border-radius:50%;font-size:11px;font-weight:800}
+.sizeguide-how li strong{font-size:12px;letter-spacing:.025em}
+.sizeguide-how li p{font-size:12px;color:#657064;line-height:1.55;margin:4px 0 0}
+.sizeguide-figure{background:#edf0eb;margin:0;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:12px}
+.sizeguide-figure svg{max-width:300px;width:100%;height:auto}
+.sizeguide-figure figcaption{font-size:9px;font-weight:800;letter-spacing:.1em;color:#687969;text-align:center;margin:2px 0 8px}
+.sizeguide-foot{margin-top:25px;padding-top:19px;border-top:1px solid #dbe2d8;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.sizeguide-foot>span{font-size:11px;color:#687368;line-height:1.5}
+.sizeguide-foot button{background:#172117;color:#fff;border:1px solid #172117;font-size:11px;font-weight:800;letter-spacing:.08em;padding:14px 20px}
+.sizeguide-foot button:hover{background:#37523a}
+body[data-product-id="signature-brode"] [data-guide-open]{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:650px){.sizeguide-modal{width:calc(100% - 16px);max-height:calc(100dvh - 20px)}.sizeguide-head{padding:24px 19px 17px}.sizeguide-head h2{font-size:34px}.sizeguide-body{padding:0 19px 22px}.sizeguide-bottom{grid-template-columns:1fr;gap:22px}.sizeguide-figure{max-width:360px;width:100%;margin:0 auto}.sizeguide-foot{align-items:stretch;flex-direction:column}.sizeguide-foot button{width:100%}}
