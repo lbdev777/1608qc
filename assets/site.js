@@ -357,7 +357,7 @@ function initProduct() {
   <div class="acc">
    <details open><summary>Détails de la pièce</summary><ul>${p.features.map(f => `<li>${f}</li>`).join('')}</ul></details>
    <details id="guide" data-guide-box><summary>Guide des tailles</summary><p>Tailles offertes : ${p.sizes.join(' / ')}. Coupe : ${p.fit.toLowerCase()}. ${sizeHelp}</p></details>
-   <details><summary>Livraison, paiement et retours</summary><p>Tu envoies ta demande, on te confirme le total exact (livraison et taxes incluses) puis tu paies par virement Interac. ${LEAD ? 'Chaque pièce est produite à la commande : compte ' + LEAD + ' après ton paiement. ' : ''}${freeOn ? 'Livraison gratuite dès ' + money(CFG.freeShippingOver).replace(',00', '') + ' d’articles après rabais. ' : ''}Les conditions de retour te sont confirmées avec ton total, avant tout paiement.</p></details>
+   <details><summary>Livraison, paiement et retours</summary><p>Tu envoies ta demande, on te confirme le total exact (livraison et taxes incluses) puis tu paies par virement Interac. ${LEAD ? 'Chaque pièce est produite à la commande : compte ' + LEAD + ' après ton paiement. ' : ''}${freeOn ? 'Livraison gratuite dès ' + money(CFG.freeShippingOver).replace(',00', '') + ' d’articles après rabais. ' : ''}Vente finale : aucun retour ni échange pour changement d’avis ou erreur de taille. Les garanties légales et les droits applicables aux articles défectueux ou non conformes demeurent en vigueur.</p></details>
   </div>
  </div>
 </div></div>
