@@ -33,7 +33,7 @@ function render(){
   items.innerHTML=cart.map((item,i)=>{
    const p=find(item.id);
    return `<article class="checkout-item">
-     <a class="checkout-item-photo" href="produit.html?id=${encodeURIComponent(p.id)}"><img src="${p.photos[0]}" alt="${p.name} — ${p.variant}" width="120" height="120"></a>
+     <a class="checkout-item-photo" href="produit-${encodeURIComponent(p.id)}.html"><img src="${p.photos[0]}" alt="${p.name} — ${p.variant}" width="120" height="120"></a>
      <div><a href="produit.html?id=${encodeURIComponent(p.id)}"><h3>${p.name}</h3></a>
        <p>${p.variant} · TAILLE ${item.size}</p>
        <div class="checkout-item-qty" role="group" aria-label="Quantité ${p.name}">
@@ -124,7 +124,7 @@ function copyText(text,button){
  else fallback();
  function fallback(){
   const el=$('[data-order-summary]');
-  if(el&&el.value===text){el.focus();el.select();document.execCommand('copy');done();}
+  if(el&&el.value===text){el.focus();el.select();try{if(document.execCommand('copy'))done();}catch(_){/* Text remains selected for manual copying. */}}
   else {prompt('Copiez cette adresse :',text)}
  }
 }

@@ -6,8 +6,16 @@ const currency = window.STORE_CURRENCY || (c=>`${(c/100).toFixed(2)} $`);
 const $ = (s,scope=document) => scope.querySelector(s);
 const $$ = (s,scope=document) => [...scope.querySelectorAll(s)];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const productUrl = id => 'produit.html?id='+encodeURIComponent(id);
+const productUrl = id => 'produit-'+encodeURIComponent(id)+'.html';
 const productById = id => P.find(p=>p.id===id);
+const productStories={
+'terrain-camo':{title:"SORTIR DU CADRE.",copy:"Devant, la signature reste discrète. Derrière, un paysage prend toute la place. Le camouflage forêt rencontre une coupe boxy."},
+'horizon-noir':{title:"DEUX FACES. UNE SIGNATURE.",copy:"Un logo devant, un globe derrière. HORIZON prend une silhouette noire essentielle et lui donne sa perspective."},
+'signature-brode':{title:"RIEN À AJOUTER.",copy:"Le lettrage brodé fait tout le travail. Un détail blanc sur noir, une coupe boxy et un dos volontairement uni."},
+'contraste-marine':{title:"LE CONTRASTE JUSTE.",copy:"Marine profond. Capuche ivoire. Deux fleurs de lys en façade, un emblème au dos. Les détails portent la pièce."},
+'archive-denim':{title:"LE DENIM, SANS DÉTOUR.",copy:"Un gris délavé, une coupe large et un marquage vertical. ARCHIVE joue sur les proportions, pas sur les artifices."},
+'heritage-noir':{title:"SIGNÉ DE PARTOUT.",copy:"Une signature compacte devant, des manches travaillées et un dos graphique. HÉRITAGE rassemble les codes 1608."}
+};
 let cart=[];
 try {
   const saved=JSON.parse(localStorage.getItem('1608-cart-v2')||'[]');
@@ -51,6 +59,7 @@ document.body.insertAdjacentHTML('beforeend',`
 </aside>
 <div class="search-panel" data-search-panel role="dialog" aria-modal="true" aria-hidden="true" aria-label="Recherche de produits"><div class="search-head"><input type="search" data-search-input placeholder="Rechercher une pièce…" aria-label="Rechercher une pièce" autocomplete="off"><button type="button" data-overlay-close aria-label="Fermer la recherche">×</button></div><div class="search-results" data-search-results></div></div>
 <div class="toast" data-toast role="status" aria-live="polite"></div>`);
+$$('[data-cart-drawer], [data-search-panel]').forEach(panel=>{panel.inert=true;});
 }
 function save(){try{localStorage.setItem('1608-cart-v2',JSON.stringify(cart));}catch(_){}}
 function cartCount(){return cart.reduce((n,x)=>n+x.qty,0)}
@@ -71,13 +80,14 @@ closeOverlay(false);
 lastFocus=document.activeElement;activeOverlay=which;
 $('[data-backdrop]').classList.add('is-open');
 const element=which==='cart'?$('[data-cart-drawer]'):$('[data-search-panel]');
+element.inert=false;
 element.classList.add('is-open');element.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
 if(which==='cart')syncCart();
 setTimeout(()=>{const target=which==='search'?$('[data-search-input]'):$('[data-cart-drawer] [data-overlay-close]');target?.focus()},120);
 }
 function closeOverlay(restore=true){
 if(activeOverlay){
-for(const sel of ['[data-cart-drawer]','[data-search-panel]']){$(sel)?.classList.remove('is-open');$(sel)?.setAttribute('aria-hidden','true')}
+for(const sel of ['[data-cart-drawer]','[data-search-panel]']){const panel=$(sel);if(panel){panel.classList.remove('is-open');panel.setAttribute('aria-hidden','true');panel.inert=true;}}
 $('[data-backdrop]')?.classList.remove('is-open');document.body.style.overflow='';activeOverlay=null;
 if(restore&&lastFocus?.isConnected)lastFocus.focus();
 }
@@ -122,7 +132,7 @@ $$('[data-gallery-thumb]').forEach(btn=>btn.setAttribute('aria-pressed',String(N
 if(main)main.classList.remove('zoomed');
 }
 function initProduct(){
-const id=new URLSearchParams(location.search).get('id');
+const id=document.body.dataset.productId || new URLSearchParams(location.search).get('id');
 const p=productById(id);
 if(!p){$('#main').innerHTML='<div class="container" style="padding:100px 0 180px"><span class="eyebrow">1608 / 404</span><h1 class="display" style="font-size:clamp(55px,8vw,110px)">PIÈCE INTROUVABLE.</h1><p>Cette fiche n’existe pas dans notre collection.</p><a class="button dark" href="index.html#collection">VOIR LA COLLECTION →</a></div>';document.title='Pièce introuvable — 1608';return;}
 selectedProduct=p;chosenSize=null;quantity=1;
@@ -132,13 +142,14 @@ const setSocialMeta=(selector,value)=>{const el=$(selector);if(el)el.content=val
 setSocialMeta('meta[property="og:title"]',p.name+' — '+p.variant+' | 1608');
 setSocialMeta('meta[property="og:description"]',p.description);
 setSocialMeta('meta[property="og:image"]',new URL(p.photos[0],document.baseURI).href);
-setSocialMeta('meta[property="og:url"]',new URL('produit.html?id='+encodeURIComponent(p.id),document.baseURI).href);
-const canonical=$('link[rel="canonical"]');
-if(canonical)canonical.href=new URL('produit.html?id='+encodeURIComponent(p.id),document.baseURI).href;
+setSocialMeta('meta[property="og:url"]',new URL(productUrl(p.id),document.baseURI).href);
+let canonical=$('link[rel="canonical"]');
+if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical);}
+canonical.href=new URL(productUrl(p.id),document.baseURI).href;
 const index=String(P.indexOf(p)+1).padStart(3,'0');
 const target=$('[data-product-shell]');
 target.innerHTML=`
-<div class="container"><nav class="breadcrumbs" aria-label="Fil d’Ariane"><a href="index.html">ACCUEIL</a><span>/</span><a href="index.html#collection">COLLECTION</a><span>/</span><span>${p.name}</span></nav>
+<div class="container" id="product-top"><nav class="breadcrumbs" aria-label="Fil d’Ariane"><a href="index.html">ACCUEIL</a><span>/</span><a href="index.html#collection">COLLECTION</a><span>/</span><span>${p.name}</span></nav>
 <div class="product-layout">
   <div class="product-gallery">
     <button class="gallery-main" data-gallery-main type="button" aria-label="Agrandir la vue avant"><span class="gallery-index" data-gallery-index>01 / 02</span><img data-gallery-image src="${p.photos[0]}" alt="${p.name} — vue avant" width="1200" height="1200"></button>
@@ -147,19 +158,21 @@ target.innerHTML=`
     </div>
   </div>
   <div class="product-info">
-    <span class="product-number">1608 / ${index} — ${p.category==='denim'?'DENIM':'COTON OUATÉ'}</span>
+    <span class="product-number">COLLECTION 1608 / ${index} SUR ${String(P.length).padStart(3,'0')}</span>
     <h1 class="display">${p.name}</h1>
     <div class="product-variant">${p.variant}</div>
     <div class="product-price">${currency(p.price)} <span style="font-size:11px;color:#777;font-weight:500">CAD</span></div>
     <p class="product-desc">${p.description}</p>
+    <div class="product-facts"><span>${p.fit}</span><span>${p.material}</span><span>IMAGINÉ AU QUÉBEC</span></div>
     <div class="option-label"><span>01 / CHOISIR UNE TAILLE</span><button type="button" class="text-link" data-guide-open>Guide des tailles</button></div>
-    <div class="size-list" role="group" aria-label="Choisir une taille">${p.sizes.map(size=>`<button class="size-option" type="button" data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div>
+    <div class="size-list" data-size-list-placeholder role="group" aria-label="Choisir une taille">${p.sizes.map(size=>`<button class="size-option" type="button" data-size="${size}" aria-pressed="false">${size}</button>`).join('')}</div>
+    <p class="size-feedback" data-size-feedback>SÉLECTIONNE TA TAILLE POUR CONTINUER.</p>
     <p class="size-error" data-size-error role="status"></p>
     <div class="option-label"><span>02 / QUANTITÉ</span></div>
     <div class="purchase-row"><div class="quantity"><button type="button" data-qty-minus aria-label="Diminuer quantité">−</button><span data-quantity>1</span><button type="button" data-qty-plus aria-label="Augmenter quantité">+</button></div>
       <button class="button dark" type="button" data-add-main>AJOUTER AU PANIER <span class="button-arrow" aria-hidden="true">↗</span></button>
     </div>
-    <p class="preview-note">Vous pouvez composer votre panier. Le paiement sera activé après finalisation des modalités de vente et de livraison.</p>
+    <p class="preview-note">Compose ton panier sans paiement immédiat. Les commandes et les frais de livraison seront confirmés avant toute vente.</p>
     <div class="proof-grid"><div><span>01 / ORIGINE</span><b>IMAGINÉ AU QUÉBEC</b></div><div><span>02 / COUPE</span><b>${p.fit}</b></div><div><span>03 / DÉTAIL</span><b>${p.material}</b></div><div><span>04 / DISPONIBILITÉ</span><b>AVANT-VENTE NON OUVERTE</b></div></div>
     <div class="product-accordion">
       <details><summary>DÉTAILS DE LA PIÈCE</summary><ul>${p.features.map(x=>`<li>${x}</li>`).join('')}</ul></details>
@@ -167,17 +180,36 @@ target.innerHTML=`
       <details><summary>LIVRAISON ET RETOURS</summary><p>Livraison envisagée au Canada. Les frais, délais de préparation et modalités de retour seront confirmés et publiés avant tout paiement.</p></details>
     </div>
   </div></div></div>`;
+const story=productStories[p.id] || {title:'UNE PIÈCE. UNE SIGNATURE.',copy:p.description};
+const next=P[(P.indexOf(p)+1)%P.length];
+target.insertAdjacentHTML('beforeend',`
+<section class="product-editorial" aria-labelledby="editorial-title">
+ <div class="product-editorial-copy">
+  <span class="eyebrow">1608 / L'INTENTION DERRIÈRE LA PIÈCE</span>
+  <h2 class="display" id="editorial-title">${story.title}</h2>
+  <p>${story.copy}</p>
+  <div class="product-editorial-rule"><span>DEVANT / DOS</span><span>${p.name} — ${p.variant}</span></div>
+  <a href="#product-top" class="editorial-link">REVOIR LA PIÈCE <span aria-hidden="true">↗</span></a>
+ </div>
+ <div class="product-editorial-media">
+  <img src="${p.photos[1]}" alt="${p.name} — vue arrière" loading="lazy" width="1000" height="1000">
+  <span>1608 / VUE ARRIÈRE</span>
+ </div>
+</section>
+<div class="container product-next">
+ <span>EXPLORER LA PIÈCE SUIVANTE</span>
+ <a href="${productUrl(next.id)}"><strong>${next.name}</strong><span aria-hidden="true">↗</span></a>
+</div>`);
 const related=P.filter(x=>x.id!==p.id).sort((a,b)=>(a.category===p.category?-1:1)-(b.category===p.category?-1:1)).slice(0,3);
 const relatedGrid=$('[data-related-grid]');if(relatedGrid)relatedGrid.innerHTML=related.map(card).join('');
 $$('[data-gallery-thumb]').forEach(btn=>btn.addEventListener('click',()=>updateGallery(Number(btn.dataset.galleryThumb))));
 $('[data-gallery-main]')?.addEventListener('click',e=>e.currentTarget.classList.toggle('zoomed'));
-$$('[data-size]').forEach(btn=>btn.addEventListener('click',()=>{chosenSize=btn.dataset.size;$$('[data-size]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));$('[data-size-error]').textContent='';}));
+$$('[data-size]').forEach(btn=>btn.addEventListener('click',()=>{chosenSize=btn.dataset.size;$$('[data-size]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));$('[data-size-error]').textContent='';const feedback=$('[data-size-feedback]');if(feedback)feedback.textContent='TAILLE '+chosenSize+' SÉLECTIONNÉE ✓';}));
 $('[data-guide-open]')?.addEventListener('click',()=>{const details=$('[data-size-guide]');details.open=true;details.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});});
 $('[data-qty-minus]')?.addEventListener('click',()=>{quantity=Math.max(1,quantity-1);$('[data-quantity]').textContent=quantity});
 $('[data-qty-plus]')?.addEventListener('click',()=>{quantity=Math.min(10,quantity+1);$('[data-quantity]').textContent=quantity});
-function purchase(){if(!chosenSize){$('[data-size-error]').textContent='Choisis une taille avant d’ajouter au panier.';$$('[data-size]')[0]?.focus();return}addToCart(p.id,chosenSize,quantity)}
+function purchase(){if(!chosenSize){$('[data-size-error]').textContent='Choisis une taille avant d’ajouter au panier.';$('[data-size-list-placeholder]')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});$$('[data-size]')[0]?.focus();return}addToCart(p.id,chosenSize,quantity)}
 $('[data-add-main]')?.addEventListener('click',purchase);
-$('[data-add-mobile]')?.addEventListener('click',()=>{if(!chosenSize){$('[data-size-list-placeholder]')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});$$('[data-size]')[0]?.focus();$('[data-size-error]').textContent='Choisis une taille avant d’ajouter au panier.';}else purchase()});
 const sticky=$('[data-mobile-product]');if(sticky){sticky.hidden=false;sticky.innerHTML=`<span>${p.name}<strong>${currency(p.price)}</strong></span><button class="button dark" type="button" data-add-mobile>AJOUTER ↗</button>`;sticky.querySelector('[data-add-mobile]').addEventListener('click',purchase);}
 }
 function listeners(){
