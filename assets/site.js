@@ -1,6 +1,14 @@
 /* 1608 / architecture sans Shopify — navigation native, états légers, aucune vente simulée. */
 (() => {
 'use strict';
+/* Public launch pause: direct product/checkout links must never lead into the
+   shopping flow. The catalogue remains in the repo for the reopening.
+   This is a UX redirect, not an access-control or authentication mechanism. */
+if (document.body && (document.body.dataset.page==='product'||document.body.dataset.page==='checkout')) {
+  const landing=new URL('index.html',document.baseURI);
+  if(window.location.href!==landing.href)window.location.replace(landing.href);
+  return;
+}
 const P = window.STORE_PRODUCTS || [];
 const currency = window.STORE_CURRENCY || (c=>`${(c/100).toFixed(2)} $`);
 const priceCart=lines=>window.STORE_BUNDLE_PRICING.calculate(lines);
