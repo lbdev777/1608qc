@@ -3,94 +3,116 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0e0f0e">
-<meta name="description" content="1608 — Mille-Six-Cent-Huit. Streetwear pensé au Québec. Collection de cotons ouatés, silhouettes amples et denim.">
-<meta property="og:title" content="1608 — Mille-Six-Cent-Huit">
-<meta property="og:description" content="Conçu ici. Porté partout. Découvrez les pièces de la collection 1608.">
+<meta name="theme-color" content="#0d0e0d">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>1608 — Mille-Six-Cent-Huit | Streetwear imaginé au Québec</title>
+<meta name="description" content="1608 — Mille-Six-Cent-Huit. Streetwear indépendant imaginé au Québec : cotons ouatés, zip, jogger et denim aux coupes amples. Rabais dès deux pièces.">
+<link rel="canonical" href="https://1608qc.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="1608">
 <meta property="og:locale" content="fr_CA">
-<meta property="og:url" content="https://lbdev777.github.io/1608qc/">
-<meta property="og:image" content="https://lbdev777.github.io/1608qc/assets/cb08506f9e9f4d24a062305fbe3a0427.webp">
-<meta property="og:image:alt" content="ORBITE 1608, noir avec signature blanche">
+<meta property="og:title" content="1608 — La pièce. La signature.">
+<meta property="og:description" content="Streetwear indépendant imaginé au Québec. Coupes amples, graphismes signature. Le duo −10 %, le trio −15 %.">
+<meta property="og:url" content="https://1608qc.com/">
+<meta property="og:image" content="https://1608qc.com/assets/cb08506f9e9f4d24a062305fbe3a0427.webp">
+<meta property="og:image:alt" content="ORBITE 1608, coton ouaté noir avec fleurs de lys">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://lbdev777.github.io/1608qc/">
-<title>1608 — Mille-Six-Cent-Huit | Collection</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-
-<link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/home.css">
+<link rel="preload" href="assets/fonts/inter-display-900.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/cb08506f9e9f4d24a062305fbe3a0427.webp" as="image">
+<link rel="stylesheet" href="assets/store.css">
 <script src="assets/catalog.js" defer></script>
+<script src="assets/payment-config.js" defer></script>
 <script src="assets/site.js" defer></script>
 </head>
 <body data-page="home">
 <div data-site-header></div>
 <main id="main">
-<section class="intro-split" aria-labelledby="hero-title">
-  <div class="intro-copy">
-    <span class="eyebrow">1608 / MILLE-SIX-CENT-HUIT</span>
-    <h1 class="intro-title" id="hero-title"><span>LA PIÈCE.</span><span>LA SIGNATURE.</span></h1>
-    <p class="intro-description">Streetwear indépendant imaginé au Québec. Des silhouettes amples et des graphismes qui parlent d'eux-mêmes.</p>
-    <a class="button dark intro-cta" href="#collection">VOIR LA COLLECTION <span class="button-arrow" aria-hidden="true">↗</span></a>
-  </div>
-   <a class="intro-side" href="produit-orbite-noir.html" aria-label="Découvrir ORBITE 1608, noir avec graphisme orbital">
-    <div class="intro-side-product"><img src="assets/cb08506f9e9f4d24a062305fbe3a0427.webp" alt="ORBITE 1608, coton ouaté noir avec fleurs de lys sur la poitrine" width="900" height="900" fetchpriority="high"></div>
-    <div class="intro-side-meta"><span>NOUVELLE PIÈCE / ORBITE 1608</span><span>89 $ CAD ↗</span></div>
-  </a>
-</section>
-<div class="intro-subline" aria-label="Identité de la marque">
-  <span>01 / COUPES AMPLES</span><i></i><span>02 / GRAPHISMES SIGNATURE</span><i></i><span>03 / IMAGINÉ AU QUÉBEC</span>
-</div>
-<section class="collection container" id="collection" aria-labelledby="collection-title">
-  <div class="section-head"><div><span class="eyebrow">1608 / LA COLLECTION</span><h2 id="collection-title" class="display">LES PIÈCES.</h2></div><span class="right" data-collection-count>09 PIÈCES</span></div>
-  <div class="filter-row" role="group" aria-label="Filtrer la collection">
-    <button type="button" data-filter="all" aria-pressed="true">TOUT VOIR</button>
-    <button type="button" data-filter="hoodies" aria-pressed="false">COTONS OUATÉS</button>
-    <button type="button" data-filter="denim" aria-pressed="false">DENIM</button>
-    <button type="button" data-filter="pants" aria-pressed="false">PANTALONS</button>
-  </div>
-  <div class="product-grid" data-product-grid></div>
-</section>
-<section class="bundle-feature" aria-labelledby="bundle-title">
-  <div class="bundle-feature-copy">
-    <span class="eyebrow">1608 / ENSEMBLES</span>
-    <h2 class="display" id="bundle-title">MIEUX<br>ENSEMBLE.</h2>
-    <p>Ta sélection, tes combinaisons. Le rabais s'applique automatiquement à différents modèles dans ton panier.</p>
-    <div class="bundle-discount-grid">
-      <div><span>LE DUO</span><strong>−10 %</strong><small>2 modèles différents</small></div>
-      <div><span>LE TRIO</span><strong>−15 %</strong><small>3 modèles différents ou plus</small></div>
+
+<!-- Héro : une pièce, une taille, un clic -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <span class="eyebrow">1608 / Mille-Six-Cent-Huit</span>
+    <h1 class="display" id="hero-title">La pièce.<br>La <em>signature.</em></h1>
+    <p class="hero-lede">Streetwear indépendant imaginé au Québec. Des coupes amples et des graphismes qui parlent d’eux-mêmes.</p>
+    <div class="hero-cta">
+      <a class="btn btn-light" href="#collection">Magasiner la collection <span class="arrow" aria-hidden="true">↗</span></a>
+      <a class="btn btn-ghost-light" href="#ensembles"><span>Duo <span data-cfg="duo">−10 %</span> · Trio <span data-cfg="trio">−15 %</span></span> <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
-    <a class="button light bundle-cta" href="#collection">COMPOSER UN ENSEMBLE <span class="button-arrow" aria-hidden="true">↗</span></a>
-    <p class="bundle-note">ZIP + JOGGER UNIFORME : −15 % dès les deux pièces. Rabais sur les articles seulement; taxes et livraison en sus. Commandes non ouvertes.</p>
+    <div class="hero-proof"><span>Imaginé au Québec</span><span>Paiement Interac, sans carte</span><span>Total confirmé avant de payer</span></div>
   </div>
-  <div class="bundle-feature-visual">
-    <div class="bundle-feature-tile"><img src="assets/b628367f22434b5bb29ac5968e05b077.webp" alt="UNIFORME ZIP 1608, noir délavé" loading="lazy" width="800" height="800"><span>01 / UNIFORME ZIP</span></div>
-    <div class="bundle-feature-tile"><img src="assets/e5a25fb4c850489785a491f805092f4a.webp" alt="UNIFORME JOGGER 1608, noir" loading="lazy" width="800" height="800"><span>02 / UNIFORME JOGGER</span></div>
+  <div class="hero-stage">
+    <span class="hero-badge">NOUVEAUTÉ</span>
+    <div class="hero-photo" data-hero-photo><img src="assets/cb08506f9e9f4d24a062305fbe3a0427.webp" alt="ORBITE 1608, coton ouaté noir avec fleurs de lys sur la poitrine" width="900" height="900" fetchpriority="high"></div>
+    <div class="hero-buy" data-hero-buy></div>
   </div>
 </section>
-<section class="story container" id="notre-histoire" aria-labelledby="story-title">
- <div>
-  <span class="eyebrow">1608 / D'ICI</span>
-  <h2 class="display" id="story-title">MILLE.<br>SIX.<br>CENT.<br>HUIT.</h2>
-  <p>1608 est une marque de vêtements indépendante imaginée au Québec. Des références locales, une identité graphique marquée et des pièces qu'on peut intégrer à sa garde-robe sans compromis.</p>
-  <a class="button dark" href="#collection">VOIR NOS VÊTEMENTS <span class="button-arrow" aria-hidden="true">↗</span></a>
- </div>
- <div class="story-aside"><strong>« La signature est dans les détails. »</strong><span>1608 — MILLE-SIX-CENT-HUIT</span></div>
+
+<div class="ticker" data-ticker></div>
+
+<section class="trust" aria-label="Nos engagements">
+  <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg><div><b>Imaginé au Québec</b><p>Une marque indépendante, des références d’ici.</p></div></div>
+  <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.5 3 8 7.5 9.5 4.5-1.5 7.5-5 7.5-9.5V6L12 3Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg><div><b>Aucune carte demandée</b><p>Tu paies par virement Interac depuis ta banque.</p></div></div>
+  <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></svg><div><b>Total exact avant de payer</b><p>Livraison et taxes confirmées par écrit d’abord.</p></div></div>
+  <div class="trust-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><div><b>Livraison au Canada</b><p><span data-cfg="lead-short">2 à 3 semaines</span> · <span data-free-ship>Gratuite dès un certain montant d’achat.</span></p></div></div>
 </section>
-<section class="faq" id="questions" aria-labelledby="faq-title">
- <div class="container faq-layout">
-   <div><span class="eyebrow">1608 / INFORMATIONS</span><h2 id="faq-title" class="display">QUESTIONS.</h2><p style="color:#686e66;max-width:350px;font-size:13px">Les informations essentielles, sans surprises.</p></div>
-   <div>
-     <details><summary>Comment fonctionne le rabais ensemble ?</summary><p>Deux modèles différents donnent 10 % de rabais sur le prix des articles. Trois modèles différents ou plus donnent 15 %. Le duo UNIFORME ZIP + JOGGER bénéficie aussi de 15 %, même avec seulement ces deux pièces. Le rabais est calculé automatiquement au panier et à la caisse. Taxes et livraison en sus; les commandes ne sont pas encore ouvertes.</p></details>
-     <details><summary>Peut-on commander maintenant ?</summary><p>La boutique est actuellement une prévisualisation interactive. Les fiches et le panier fonctionnent, mais aucun paiement n'est encore accepté. Les modalités seront publiées avant l'ouverture des commandes.</p></details>
-     <details><summary>Où les vêtements sont-ils conçus ?</summary><p>Les concepts et graphismes de 1608 sont imaginés au Québec. Cela ne signifie pas que tous les textiles sont fabriqués au Québec; les détails de production seront précisés par produit lorsque confirmés.</p></details>
-     <details><summary>Comment choisir ma taille ?</summary><p>Chaque fiche propose une sélection de tailles. Les mesures exactes du fabricant seront ajoutées avant la mise en vente. Les coupes varient d'une pièce à l'autre.</p></details>
-     <details><summary>Livrez-vous partout au Canada ?</summary><p>La livraison au Canada est prévue. Les tarifs, les délais de production et les conditions de retour seront confirmés avant l'activation des commandes.</p></details>
-   </div>
- </div>
+
+<section class="section" id="collection" aria-labelledby="collection-title">
+  <div class="container">
+    <div class="section-head"><div><span class="eyebrow">1608 / La collection</span><h2 class="display" id="collection-title">Les pièces.</h2></div><span class="label muted" data-count aria-live="polite"></span></div>
+    <div class="section-tools">
+      <div class="filters" role="group" aria-label="Filtrer la collection">
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">Tout voir</button>
+        <button class="chip" type="button" data-filter="hoodies" aria-pressed="false">Cotons ouatés</button>
+        <button class="chip" type="button" data-filter="pants" aria-pressed="false">Pantalons</button>
+        <button class="chip" type="button" data-filter="denim" aria-pressed="false">Denim</button>
+      </div>
+      <label class="sort">Trier <select data-sort aria-label="Trier les pièces"><option value="default">Sélection</option><option value="asc">Prix croissant</option><option value="desc">Prix décroissant</option></select></label>
+    </div>
+    <div class="grid" data-grid></div>
+  </div>
 </section>
+
+<section class="section bundles on-dark" id="ensembles" aria-labelledby="bundles-title">
+  <div class="container">
+    <div class="bundles-top">
+      <div><span class="eyebrow">1608 / Ensembles</span><h2 class="display" id="bundles-title">Plus tu portes,<br>moins tu paies.</h2></div>
+      <div><p class="bundles-lede">Le rabais s’applique automatiquement dans ton panier, sur le prix des articles, dès que tu combines des modèles différents.</p><div class="tiers" data-tiers></div></div>
+    </div>
+    <div class="look" data-look></div>
+    <p class="fineprint">Rabais calculé sur les articles seulement. Taxes et, sous le seuil de livraison gratuite, frais de livraison en sus. Les rabais ne se cumulent pas : c’est le plus avantageux qui s’applique.</p>
+  </div>
+</section>
+
+<section class="section" id="marque" aria-labelledby="story-title">
+  <div class="container story">
+    <figure class="story-photo"><img src="assets/studio-1608.webp" alt="Deux personnes portant des cotons ouatés 1608" width="936" height="480" loading="lazy"><figcaption>1608 / PORTÉ ICI</figcaption></figure>
+    <div>
+      <span class="eyebrow">1608 / D’ici</span>
+      <h2 class="display" id="story-title">Mille.<br>Six.<br>Cent.<br>Huit.</h2>
+      <p>1608 est une marque de vêtements indépendante imaginée au Québec. Des références locales, une identité graphique marquée et des pièces qu’on intègre à sa garde-robe sans compromis.</p>
+      <div class="values"><div><span>01</span>Coupes amples</div><div><span>02</span>Graphismes signature</div><div><span>03</span>Imaginé au Québec</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section faq" id="questions" aria-labelledby="faq-title">
+  <div class="container faq-layout">
+    <div><span class="eyebrow">1608 / Infos</span><h2 class="display" id="faq-title">Questions.</h2></div>
+    <div class="faq-list">
+      <details open><summary>Comment commander ?</summary><p>Tu composes ton panier, tu remplis tes coordonnées et ton application de courriel s’ouvre avec ta demande déjà rédigée. On te répond avec ton total exact (articles, livraison et taxes). Tu paies ensuite par virement Interac depuis ta banque, en indiquant ta référence.</p></details>
+      <details><summary>Comment fonctionnent les rabais ensemble ?</summary><p>Deux modèles différents : <span data-cfg="duo">−10 %</span>. Trois modèles différents ou plus : <span data-cfg="trio">−15 %</span>. Le look UNIFORME (zip + jogger) donne <span data-cfg="look">−15 %</span> dès les deux pièces. Le rabais est calculé automatiquement au panier, sur le prix des articles.</p></details>
+      <details><summary>Combien de temps pour recevoir ma commande ?</summary><p>Chaque pièce est produite à la commande, pas sortie d’un entrepôt. Compte <span data-cfg="lead">2 à 3 semaines</span> après ton paiement pour la production et la livraison au Canada. Pas de surprise : on te confirme le délai avec ton total.</p></details>
+      <details><summary>Combien coûte la livraison ?</summary><p><span data-cfg="free-long">La livraison au Canada est confirmée avec ton total avant tout paiement.</span> Tu connais toujours le montant exact avant de payer.</p></details>
+      <details><summary>Comment choisir ma taille ?</summary><p>Chaque fiche indique la coupe de la pièce (oversized, boxy, ample…). Si tu hésites, indique ta taille habituelle dans ta demande : on te conseille avant que tu paies.</p></details>
+      <details><summary>Et pour les retours ?</summary><p>Les conditions de retour te sont confirmées par écrit avec ton total, avant tout paiement.</p></details>
+      <details><summary>Où sont conçus les vêtements ?</summary><p>Les concepts et graphismes de 1608 sont imaginés au Québec. Les détails de production sont précisés par produit lorsqu’ils sont confirmés.</p></details>
+    </div>
+  </div>
+</section>
+
 </main>
 <div data-site-footer></div>
-<noscript><div class="container" style="padding:25px 0">Activez JavaScript pour consulter les produits, les tailles et le panier.</div></noscript>
+<noscript><div class="container section"><p>Active JavaScript pour consulter la collection, choisir ta taille et composer ton panier.</p></div></noscript>
 </body>
 </html>

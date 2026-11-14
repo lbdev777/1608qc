@@ -2,73 +2,82 @@
 <html lang="fr-CA">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0e0f0e">
-<meta name="description" content="Préparez votre commande 1608. Paiement par virement Interac après confirmation du total par courriel.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d0e0d">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="robots" content="noindex">
-<title>Passage en caisse — 1608</title>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/checkout.css">
+<title>Caisse — 1608</title>
+<meta name="description" content="Prépare ta commande 1608. Paiement par virement Interac après confirmation du total par courriel.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preload" href="assets/fonts/inter-display-900.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="assets/store.css">
 <script src="assets/catalog.js" defer></script>
-<script src="assets/site.js" defer></script>
 <script src="assets/payment-config.js" defer></script>
+<script src="assets/site.js" defer></script>
 <script src="assets/checkout.js" defer></script>
 </head>
 <body data-page="checkout">
 <div data-site-header></div>
-<main id="main" class="checkout-main">
- <div class="container">
-  <nav class="breadcrumbs" aria-label="Fil d'Ariane"><a href="index.html">ACCUEIL</a><span>/</span><a href="index.html#collection">COLLECTION</a><span>/</span><span>CAISSE</span></nav>
-  <div class="checkout-intro"><div><span class="eyebrow">1608 / PASSAGE EN CAISSE</span><h1 class="display">INTERAC. SIMPLEMENT.</h1><p>Vous préparez la commande. Nous confirmons le total avec livraison. Vous payez ensuite directement depuis votre banque.</p></div><div class="checkout-progress" aria-label="Étapes"><span class="is-current">01 / PANIER</span><span>02 / TOTAL CONFIRMÉ</span><span>03 / INTERAC</span></div></div>
-  <div class="checkout-alert" role="status" data-checkout-alert><span aria-hidden="true">ⓘ</span><div><b>COMMANDE MANUELLE — ADRESSE INTERAC À CONFIGURER</b><p>Le parcours est préparé, mais l'adresse du destinataire n'est pas encore renseignée. Aucun paiement n'est accepté pour l'instant.</p></div></div>
-  <div class="checkout-layout">
-   <div class="checkout-left">
-    <section class="checkout-section" aria-labelledby="review-title"><div class="checkout-section-head"><span>01</span><h2 id="review-title">VOTRE SÉLECTION</h2><a href="index.html#collection">Continuer à magasiner ↗</a></div><div id="checkout-items" data-checkout-items aria-live="polite"></div></section>
-    <section class="checkout-section" aria-labelledby="delivery-title"><div class="checkout-section-head"><span>02</span><h2 id="delivery-title">POUR VOUS REJOINDRE</h2></div>
-      <p class="manual-helper">Ces informations servent à préparer la demande et à estimer la livraison. Elles ne sont pas envoyées automatiquement : votre application de courriel s'ouvrira avec un brouillon à vérifier et à envoyer.</p>
-      <div class="manual-fields">
-        <label>Nom complet <input id="manual-name" autocomplete="name" maxlength="100" placeholder="Prénom et nom" required></label>
-        <label>Courriel <input id="manual-email" type="email" autocomplete="email" maxlength="150" placeholder="vous@exemple.ca" required></label>
-        <label>Ville <input id="manual-city" autocomplete="address-level2" maxlength="90" placeholder="Votre ville" required></label>
-        <label>Code postal <input id="manual-postal" autocomplete="postal-code" maxlength="12" placeholder="A1A 1A1" required></label>
-      </div>
-      <p class="manual-helper">L'adresse de livraison complète sera demandée après validation de la demande. <strong>Ne fournissez jamais de mot de passe ou de code bancaire.</strong></p>
-    </section>
-    <section class="checkout-section" aria-labelledby="payment-title"><div class="checkout-section-head"><span>03</span><h2 id="payment-title">VIREMENT INTERAC</h2></div>
-      <div class="manual-steps">
-        <div><span>01</span><p><strong>Envoyez votre demande de commande.</strong><small>Un brouillon avec les articles, tailles et coordonnées s'ouvre dans votre logiciel de courriel. Vous devez l'envoyer vous-même.</small></p></div>
-        <div><span>02</span><p><strong>Recevez votre total exact.</strong><small>Nous confirmons la disponibilité, les frais de livraison, les taxes applicables et le total avant tout paiement.</small></p></div>
-        <div><span>03</span><p><strong>Payez depuis votre banque.</strong><small>Une fois le total confirmé, faites un virement Interac à l'adresse indiquée en mentionnant votre référence de demande.</small></p></div>
-      </div>
-      <div class="manual-recipient">
-        <span class="eyebrow">DESTINATAIRE DU VIREMENT INTERAC</span>
-        <strong data-interac-address>Adresse en préparation</strong>
-        <button type="button" class="manual-copy" data-copy-interac disabled>Copier l'adresse</button>
-        <p>Vérifiez l'adresse dans notre confirmation avant de payer. Un virement ne constitue pas une commande confirmée tant que nous ne l'avons pas reçu et associé à votre demande.</p>
-      </div>
-      <div class="checkout-assurance">
-        <div><span aria-hidden="true">⌁</span><b>CONNEXION HTTPS</b><p>Les pages sont servies en HTTPS. Aucun mot de passe bancaire n'est saisi ici.</p></div>
-        <div><span aria-hidden="true">◎</span><b>CONFIRMATION MANUELLE</b><p>Vous recevez une confirmation écrite après vérification de la commande et du virement reçu.</p></div>
-      </div>
-      <p class="payment-trust-note">Pas de paiement par carte ni de processeur de paiement supplémentaire sur ce site. Les conditions de retour et de livraison seront confirmées avant paiement.</p>
-    </section>
-   </div>
-   <aside class="checkout-summary" aria-labelledby="summary-heading">
-    <span class="eyebrow">1608 / VOTRE COMMANDE</span><h2 id="summary-heading">RÉCAPITULATIF</h2><div data-mini-lines class="summary-lines"></div>
-    <div class="summary-row"><span>Sous-total des articles</span><b data-subtotal>0,00 $</b></div>
-    <div class="summary-row summary-discount" data-bundle-discount-row hidden><span data-bundle-discount-label>Rabais ensemble</span><b data-bundle-discount-value>−0,00 $</b></div>
-    <p class="checkout-bundle-progress" data-bundle-progress>2 modèles différents : −10 % · 3 modèles ou plus : −15 %</p>
-    <div class="summary-row"><span>Livraison</span><span>À confirmer</span></div>
-    <div class="summary-row"><span>Taxes applicables</span><span>À calculer</span></div>
-    <div class="summary-final"><span>ARTICLES APRÈS RABAIS</span><b data-items-total>0,00 $</b></div>
-    <button type="button" class="button dark checkout-pay" data-pay-button disabled>PRÉPARER MA DEMANDE <span aria-hidden="true">↗</span></button>
-    <div class="manual-draft" data-manual-draft hidden><p>Si votre application de courriel ne s'ouvre pas, copiez ce texte et envoyez-le vous-même à l'adresse indiquée.</p><textarea data-order-summary readonly rows="7" aria-label="Résumé de votre demande"></textarea><button type="button" data-copy-summary class="manual-copy">Copier le résumé</button></div>
-    <p class="checkout-under-button" data-pay-status>Vous ne devrez envoyer aucun virement avant de recevoir votre total final confirmé.</p>
-    <a class="checkout-back" href="index.html#collection">← Retour à la collection</a>
-   </aside>
+<main id="main">
+<div class="container">
+  <nav class="crumbs" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a><span>/</span><a href="index.html#collection">Collection</a><span>/</span><span>Caisse</span></nav>
+  <div class="co-intro">
+    <div><span class="eyebrow">1608 / Caisse</span><h1 class="display">Interac.<br>Simplement.</h1><p>Tu prépares ta commande. On te confirme le total exact, livraison comprise. Tu paies ensuite depuis ta banque.</p></div>
+    <div class="steps" aria-label="Étapes"><span class="on">01 / Panier</span><span>02 / Total confirmé</span><span>03 / Interac</span></div>
   </div>
- </div>
+  <div class="notice" role="status" data-closed-notice hidden><span aria-hidden="true">ⓘ</span><div><b>Commandes bientôt ouvertes</b>Les commandes ne sont pas encore ouvertes. Ton panier est conservé sur cet appareil : reviens bientôt.</div></div>
+
+  <div class="co-layout">
+    <div>
+      <section class="co-section" aria-labelledby="review-title">
+        <div class="co-section-head"><span>01</span><h2 id="review-title">Ta sélection</h2><a href="index.html#collection">Continuer à magasiner</a></div>
+        <div data-items aria-live="polite"></div>
+      </section>
+      <section class="co-section" aria-labelledby="contact-title">
+        <div class="co-section-head"><span>02</span><h2 id="contact-title">Pour te joindre</h2></div>
+        <p class="helper">Ces informations servent à préparer ta demande et à estimer la livraison. Elles ne sont pas envoyées automatiquement : ton application de courriel s’ouvre avec un brouillon que tu vérifies et envoies toi-même.</p>
+        <div class="fields">
+          <label>Nom complet <input id="manual-name" autocomplete="name" maxlength="100" placeholder="Prénom et nom" required></label>
+          <label>Courriel <input id="manual-email" type="email" autocomplete="email" maxlength="150" placeholder="toi@exemple.ca" required></label>
+          <label>Ville <input id="manual-city" autocomplete="address-level2" maxlength="90" placeholder="Ta ville" required></label>
+          <label>Code postal <input id="manual-postal" autocomplete="postal-code" maxlength="12" placeholder="A1A 1A1" required></label>
+        </div>
+        <p class="helper gap">L’adresse de livraison complète te sera demandée après validation de ta demande. <strong>Ne donne jamais de mot de passe ni de code bancaire.</strong></p>
+      </section>
+      <section class="co-section" aria-labelledby="pay-title">
+        <div class="co-section-head"><span>03</span><h2 id="pay-title">Virement Interac</h2></div>
+        <div class="pay-steps">
+          <div><span>1</span><p><strong>Envoie ta demande.</strong><small>Un brouillon avec tes articles, tes tailles et tes coordonnées s’ouvre dans ton courriel. Tu l’envoies toi-même.</small></p></div>
+          <div><span>2</span><p><strong>Reçois ton total exact.</strong><small>On confirme la disponibilité, la livraison, les taxes et le total avant tout paiement.</small></p></div>
+          <div><span>3</span><p><strong>Paie depuis ta banque.</strong><small>Une fois le total confirmé, fais un virement Interac à l’adresse indiquée, avec ta référence de demande.</small></p></div>
+        </div>
+        <div class="recipient">
+          <span class="eyebrow flush">Destinataire du virement</span>
+          <strong data-interac-address>Adresse communiquée avec ton total</strong>
+          <button class="copy-btn" type="button" data-copy-interac disabled>Copier l’adresse</button>
+          <p>Vérifie l’adresse dans notre confirmation avant de payer. Un virement n’est pas une commande confirmée tant que nous ne l’avons pas reçu et associé à ta demande.</p>
+        </div>
+        <p class="co-note">Pas de paiement par carte sur ce site : aucun numéro de carte n’est demandé ni conservé.</p>
+      </section>
+    </div>
+
+    <aside class="co-summary" aria-labelledby="sum-title">
+      <span class="eyebrow">1608 / Ta commande</span>
+      <h2 id="sum-title">Récapitulatif</h2>
+      <div data-mini></div>
+      <div class="perks" data-perks hidden></div>
+      <div class="sum-row"><span>Articles</span><b data-subtotal>0,00 $</b></div>
+      <div class="sum-row save" data-discount-row hidden><span data-discount-label>Rabais ensemble</span><b data-discount-value>−0,00 $</b></div>
+      <div class="sum-row"><span>Livraison</span><span data-shipping>À confirmer</span></div>
+      <div class="sum-row"><span>Taxes applicables</span><span>À calculer</span></div>
+      <div class="sum-final"><span>Articles après rabais</span><b data-total>0,00 $</b></div>
+      <button class="btn btn-block" type="button" data-pay disabled>Préparer ma demande <span class="arrow" aria-hidden="true">↗</span></button>
+      <div class="co-draft" data-draft hidden><p>Si ton application de courriel ne s’ouvre pas, copie ce texte et envoie-le toi-même à l’adresse indiquée.</p><textarea data-summary readonly rows="7" aria-label="Résumé de ta demande"></textarea><button class="copy-btn" type="button" data-copy-summary>Copier le résumé</button></div>
+      <p class="co-note" data-status>Tu n’as aucun virement à faire avant de recevoir ton total final confirmé.</p>
+      <a class="co-back" href="index.html#collection">← Retour à la collection</a>
+    </aside>
+  </div>
+</div>
 </main>
 <div data-site-footer></div>
 </body>
