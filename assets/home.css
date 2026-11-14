@@ -86,3 +86,11 @@ body[data-page="home"] .collection{padding-top:40px}
 .matching-piece a{font-size:10px;font-weight:800;text-decoration:underline;text-underline-offset:4px}
 .matching-piece img{width:100%;height:150px;object-fit:contain;mix-blend-mode:multiply}
 @media(max-width:480px){.matching-piece{grid-template-columns:minmax(0,1fr) 92px;padding:12px}.matching-piece img{height:118px}.matching-piece strong{font-size:13px}}
+
+/* Correctif : le bloc « Mieux ensemble » débordait sur les petits téléphones (360 px). */
+.bundle-feature{grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr)}
+.bundle-feature-copy{min-width:0}
+@media(max-width:900px){.bundle-feature{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){.bundle-feature-copy h2{font-size:clamp(40px,14.5vw,70px)}}
+/* Correctif : le titre « Questions. » débordait sur les petits téléphones. */
+@media(max-width:560px){.faq-layout{grid-template-columns:minmax(0,1fr)}.faq h2{font-size:clamp(38px,13.8vw,55px)}}

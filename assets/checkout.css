@@ -45,3 +45,5 @@
 /* Exact reductions, not estimated amounts. */
 .summary-discount,.summary-discount b{color:#28633d!important;font-weight:800}
 .checkout-bundle-progress{font-size:11px;line-height:1.65;color:#657265;margin:7px 0 15px}
+/* Correctif : titre de la caisse trop large sur très petit téléphone (320 px). */
+@media(max-width:400px){.checkout-intro h1{font-size:clamp(34px,11.5vw,56px);overflow-wrap:anywhere}}
