@@ -291,7 +291,7 @@ target.innerHTML=`
     <div class="product-accordion">
       <details><summary>DÉTAILS DE LA PIÈCE</summary><ul>${p.features.map(x=>`<li>${x}</li>`).join('')}</ul></details>
       <details data-size-guide><summary>GUIDE DES TAILLES</summary><p>Tailles proposées : ${p.sizes.join(' / ')}. Les mesures exactes du fabricant seront affichées avant l’ouverture des commandes. Pour l’instant, les tailles ne constituent pas une recommandation personnalisée.</p></details>
-      <details><summary>LIVRAISON ET RETOURS</summary><p>Livraison envisagée au Canada. Les frais, délais de préparation et modalités de retour seront confirmés et publiés avant tout paiement.</p></details>
+      <details><summary>LIVRAISON ET RETOURS</summary><p><strong>VENTE FINALE.</strong> Aucun retour ni échange pour changement d’avis ou erreur de taille. Les garanties légales et les droits applicables aux articles défectueux ou non conformes restent en vigueur. Les frais et délais de livraison seront communiqués avant tout paiement.</p></details>
     </div>
   </div></div></div>`;
 const story=productStories[p.id] || {title:'UNE PIÈCE. UNE SIGNATURE.',copy:p.description};
