@@ -33,7 +33,7 @@ const iconBag='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1 1
 const iconMenu='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>';
 function header(){
 return `<a class="skip-link" href="#main">Aller au contenu</a>
-<div class="hm-bar" role="region" aria-label="Informations"><span>Aperçu de la collection · commandes pas encore ouvertes</span><span>Duo −10 % · Trio −15 % sur des modèles différents</span><span>Total, livraison et taxes confirmés avant de payer</span><span>Imaginé au Québec</span></div>
+<div class="hm-bar" role="region" aria-label="Informations"><span>Demandes de commande ouvertes · total confirmé avant tout paiement</span><span>Duo −10 % · Trio −15 % sur des modèles différents</span><span>Total, livraison et taxes confirmés avant de payer</span><span>Imaginé au Québec</span></div>
 <header class="site-header"><div class="header-inner">
 <a class="wordmark" href="index.html" aria-label="1608, accueil"><span class="wordmark-number">1608</span><span class="wordmark-sub">MILLE-SIX-CENT-HUIT</span></a>
 <nav class="nav-main" aria-label="Navigation"><a href="index.html#collection">Tout voir</a><a href="index.html?cat=hoodies#collection">Cotons ouatés</a><a href="index.html?cat=denim#collection">Denim</a><a href="index.html?cat=pants#collection">Pantalons</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a></nav>
