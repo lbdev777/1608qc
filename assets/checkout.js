@@ -1,5 +1,7 @@
-/* 1608 — demandes de commande par courriel, puis virement Interac manuel.
-   AUCUN paiement, encaissement, ni enregistrement de commande automatique. */
+/* 1608 — demandes de commande, puis virement Interac manuel. AUCUN paiement en ligne.
+   Mode API (config.apiUrl défini) : la demande est envoyée au serveur sécurisé 1608 (Cloudflare), qui l'enregistre
+   et avertit le propriétaire. Une copie est gardée sur l'appareil tant que le serveur n'a pas confirmé réception
+   (aucune demande perdue en cas de panne réseau). Sans apiUrl : brouillon de courriel (ancien mode). */
 (() => {
 'use strict';
 const P=window.STORE_PRODUCTS||[];
@@ -15,7 +17,42 @@ try{
  const saved=JSON.parse(localStorage.getItem(key)||'[]');
  if(Array.isArray(saved))cart=saved.filter(x=>find(x.id)&&find(x.id).sizes.includes(x.size)&&Number.isInteger(x.qty)&&x.qty>=1&&x.qty<=10);
 }catch(_){}
-const canRequest=Boolean(config.enabled&&validEmail(config.ordersEmail)&&validEmail(config.interacEmail));
+const apiUrl=typeof config.apiUrl==='string'&&/^https:\/\//.test(config.apiUrl)?config.apiUrl.replace(/\/$/,''):'';
+const canRequest=Boolean(config.enabled&&validEmail(config.interacEmail)&&(apiUrl||validEmail(config.ordersEmail)));
+const PENDING='1608-pending-v1';
+const readPending=()=>{try{const v=JSON.parse(localStorage.getItem(PENDING)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}};
+const writePending=v=>{try{localStorage.setItem(PENDING,JSON.stringify(v))}catch(_){}};
+function newIdem(){const b=new Uint8Array(16);try{crypto.getRandomValues(b)}catch(_){for(let i=0;i<16;i++)b[i]=Math.random()*256}return Array.from(b).map(v=>v.toString(16).padStart(2,'0')).join('')}
+async function sendOrder(entry){
+ const ctl=typeof AbortController==='function'?new AbortController():null;const t=ctl&&setTimeout(()=>ctl.abort(),15000);
+ try{
+  const r=await fetch(apiUrl+'/api/orders',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(entry.payload),signal:ctl?ctl.signal:undefined});
+  const j=await r.json().catch(()=>({}));
+  if(r.ok&&j.ok)return{ok:true,id:j.id,total:j.total};
+  // 4xx = demande refusée (inutile de réessayer) ; 429/5xx = on garde et on réessaie
+  return{ok:false,final:r.status>=400&&r.status<500&&r.status!==429&&r.status!==408,error:j.error||'Erreur réseau'};
+ }catch(_){return{ok:false,final:false,error:'Connexion impossible'}}
+ finally{if(t)clearTimeout(t)}
+}
+async function flushPending(){
+ if(!apiUrl)return[];
+ const done=[];let list=readPending();
+ for(const e of list.slice()){
+  const res=await sendOrder(e);
+  if(res.ok){done.push({id:res.id,total:res.total});list=readPending().filter(x=>x.idem!==e.idem);writePending(list)}
+  else if(res.final){list=readPending().filter(x=>x.idem!==e.idem);writePending(list)}
+ }
+ return done;
+}
+function showConfirmation(res){
+ const draft=$('[data-manual-draft]');
+ if(draft)draft.hidden=true;
+ const st=$('[data-pay-status]');
+ st.innerHTML='';
+ const b=document.createElement('strong');b.textContent='Demande reçue ✓ Numéro : '+res.id;
+ const p=document.createElement('span');p.textContent=' Gardez ce numéro. Nous vous écrivons avec le total confirmé (livraison et taxes incluses) avant tout virement Interac.';
+ st.append(b,p);
+}
 
 function save(){
  try{localStorage.setItem(key,JSON.stringify(cart))}catch(_){}
@@ -54,7 +91,7 @@ function render(){
  $('[data-bundle-discount-value]').textContent='−'+money(pricing.discount);
  const promoProgress=$('[data-bundle-progress]');if(promoProgress){promoProgress.hidden=true;promoProgress.textContent='';}
  $('[data-pay-button]').disabled=!canRequest||cart.length===0;
- $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'PRÉPARER MA DEMANDE ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
+ $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?(apiUrl?'ENVOYER MA DEMANDE ↗':'PRÉPARER MA DEMANDE ↗'):'ADRESSE DE PAIEMENT À CONFIGURER';
  $('[data-pay-status]').textContent=canRequest
  ?'Après votre demande, attendez le total confirmé (articles, frais de livraison et taxes applicables) avant tout virement.'
  :'La réception des commandes n’est pas encore activée. Vous pouvez consulter le panier sans effectuer de paiement.';
@@ -77,20 +114,39 @@ function requestRef(){
  return 'RQ-'+day+'-'+suffix;
 }
 function getContact(){
- const fields=['manual-name','manual-email','manual-city','manual-postal'].map(id=>document.getElementById(id));
+ const fields=['manual-name','manual-email',...(apiUrl?['manual-street']:[]),'manual-city','manual-postal'].map(id=>document.getElementById(id)).filter(Boolean);
  for(const input of fields){
   if(!input.value.trim()){input.setCustomValidity('Ce champ est obligatoire.');input.reportValidity();input.setCustomValidity('');return null;}
   if(!input.checkValidity()){input.reportValidity();return null;}
  }
- const [name,email,city,postal]=fields.map(input=>input.value.trim());
+ const v=Object.fromEntries(fields.map(input=>[input.id.replace('manual-',''),input.value.trim()]));
+ const {name,email,city,postal}=v;
  if(!/^[A-Z]\d[A-Z][ -]?\d[A-Z]\d$/i.test(postal.replace(/\s+/g,''))){
   const el=$('#manual-postal');el.setCustomValidity('Entrez un code postal canadien valide.');el.reportValidity();el.setCustomValidity('');return null;
  }
- return {name,email,city,postal};
+ const phone=($('#manual-phone')||{}).value||'',street=v.street||'';
+ return {name,email,city,postal,phone:phone.trim(),street};
+}
+async function submitToApi(contact){
+ const btn=$('[data-pay-button]'),st=$('[data-pay-status]');
+ if(btn.disabled)return;btn.disabled=true;st.textContent='Envoi sécurisé en cours…';
+ const entry={idem:newIdem(),at:Date.now(),payload:{idem:'',items:cart.map(i=>({id:i.id,size:i.size,qty:i.qty})),customer:contact,website:($('#manual-website')||{}).value||''}};
+ entry.payload.idem=entry.idem;
+ writePending([...readPending(),entry]);               // copie locale AVANT l'envoi
+ let res=await sendOrder(entry);
+ if(!res.ok&&!res.final){await new Promise(r=>setTimeout(r,2500));res=await sendOrder(entry)}
+ if(res.ok){
+  writePending(readPending().filter(x=>x.idem!==entry.idem));
+  cart=[];save();render();showConfirmation(res);return;
+ }
+ if(res.final){writePending(readPending().filter(x=>x.idem!==entry.idem));btn.disabled=false;st.textContent='Demande refusée : '+res.error+' Vérifiez vos informations.';return}
+ btn.disabled=false;
+ st.textContent='Connexion impossible pour le moment. Votre demande est gardée sur cet appareil et sera renvoyée automatiquement dès que la connexion revient (gardez cette page ouverte ou revenez sur le site). Vous pouvez aussi nous écrire à '+(validEmail(config.ordersEmail)?config.ordersEmail:'notre courriel')+'.';
 }
 function prepareRequest(){
  if(!canRequest||cart.length===0)return;
  const contact=getContact();if(!contact)return;
+ if(apiUrl){submitToApi(contact);return}
  const reference=requestRef();
  const lines=cart.map(item=>{
   const p=find(item.id);
@@ -136,6 +192,9 @@ function copyText(text,button){
 }
 document.addEventListener('DOMContentLoaded',()=>{
  showRecipient();render();
+ const reveal=()=>{document.querySelectorAll('[data-api-only]').forEach(e=>e.hidden=!apiUrl);document.querySelectorAll('[data-mail-only]').forEach(e=>e.hidden=!!apiUrl)};reveal();
+ const retry=()=>flushPending().then(d=>{if(d.length&&$('[data-pay-status]'))showConfirmation(d[d.length-1])});
+ retry();window.addEventListener('online',retry);setInterval(()=>{if(readPending().length)retry()},30000);
  document.addEventListener('click',event=>{
   const q=event.target.closest('[data-cqty]');
   if(q){

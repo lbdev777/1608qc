@@ -1,0 +1,10 @@
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,-apple-system,sans-serif;background:#f4f3ef;color:#111}
+.cm-top{display:flex;gap:12px;align-items:center;padding:14px 16px;background:#111;color:#fff;position:sticky;top:0}
+.cm-top b{letter-spacing:.12em}.cm-top span{opacity:.7;flex:1}.cm-top button{background:#fff;border:0;padding:8px 12px;font:inherit;cursor:pointer}
+main{max-width:720px;margin:0 auto;padding:12px}#cm-state{color:#555}
+.cm-filters{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.cm-filters button{border:1px solid #111;background:#fff;padding:6px 10px;font:inherit;cursor:pointer}.cm-filters button[aria-pressed=true]{background:#111;color:#fff}
+.cm-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.cm-card{background:#fff;border:1px solid #ddd;padding:14px}.cm-card h2{margin:0 0 2px;font-size:16px}.cm-meta{color:#555;font-size:13px}
+.cm-items{margin:8px 0;padding-left:18px}.cm-cust{background:#f4f3ef;padding:8px 10px;margin:8px 0;font-size:14px;word-break:break-word}
+.cm-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.cm-row select,.cm-row button,.cm-row input{font:inherit;padding:8px;border:1px solid #111;background:#fff}.cm-row input{flex:1;min-width:120px}
+.cm-warn{color:#a00;font-size:13px}

@@ -1,0 +1,100 @@
+{
+ "orbite-noir": {
+  "name": "ORBITE 1608",
+  "price": 8900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL"
+  ]
+ },
+ "terrain-camo": {
+  "name": "TERRAIN 1608",
+  "price": 8900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "horizon-noir": {
+  "name": "HORIZON 1608",
+  "price": 6900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "signature-brode": {
+  "name": "SIGNATURE 1608",
+  "price": 6900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "contraste-marine": {
+  "name": "CONTRASTE 1608",
+  "price": 8900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "archive-denim": {
+  "name": "ARCHIVE 1608",
+  "price": 6900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "heritage-noir": {
+  "name": "HÉRITAGE 1608",
+  "price": 9900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "uniforme-zip": {
+  "name": "UNIFORME ZIP 1608",
+  "price": 8900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ },
+ "uniforme-jogger": {
+  "name": "UNIFORME JOGGER 1608",
+  "price": 6900,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "2XL"
+  ]
+ }
+}

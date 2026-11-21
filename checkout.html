@@ -30,14 +30,18 @@
    <div class="checkout-left">
     <section class="checkout-section" aria-labelledby="review-title"><div class="checkout-section-head"><span>01</span><h2 id="review-title">VOTRE SÉLECTION</h2><a href="index.html#collection">Continuer à magasiner ↗</a></div><div id="checkout-items" data-checkout-items aria-live="polite"></div></section>
     <section class="checkout-section" aria-labelledby="delivery-title"><div class="checkout-section-head"><span>02</span><h2 id="delivery-title">POUR VOUS REJOINDRE</h2></div>
-      <p class="manual-helper">Ces informations servent à préparer la demande et à estimer la livraison. Elles ne sont pas envoyées automatiquement : votre application de courriel s'ouvrira avec un brouillon à vérifier et à envoyer.</p>
+      <p class="manual-helper" data-mail-only>Ces informations servent à préparer la demande et à estimer la livraison. Elles ne sont pas envoyées automatiquement : votre application de courriel s'ouvrira avec un brouillon à vérifier et à envoyer.</p>
       <div class="manual-fields">
         <label>Nom complet <input id="manual-name" autocomplete="name" maxlength="100" placeholder="Prénom et nom" required></label>
         <label>Courriel <input id="manual-email" type="email" autocomplete="email" maxlength="150" placeholder="vous@exemple.ca" required></label>
+        <label data-api-only hidden>Adresse (rue, appartement) <input id="manual-street" autocomplete="street-address" maxlength="120" placeholder="123 rue Exemple, app. 4"></label>
+        <label data-api-only hidden>Téléphone (facultatif) <input id="manual-phone" type="tel" autocomplete="tel" maxlength="30" placeholder="418 555-0100"></label>
         <label>Ville <input id="manual-city" autocomplete="address-level2" maxlength="90" placeholder="Votre ville" required></label>
         <label>Code postal <input id="manual-postal" autocomplete="postal-code" maxlength="12" placeholder="A1A 1A1" required></label>
+        <input id="manual-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       </div>
-      <p class="manual-helper">L'adresse de livraison complète sera demandée après validation de la demande. <strong>Ne fournissez jamais de mot de passe ou de code bancaire.</strong></p>
+      <p class="manual-helper" data-api-only hidden>Vos coordonnées sont transmises par connexion chiffrée (HTTPS) à notre serveur sécurisé, stockées chiffrées, et utilisées uniquement pour traiter votre commande.</p>
+      <p class="manual-helper" data-mail-only>L'adresse de livraison complète sera demandée après validation de la demande. <strong>Ne fournissez jamais de mot de passe ou de code bancaire.</strong></p>
     </section>
     <section class="checkout-section" aria-labelledby="payment-title"><div class="checkout-section-head"><span>03</span><h2 id="payment-title">VIREMENT INTERAC</h2></div>
       <div class="manual-steps">

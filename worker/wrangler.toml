@@ -1,0 +1,21 @@
+# 1608 / Worker des commandes. Les SECRETS ne vont jamais ici (voir CLOUDFLARE-COMMANDES.md).
+name = "1608-orders"
+main = "dist/worker.js"
+compatibility_date = "2026-01-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "1608-orders"
+database_id = "À_REMPLIR_APRES_CREATION"
+
+[triggers]
+crons = ["* * * * *", "0 12 * * *"]
+
+# Une fois 1608qc.com dans Cloudflare :
+# routes = [{ pattern = "1608qc.com/api/*", zone_name = "1608qc.com" }]
+
+[vars]
+ALLOWED_ORIGINS = "https://1608qc.com,https://www.1608qc.com,https://lbdev777.github.io"
+NOTIFY_DETAILS = "minimal"
+ADMIN_URL = "https://1608qc.com/admin.html"
