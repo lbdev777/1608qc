@@ -67,7 +67,7 @@ function frame(now){
  const R=Math.min(W,H)*0.44*zoom,mx=W/2,my=H/2;cx.clearRect(0,0,W,H);
  const g=cx.createRadialGradient(mx-R*.3,my-R*.35,R*.1,mx,my,R);g.addColorStop(0,'#eef8fb');g.addColorStop(1,'#cfe6f7');
  cx.fillStyle=g;cx.beginPath();cx.arc(mx,my,R,0,7);cx.fill();
- const dot=Math.max(1.1,R*0.0105);
+ const dot=Math.max(.8,R*0.0105*((L&&L.step)||2)/2*1.15);
  for(const [la,lo] of cells){const p=proj(la,lo,R,mx,my);if(!p)continue;const a=.35+.65*p[2];cx.fillStyle=`rgba(58,201,178,${a.toFixed(2)})`;cx.beginPath();cx.arc(p[0],p[1],dot*(.6+.5*p[2]),0,7);cx.fill()}
  const t=(now-t0)/1000;
  for(const v of live){const p=proj(v.lat*Math.PI/180,v.lon*Math.PI/180,R,mx,my);if(!p)continue;const k=(t%2)/2;cx.fillStyle='rgba(47,111,214,.25)';cx.beginPath();cx.arc(p[0],p[1],4+k*14,0,7);cx.fill();cx.fillStyle='#2f6fd6';cx.beginPath();cx.arc(p[0],p[1],4,0,7);cx.fill()}
