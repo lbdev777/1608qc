@@ -91,7 +91,7 @@ function render(){
  $('[data-bundle-discount-value]').textContent='−'+money(pricing.discount);
  const promoProgress=$('[data-bundle-progress]');if(promoProgress){promoProgress.hidden=true;promoProgress.textContent='';}
  $('[data-pay-button]').disabled=!canRequest||cart.length===0;
- $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?(apiUrl?'ENVOYER MA DEMANDE ↗':'PRÉPARER MA DEMANDE ↗'):'ADRESSE DE PAIEMENT À CONFIGURER';
+ $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'ENVOYER MA DEMANDE ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
  $('[data-pay-status]').textContent=canRequest
  ?'Après votre demande, attendez le total confirmé (articles, frais de livraison et taxes applicables) avant tout virement.'
  :'La réception des commandes n’est pas encore activée. Vous pouvez consulter le panier sans effectuer de paiement.';
@@ -190,12 +190,15 @@ function prepareRequest(){
   'Veuillez me confirmer le total et les conditions de livraison avant que je fasse mon virement Interac.',
   'Je comprends que ma demande n’est pas encore une commande acceptée.'
  ].join('\n');
- const draft=$('[data-manual-draft]');draft.hidden=false;
+ const draft=$('[data-manual-draft]');draft.hidden=true;
  $('[data-order-summary]').value=body;
+ const to=$('[data-draft-to]');if(to)to.textContent=config.ordersEmail;
+ const gl=$('[data-gmail-link]');if(gl)gl.href='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(config.ordersEmail)+'&su='+encodeURIComponent('1608 — demande '+reference)+'&body='+encodeURIComponent(body);
+ const mh=$('[data-mail-help]');if(mh)mh.hidden=false;
  const uri='mailto:'+config.ordersEmail+'?subject='+encodeURIComponent('1608 — demande '+reference)+'&body='+encodeURIComponent(body);
  // Le navigateur ouvre seulement un brouillon. L'envoi exige une action du client dans son logiciel.
  window.location.href=uri;
- $('[data-pay-status]').textContent='Votre brouillon de courriel est prêt : vérifiez-le, puis cliquez sur Envoyer dans votre application. Aucun virement n’est requis avant confirmation du total.';
+ $('[data-pay-status]').textContent='Votre courriel est prêt : appuyez sur Envoyer. Il ne s’est pas ouvert ? Utilisez un des choix ci-dessous.';
 }
 function copyText(text,button){
  const done=()=>{const old=button.textContent;button.textContent='COPIÉ ✓';setTimeout(()=>button.textContent=old,2000)};
@@ -225,6 +228,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(event.target.closest('[data-pay-button]')){prepareRequest();return}
   const address=event.target.closest('[data-copy-interac]');
   if(address&&canRequest){copyText(config.interacEmail,address);return}
+  if(event.target.closest('[data-open-draft]')){const d=$('[data-manual-draft]');d.hidden=false;copyText($('[data-order-summary]').value,event.target.closest('[data-open-draft]'));return}
   const summary=event.target.closest('[data-copy-summary]');
   if(summary){copyText($('[data-order-summary]').value,summary);return}
  });

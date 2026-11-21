@@ -53,7 +53,7 @@ return `<footer class="site-footer ed-footer">
 <div><a class="ed-footer-logo" href="index.html" aria-label="1608, retour à l'accueil">1608.</a><p>Mille-Six-Cent-Huit<br>Une marque indépendante du Québec.</p></div>
 <nav aria-label="Pied de page"><a href="index.html#collection">Collection</a><a href="index.html#l-uniforme">L'uniforme</a><a href="index.html#notre-histoire">La marque</a><a href="index.html#questions">Informations</a></nav>
 </div>
-<div class="ed-footer-bottom"><span>© ${new Date().getFullYear()} 1608</span><span>QUÉBEC, CANADA</span><span>Boutique en aperçu — aucun paiement accepté</span></div></footer>`;
+<div class="ed-footer-bottom"><span>© ${new Date().getFullYear()} 1608</span><span>QUÉBEC, CANADA</span><span>Paiement par Interac après confirmation du total</span></div></footer>`;
 }
 function wishList(){try{return JSON.parse(localStorage.getItem('1608-wish')||'[]')}catch(_){return []}}
 function saveWish(list){try{localStorage.setItem('1608-wish',JSON.stringify(list))}catch(_){}}
