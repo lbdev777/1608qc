@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Analytique — 1608</title>
+<link rel="stylesheet" href="/app.css">
+</head><body>
+<header class="top"><b>1608</b><span>Analytique</span>
+ <div class="seg" id="range" role="group" aria-label="Période"><button data-r="24h" aria-pressed="true">24 h</button><button data-r="7d" aria-pressed="false">7 jours</button><button data-r="30d" aria-pressed="false">30 jours</button></div>
+</header>
+<main>
+ <section class="col" id="left">
+  <p id="state" role="status" class="muted">Chargement…</p>
+  <div class="grid2">
+   <div class="card"><h3>Visiteurs en ce moment</h3><div class="big" id="k-live">–</div></div>
+   <div class="card"><h3>Ventes totales</h3><div class="big" id="k-sales">–</div><div class="delta" id="d-sales"></div></div>
+   <div class="card"><h3>Sessions</h3><div class="big" id="k-sessions">–</div><div class="delta" id="d-sessions"></div></div>
+   <div class="card"><h3>Commandes</h3><div class="big" id="k-orders">–</div><div class="delta" id="d-orders"></div></div>
+  </div>
+  <div class="card"><h3>Sessions dans le temps</h3><svg id="chart" viewBox="0 0 400 110" preserveAspectRatio="none" role="img" aria-label="Graphique des sessions"></svg><div class="axis" id="axis"></div></div>
+  <div class="card"><h3>Entonnoir de conversion</h3><div id="funnel"></div></div>
+  <div class="card"><h3>Principaux lieux</h3><div id="locs"></div></div>
+  <div class="card"><h3>Pièces les plus vues</h3><div id="prods"></div></div>
+  <div class="card"><h3>Pages les plus visitées</h3><div id="pages"></div></div>
+  <div class="grid2">
+   <div class="card"><h3>Appareils</h3><div id="devs"></div></div>
+   <div class="card"><h3>Sources</h3><div id="refs"></div></div>
+  </div>
+  <p class="muted small">Aucun cookie, aucune adresse IP conservée. Ville approximative fournie par Cloudflare. Données gardées 120 jours. Les ventes viennent des commandes réelles.</p>
+ </section>
+ <section class="globe-wrap" aria-label="Globe des visiteurs et des commandes">
+  <div class="legend"><span class="dot-order"></span>Commandes <span class="dot-live"></span>Visiteurs en ce moment</div>
+  <canvas id="globe" aria-hidden="true"></canvas>
+  <div class="gctl"><button id="zin" aria-label="Zoom avant">+</button><button id="zout" aria-label="Zoom arrière">−</button><button id="home" aria-label="Recentrer">⌖</button></div>
+ </section>
+</main>
+<script src="/names.js"></script><script src="/land.js"></script><script src="/app.js"></script>
+</body></html>

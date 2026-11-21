@@ -46,6 +46,7 @@ async function flushPending(){
 }
 function saveLast(id,email){try{localStorage.setItem('1608-last-order',JSON.stringify({id:String(id),email:email||''}))}catch(_){}}
 function showConfirmation(res){
+ try{window.dispatchEvent(new Event('1608:purchase'))}catch(_){}
  const draft=$('[data-manual-draft]');
  if(draft)draft.hidden=true;
  const st=$('[data-pay-status]');

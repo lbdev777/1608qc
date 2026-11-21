@@ -134,7 +134,7 @@ function addItemsToCart(items,message){
    existing.qty+=item.qty;
   }else next.push({...item});
  }
- cart=next;save();syncCart();openOverlay('cart');toast(message);return true;
+ cart=next;save();syncCart();try{window.dispatchEvent(new Event('1608:cart-added'))}catch(_){}openOverlay('cart');toast(message);return true;
 }
 function addToCart(id,size,qty){
  return addItemsToCart([{id,size,qty}],'Pièce ajoutée au panier.');
@@ -398,5 +398,33 @@ window.addEventListener('1608:cart-changed',()=>{
 document.addEventListener('DOMContentLoaded',()=>{
 mountShell();syncCart();listeners();
 if(document.body.dataset.page==='product')initProduct();else if(document.body.dataset.page==='home')initHome();
+});
+})();
+
+/* Statistiques de visite 1608 : sans cookie, sans adresse IP, sans identifiant persistant. Désactivées si le navigateur
+   demande de ne pas être suivi (DNT / GPC) ou après ?notrack=1 (pour exclure tes propres visites). */
+(()=>{'use strict';
+try{
+ if(/[?&]notrack=1/.test(location.search))localStorage.setItem('1608-notrack','1');
+ if(/[?&]notrack=0/.test(location.search))localStorage.removeItem('1608-notrack');
+ if(localStorage.getItem('1608-notrack')==='1')return;
+}catch(_){}
+if(navigator.doNotTrack==='1'||navigator.globalPrivacyControl===true)return;
+let sid='';
+try{sid=sessionStorage.getItem('1608-sid')||'';if(!/^[a-z0-9]{12,32}$/.test(sid)){const b=new Uint8Array(10);crypto.getRandomValues(b);sid=Array.from(b).map(v=>(v%36).toString(36)).join('')+Date.now().toString(36);sessionStorage.setItem('1608-sid',sid)}}catch(_){return}
+const device=/ipad|tablet/i.test(navigator.userAgent)?'tablet':/mobi|android|iphone/i.test(navigator.userAgent)?'mobile':'desktop';
+const path=()=>location.pathname.replace(/^\/1608qc(?=\/)/,'')||'/';
+function send(events){
+ const base=(window.STORE_MANUAL_PAYMENT||{}).trackUrl||'https://1608-track.louisbeaulieu33.workers.dev';if(typeof base!=='string'||!/^https:\/\//.test(base))return;
+ try{fetch(base.replace(/\/$/,'')+'/api/t',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sid,device,events}),keepalive:true,mode:'cors',credentials:'omit'}).catch(()=>{})}catch(_){}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ let ref='';try{const h=new URL(document.referrer).hostname.replace(/^www\./,'');if(h&&h!==location.hostname)ref=h}catch(_){}
+ const p=path(),ev=[{type:'pageview',path:p,ref}];
+ const m=p.match(/^\/produit-([a-z0-9-]+)\.html$/);if(m)ev.push({type:'product',path:p,product:m[1]});
+ if(/^\/checkout(\.html)?$/.test(p))ev.push({type:'checkout',path:p});
+ send(ev);
+ window.addEventListener('1608:cart-added',()=>send([{type:'cart',path:path()}]));
+ window.addEventListener('1608:purchase',()=>send([{type:'purchase',path:path()}]));
 });
 })();

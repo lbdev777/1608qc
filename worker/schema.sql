@@ -44,3 +44,8 @@ CREATE TABLE IF NOT EXISTS counter(name TEXT PRIMARY KEY, n INTEGER NOT NULL);
 INSERT OR IGNORE INTO counter(name,n) VALUES('order',3000);
 CREATE TABLE IF NOT EXISTS lookups(ip_hash TEXT NOT NULL, at TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_lookups ON lookups(ip_hash, at);
+CREATE TABLE IF NOT EXISTS hits(id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT NOT NULL, sid TEXT NOT NULL, type TEXT NOT NULL, path TEXT, ref TEXT, product TEXT, country TEXT, region TEXT, city TEXT, lat REAL, lon REAL, device TEXT);
+CREATE INDEX IF NOT EXISTS idx_hits_ts ON hits(ts);
+CREATE INDEX IF NOT EXISTS idx_hits_sid ON hits(sid, ts);
+CREATE TABLE IF NOT EXISTS track_rl(ip_hash TEXT NOT NULL, at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_track_rl ON track_rl(ip_hash, at);

@@ -16,3 +16,12 @@ console.log('ok', Object.keys(cat).length, 'modèles');
   fs.writeFileSync(path.join(root, 'worker/dist/admin.js'), a);
   console.log('admin ok');
 }
+// --- Worker de collecte + Worker d'analytique ---
+{
+  fs.copyFileSync(path.join(root, 'worker/src/track.js'), path.join(root, 'worker/dist/track.js'));
+  const names = Object.fromEntries(Object.entries(cat).map(([k, v]) => [k, v.name]));
+  const ui = f => JSON.stringify(fs.readFileSync(path.join(root, 'worker/analytics-ui', f), 'utf8'));
+  const a = fs.readFileSync(path.join(root, 'worker/src/analytics.js'), 'utf8').replace('__NAMES__', () => JSON.stringify(names)).replace('__HTML__', () => ui('index.html')).replace('__APP_JS__', () => ui('app.js')).replace('__APP_CSS__', () => ui('app.css')).replace('__LAND_JS__', () => ui('land.js'));
+  fs.writeFileSync(path.join(root, 'worker/dist/analytics.js'), a);
+  console.log('track + analytics ok');
+}
