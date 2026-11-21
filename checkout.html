@@ -10,7 +10,7 @@
 <script>document.documentElement.classList.add("qc-js")</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/checkout.css?v=overflow-fix-5">
+<link rel="stylesheet" href="assets/checkout.css?v=overflow-fix-6">
 <link rel="stylesheet" href="assets/qc-polish.css?v=edition-02">
 <link rel="stylesheet" href="assets/hm-shop.css?v=hm-1">
 <script src="assets/catalog.js" defer></script>
@@ -32,12 +32,12 @@
     <section class="checkout-section" aria-labelledby="delivery-title"><div class="checkout-section-head"><span>02</span><h2 id="delivery-title">POUR VOUS REJOINDRE</h2></div>
       <p class="manual-helper" data-mail-only>Ces informations servent à préparer la demande et à estimer la livraison. Elles ne sont pas envoyées automatiquement : votre application de courriel s'ouvrira avec un brouillon à vérifier et à envoyer.</p>
       <div class="manual-fields">
-        <label>Nom complet <input id="manual-name" autocomplete="name" maxlength="100" placeholder="Prénom et nom" required></label>
-        <label>Courriel <input id="manual-email" type="email" autocomplete="email" maxlength="150" placeholder="vous@exemple.ca" required></label>
-        <label data-api-only hidden>Adresse (rue, appartement) <input id="manual-street" autocomplete="street-address" maxlength="120" placeholder="123 rue Exemple, app. 4"></label>
-        <label data-api-only hidden>Téléphone (facultatif) <input id="manual-phone" type="tel" autocomplete="tel" maxlength="30" placeholder="418 555-0100"></label>
-        <label>Ville <input id="manual-city" autocomplete="address-level2" maxlength="90" placeholder="Votre ville" required></label>
-        <label>Code postal <input id="manual-postal" autocomplete="postal-code" maxlength="12" placeholder="A1A 1A1" required></label>
+        <label>Nom complet <input id="manual-name" lang="fr" autocomplete="name" maxlength="100" placeholder="Prénom et nom" required></label>
+        <label>Courriel <input id="manual-email" lang="fr" type="email" autocomplete="email" maxlength="150" placeholder="vous@exemple.ca" required></label>
+        <label data-api-only hidden>Adresse (rue, appartement) <input id="manual-street" lang="fr" autocomplete="street-address" maxlength="120" placeholder="123 rue Exemple, app. 4"></label>
+        <label data-api-only hidden>Téléphone (facultatif) <input id="manual-phone" lang="fr" type="tel" autocomplete="tel" maxlength="30" placeholder="418 555-0100"></label>
+        <label>Ville <input id="manual-city" lang="fr" autocomplete="address-level2" maxlength="90" placeholder="Votre ville" required></label>
+        <label>Code postal <input id="manual-postal" lang="fr" autocomplete="postal-code" maxlength="12" placeholder="A1A 1A1" required></label>
         <input id="manual-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       </div>
       <p class="manual-helper" data-api-only hidden>Vos coordonnées sont transmises par connexion chiffrée (HTTPS) à notre serveur sécurisé, stockées chiffrées, et utilisées uniquement pour traiter votre commande.</p>

@@ -113,19 +113,36 @@ function requestRef(){
  const day=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
  return 'RQ-'+day+'-'+suffix;
 }
+const FIELD_RULES={
+ name:{label:'nom complet',test:v=>v.length>=2&&/\s|.{4,}/.test(v),msg:'Entrez votre prénom et votre nom.'},
+ email:{label:'courriel',test:v=>/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v)&&!/\.\./.test(v),msg:'Entrez un courriel valide, par exemple prenom@exemple.ca.'},
+ street:{label:'adresse',test:v=>v.length>=5&&/\d/.test(v),msg:'Entrez votre adresse complète avec le numéro civique.'},
+ city:{label:'ville',test:v=>v.length>=2,msg:'Entrez votre ville.'},
+ postal:{label:'code postal',test:v=>/^[A-Z]\d[A-Z][ -]?\d[A-Z]\d$/i.test(v.replace(/\s+/g,'')),msg:'Entrez un code postal canadien valide, par exemple G5L 1A1.'}
+};
+function fieldError(input,message){
+ let box=input.parentElement.querySelector('.field-error');
+ if(message){
+  if(!box){box=document.createElement('span');box.className='field-error';box.id=input.id+'-err';box.setAttribute('role','alert');input.parentElement.appendChild(box)}
+  box.textContent=message;input.setAttribute('aria-invalid','true');input.setAttribute('aria-describedby',box.id);
+ }else{
+  if(box)box.remove();input.removeAttribute('aria-invalid');input.removeAttribute('aria-describedby');
+ }
+}
 function getContact(){
- const fields=['manual-name','manual-email',...(apiUrl?['manual-street']:[]),'manual-city','manual-postal'].map(id=>document.getElementById(id)).filter(Boolean);
- for(const input of fields){
-  if(!input.value.trim()){input.setCustomValidity('Ce champ est obligatoire.');input.reportValidity();input.setCustomValidity('');return null;}
-  if(!input.checkValidity()){input.reportValidity();return null;}
+ const ids=['name','email',...(apiUrl?['street']:[]),'city','postal'];
+ const values={};let first=null;
+ for(const id of ids){
+  const input=document.getElementById('manual-'+id);if(!input)continue;
+  const v=input.value.trim();values[id]=v;
+  const rule=FIELD_RULES[id];
+  const msg=v===''?'Ce champ est obligatoire.':(rule.test(v)?'':rule.msg);
+  fieldError(input,msg);
+  if(msg&&!first)first=input;
  }
- const v=Object.fromEntries(fields.map(input=>[input.id.replace('manual-',''),input.value.trim()]));
- const {name,email,city,postal}=v;
- if(!/^[A-Z]\d[A-Z][ -]?\d[A-Z]\d$/i.test(postal.replace(/\s+/g,''))){
-  const el=$('#manual-postal');el.setCustomValidity('Entrez un code postal canadien valide.');el.reportValidity();el.setCustomValidity('');return null;
- }
- const phone=($('#manual-phone')||{}).value||'',street=v.street||'';
- return {name,email,city,postal,phone:phone.trim(),street};
+ if(first){first.focus();first.scrollIntoView({block:'center',behavior:'smooth'});return null}
+ const phone=($('#manual-phone')||{}).value||'';
+ return {name:values.name,email:values.email.toLowerCase(),city:values.city,postal:values.postal.toUpperCase(),phone:phone.trim(),street:values.street||''};
 }
 async function submitToApi(contact){
  const btn=$('[data-pay-button]'),st=$('[data-pay-status]');
@@ -192,6 +209,7 @@ function copyText(text,button){
 }
 document.addEventListener('DOMContentLoaded',()=>{
  showRecipient();render();
+ document.querySelectorAll('.manual-fields input').forEach(i=>{i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid'))fieldError(i,'')});});
  const reveal=()=>{document.querySelectorAll('[data-api-only]').forEach(e=>e.hidden=!apiUrl);document.querySelectorAll('[data-mail-only]').forEach(e=>e.hidden=!!apiUrl)};reveal();
  const retry=()=>flushPending().then(d=>{if(d.length&&$('[data-pay-status]'))showConfirmation(d[d.length-1])});
  retry();window.addEventListener('online',retry);setInterval(()=>{if(readPending().length)retry()},30000);
