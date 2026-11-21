@@ -57,8 +57,11 @@ document.querySelectorAll('#range button').forEach(b=>b.addEventListener('click'
 /* ---------- globe ---------- */
 const cv=$('#globe'),cx=cv.getContext('2d');
 let lon0=-70,lat0=40,zoom=1,dragging=false,last=null,auto=true,dpr=1,W=0,H=0,t0=performance.now();
-const L=window.LAND,cells=[];
-if(L){const step=L.step;L.rows.forEach((b64,ri)=>{const lat=L.lat0+ri*step,bin=atob(b64),skip=Math.max(1,Math.round(1/Math.max(.2,Math.cos(lat*Math.PI/180))));for(let ci=0;ci<L.cols;ci++){if((bin.charCodeAt(ci>>3)>>(7-(ci&7)))&1&&ci%skip===0)cells.push([lat*Math.PI/180,(L.lon0+ci*step)*Math.PI/180])}})}
+const L=window.LAND,RINGS=[];
+/* Contours réels des terres (Natural Earth 110m), décodés puis densifiés pour bien épouser la sphère. */
+if(L){const D=Math.PI/180;L.r.forEach(f=>{let x=f[0],y=f[1];const pts=[[x*L.u,y*L.u]];for(let k=2;k<f.length;k+=2){x+=f[k];y+=f[k+1];pts.push([x*L.u,y*L.u])}
+ const out=[];for(let k=0;k<pts.length;k++){const a=pts[k],b=pts[(k+1)%pts.length],n=Math.max(1,Math.ceil(Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]))/2));for(let t=0;t<n;t++){const lo=(a[0]+(b[0]-a[0])*t/n)*D,la=(a[1]+(b[1]-a[1])*t/n)*D;out.push([Math.cos(la)*Math.sin(lo),Math.sin(la),Math.cos(la)*Math.cos(lo)])}}
+ RINGS.push(out)})}
 function size(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)}
 function proj(lat,lon,R,cxp,cyp){const φ=lat,λ=lon-lon0*Math.PI/180,φ0=lat0*Math.PI/180;const c=Math.sin(φ0)*Math.sin(φ)+Math.cos(φ0)*Math.cos(φ)*Math.cos(λ);if(c<=0)return null;return[cxp+R*Math.cos(φ)*Math.sin(λ),cyp-R*(Math.cos(φ0)*Math.sin(φ)-Math.sin(φ0)*Math.cos(φ)*Math.cos(λ)),c]}
 function frame(now){
@@ -67,8 +70,22 @@ function frame(now){
  const R=Math.min(W,H)*0.44*zoom,mx=W/2,my=H/2;cx.clearRect(0,0,W,H);
  const g=cx.createRadialGradient(mx-R*.3,my-R*.35,R*.1,mx,my,R);g.addColorStop(0,'#eef8fb');g.addColorStop(1,'#cfe6f7');
  cx.fillStyle=g;cx.beginPath();cx.arc(mx,my,R,0,7);cx.fill();
- const dot=Math.max(.8,R*0.0105*((L&&L.step)||2)/2*1.15);
- for(const [la,lo] of cells){const p=proj(la,lo,R,mx,my);if(!p)continue;const a=.35+.65*p[2];cx.fillStyle=`rgba(58,201,178,${a.toFixed(2)})`;cx.beginPath();cx.arc(p[0],p[1],dot*(.6+.5*p[2]),0,7);cx.fill()}
+ const sl=Math.sin(lat0*Math.PI/180),cl=Math.cos(lat0*Math.PI/180),sb=Math.sin(lon0*Math.PI/180),cb=Math.cos(lon0*Math.PI/180);
+ /* grille discrète */
+ cx.strokeStyle='rgba(60,110,150,.10)';cx.lineWidth=.6;
+ for(let la=-60;la<=60;la+=30){cx.beginPath();let on=false;for(let lo=-180;lo<=180;lo+=4){const p=proj(la*Math.PI/180,lo*Math.PI/180,R,mx,my);if(!p){on=false;continue}on?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]);on=true}cx.stroke()}
+ for(let lo=-180;lo<180;lo+=30){cx.beginPath();let on=false;for(let la=-90;la<=90;la+=4){const p=proj(la*Math.PI/180,lo*Math.PI/180,R,mx,my);if(!p){on=false;continue}on?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]);on=true}cx.stroke()}
+ /* terres : surfaces pleines ; les points derrière l'horizon sont ramenés sur le bord du globe */
+ cx.fillStyle='#d9e4dc';cx.strokeStyle='#8fa89c';cx.lineWidth=.8;cx.lineJoin='round';
+ for(const ring of RINGS){
+  let vis=false;const pts=new Array(ring.length);
+  for(let k=0;k<ring.length;k++){const v=ring[k];
+   const x1=v[0]*cb-v[2]*sb,z1=v[0]*sb+v[2]*cb,y1=v[1];
+   const y2=y1*cl-z1*sl,z2=y1*sl+z1*cl;
+   let px=x1,py=y2;if(z2<0){const m=Math.hypot(px,py)||1;px/=m;py/=m}else vis=true;
+   pts[k]=[mx+px*R,my-py*R]}
+  if(!vis)continue;
+  cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);for(let k=1;k<pts.length;k++)cx.lineTo(pts[k][0],pts[k][1]);cx.closePath();cx.fill();cx.stroke()}
  const t=(now-t0)/1000;
  for(const v of live){const p=proj(v.lat*Math.PI/180,v.lon*Math.PI/180,R,mx,my);if(!p)continue;const k=(t%2)/2;cx.fillStyle='rgba(47,111,214,.25)';cx.beginPath();cx.arc(p[0],p[1],4+k*14,0,7);cx.fill();cx.fillStyle='#2f6fd6';cx.beginPath();cx.arc(p[0],p[1],4,0,7);cx.fill()}
  for(const o of orders){const p=proj(o.lat*Math.PI/180,o.lon*Math.PI/180,R,mx,my);if(!p)continue;cx.fillStyle='#7c5cf0';cx.beginPath();cx.arc(p[0],p[1],5,0,7);cx.fill();cx.strokeStyle='#fff';cx.lineWidth=1.5;cx.stroke();cx.beginPath();cx.moveTo(p[0],p[1]);cx.lineTo(p[0],p[1]-14);cx.strokeStyle='#7c5cf0';cx.stroke();cx.beginPath();cx.arc(p[0],p[1]-16,4,0,7);cx.fillStyle='#7c5cf0';cx.fill()}
