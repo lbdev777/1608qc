@@ -62,6 +62,12 @@ const L=window.LAND,RINGS=[];
 if(L){const D=Math.PI/180;L.r.forEach(f=>{let x=f[0],y=f[1];const pts=[[x*L.u,y*L.u]];for(let k=2;k<f.length;k+=2){x+=f[k];y+=f[k+1];pts.push([x*L.u,y*L.u])}
  const out=[];for(let k=0;k<pts.length;k++){const a=pts[k],b=pts[(k+1)%pts.length],n=Math.max(1,Math.ceil(Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]))/2));for(let t=0;t<n;t++){const lo=(a[0]+(b[0]-a[0])*t/n)*D,la=(a[1]+(b[1]-a[1])*t/n)*D;out.push([Math.cos(la)*Math.sin(lo),Math.sin(la),Math.cos(la)*Math.cos(lo)])}}
  RINGS.push(out)})}
+const B=window.BORDERS,CLINES=[],SLINES=[];
+/* Frontières : pays (Natural Earth 110m) ; provinces et états du Canada et des États-Unis (50m). */
+function decodeLines(arr,u,dst){const D=Math.PI/180;arr.forEach(f=>{let x=f[0],y=f[1];const pts=[[x*u,y*u]];for(let k=2;k<f.length;k+=2){x+=f[k];y+=f[k+1];pts.push([x*u,y*u])}
+ const out=[];for(let k=0;k<pts.length;k++){const a=pts[k],b=pts[k+1]||a,n=Math.max(1,Math.ceil(Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]))/2));for(let t=0;t<(k===pts.length-1?1:n);t++){const lo=(a[0]+(b[0]-a[0])*t/n)*D,la=(a[1]+(b[1]-a[1])*t/n)*D;out.push([Math.cos(la)*Math.sin(lo),Math.sin(la),Math.cos(la)*Math.cos(lo)])}}
+ dst.push(out)})}
+if(B){decodeLines(B.c,B.u,CLINES);decodeLines(B.s,B.u,SLINES)}
 function size(){const r=cv.getBoundingClientRect();dpr=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)}
 function proj(lat,lon,R,cxp,cyp){const φ=lat,λ=lon-lon0*Math.PI/180,φ0=lat0*Math.PI/180;const c=Math.sin(φ0)*Math.sin(φ)+Math.cos(φ0)*Math.cos(φ)*Math.cos(λ);if(c<=0)return null;return[cxp+R*Math.cos(φ)*Math.sin(λ),cyp-R*(Math.cos(φ0)*Math.sin(φ)-Math.sin(φ0)*Math.cos(φ)*Math.cos(λ)),c]}
 function frame(now){
@@ -86,6 +92,12 @@ function frame(now){
    pts[k]=[mx+px*R,my-py*R]}
   if(!vis)continue;
   cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);for(let k=1;k<pts.length;k++)cx.lineTo(pts[k][0],pts[k][1]);cx.closePath();cx.fill();cx.stroke()}
+/* frontières : segments visibles seulement (on coupe au passage de l'horizon) */
+ const drawLines=(L,style,w,zk)=>{cx.strokeStyle=style;cx.lineWidth=w;cx.beginPath();
+  for(const ln of L){let on=false;for(let k=0;k<ln.length;k++){const v=ln[k];const x1=v[0]*cb-v[2]*sb,z1=v[0]*sb+v[2]*cb,y2=v[1]*cl-z1*sl,z2=v[1]*sl+z1*cl;
+   if(z2<=0){on=false;continue}const X=mx+x1*R,Y=my-y2*R;on?cx.lineTo(X,Y):cx.moveTo(X,Y);on=true}}cx.stroke()};
+ drawLines(SLINES,'rgba(120,140,150,.5)',.5);
+ drawLines(CLINES,'rgba(90,110,120,.75)',.8);
  const t=(now-t0)/1000;
  for(const v of live){const p=proj(v.lat*Math.PI/180,v.lon*Math.PI/180,R,mx,my);if(!p)continue;const k=(t%2)/2;cx.fillStyle='rgba(47,111,214,.25)';cx.beginPath();cx.arc(p[0],p[1],4+k*14,0,7);cx.fill();cx.fillStyle='#2f6fd6';cx.beginPath();cx.arc(p[0],p[1],4,0,7);cx.fill()}
  for(const o of orders){const p=proj(o.lat*Math.PI/180,o.lon*Math.PI/180,R,mx,my);if(!p)continue;cx.fillStyle='#7c5cf0';cx.beginPath();cx.arc(p[0],p[1],5,0,7);cx.fill();cx.strokeStyle='#fff';cx.lineWidth=1.5;cx.stroke();cx.beginPath();cx.moveTo(p[0],p[1]);cx.lineTo(p[0],p[1]-14);cx.strokeStyle='#7c5cf0';cx.stroke();cx.beginPath();cx.arc(p[0],p[1]-16,4,0,7);cx.fillStyle='#7c5cf0';cx.fill()}
