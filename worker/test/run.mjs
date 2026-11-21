@@ -23,7 +23,7 @@ let n = 0; const ok = (name, f) => f().then(() => { n++; console.log('✓', name
 
 await ok('commande valide : 201, stockée, notifiée', async () => {
   const b = good(); const r = await post(b); assert.equal(r.status, 201); const j = await r.json();
-  assert.match(j.id, /^1608-[A-Z0-9]{6}$/); await Promise.all(waits);
+  assert.match(j.id, /^30\d\d$/); assert.equal(j.id, '3001'); await Promise.all(waits);
   assert.equal(sent.length, 1); assert.ok(sent[0].text.includes(j.id)); assert.ok(!sent[0].text.includes('Test.ca'), 'pas de courriel dans la notif');
   assert.ok(!sent[0].text.includes('rue Test'));
 });
@@ -77,5 +77,22 @@ await ok('erreur serveur : aucune fuite de détails', async () => {
   const r = await post(good(), {}); const bad = { ...env, PII_KEY: undefined };
   const r2 = await W.default.fetch(new Request('https://api/api/orders', { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://1608qc.com' }, body: JSON.stringify(good()) }), bad, ctx);
   assert.equal(r2.status, 500); assert.ok(!(await r2.text()).includes('PII_KEY'));
+});
+await ok('numéros séquentiels 3001, 3002… sans doublon', async () => {
+  const a = await (await post(good(), { 'cf-connecting-ip': '5.5.5.5' })).json(); const b = await (await post(good(), { 'cf-connecting-ip': '5.5.5.5' })).json();
+  assert.equal(Number(b.id), Number(a.id) + 1);
+});
+const look = (email, number, ip = '7.7.7.7') => W.default.fetch(new Request('https://api/api/order-status', { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://1608qc.com', 'cf-connecting-ip': ip }, body: JSON.stringify({ email, number }) }), env, ctx);
+await ok('suivi : bon courriel + numéro → statut, sans coordonnées', async () => {
+  const r = await look('JEAN@test.ca', '#3001'); assert.equal(r.status, 200); const j = await r.json();
+  assert.equal(j.id, '3001'); assert.equal(j.status, 'Commande reçue'); const all = JSON.stringify(j);
+  for (const x of ['Tremblay', 'rue Test', 'G5L', '555-0100', 'pii_enc']) assert.ok(!all.includes(x), x);
+});
+await ok('suivi : mauvais courriel ou numéro inconnu → 404 identique', async () => {
+  const a = await look('autre@test.ca', '3001'), b = await look('jean@test.ca', '3999');
+  assert.equal(a.status, 404); assert.equal(b.status, 404); assert.equal((await a.text()), (await b.text()));
+});
+await ok('suivi : limite de 10 essais / 10 min', async () => {
+  let last; for (let i = 0; i < 12; i++) last = (await look('x@test.ca', '3001', '8.8.8.8')).status; assert.equal(last, 429);
 });
 console.log(n, 'tests réussis');

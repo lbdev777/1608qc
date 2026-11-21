@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS orders(
   city TEXT NOT NULL,
   pii_enc TEXT NOT NULL,
   ip_hash TEXT,
+  email_hash TEXT,
   reminded_at TEXT,
   admin_note TEXT NOT NULL DEFAULT ''
 );
@@ -38,3 +39,8 @@ CREATE TABLE IF NOT EXISTS events(
   note TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_events_order ON events(order_id, at);
+CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email_hash);
+CREATE TABLE IF NOT EXISTS counter(name TEXT PRIMARY KEY, n INTEGER NOT NULL);
+INSERT OR IGNORE INTO counter(name,n) VALUES('order',3000);
+CREATE TABLE IF NOT EXISTS lookups(ip_hash TEXT NOT NULL, at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_lookups ON lookups(ip_hash, at);

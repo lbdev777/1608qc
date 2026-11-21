@@ -39,19 +39,20 @@ async function flushPending(){
  const done=[];let list=readPending();
  for(const e of list.slice()){
   const res=await sendOrder(e);
-  if(res.ok){done.push({id:res.id,total:res.total});list=readPending().filter(x=>x.idem!==e.idem);writePending(list)}
+  if(res.ok){saveLast(res.id,e.payload&&e.payload.customer&&e.payload.customer.email);done.push({id:res.id,total:res.total});list=readPending().filter(x=>x.idem!==e.idem);writePending(list)}
   else if(res.final){list=readPending().filter(x=>x.idem!==e.idem);writePending(list)}
  }
  return done;
 }
+function saveLast(id,email){try{localStorage.setItem('1608-last-order',JSON.stringify({id:String(id),email:email||''}))}catch(_){}}
 function showConfirmation(res){
  const draft=$('[data-manual-draft]');
  if(draft)draft.hidden=true;
  const st=$('[data-pay-status]');
  st.innerHTML='';
- const b=document.createElement('strong');b.textContent='Commande reçue ✓ Numéro : '+res.id;
+ const b=document.createElement('strong');b.textContent='Commande reçue ✓ Numéro #'+res.id;
  const p=document.createElement('span');p.textContent=' Gardez ce numéro. Nous vous écrivons le montant exact à virer par Interac. Votre commande est confirmée dès réception du virement.';
- st.append(b,p);
+ const l=document.createElement('a');l.href='commande.html';l.textContent=' Suivre ma commande →';l.style.cssText='display:block;margin-top:8px;font-weight:700';st.append(b,p,l);
 }
 
 function save(){
@@ -154,7 +155,7 @@ async function submitToApi(contact){
  if(!res.ok&&!res.final){await new Promise(r=>setTimeout(r,2500));res=await sendOrder(entry)}
  if(res.ok){
   writePending(readPending().filter(x=>x.idem!==entry.idem));
-  cart=[];save();render();showConfirmation(res);return;
+  saveLast(res.id,contact.email);cart=[];save();render();showConfirmation(res);return;
  }
  if(res.final){writePending(readPending().filter(x=>x.idem!==entry.idem));btn.disabled=false;st.textContent='Commande refusée : '+res.error+' Vérifiez vos informations.';return}
  btn.disabled=false;

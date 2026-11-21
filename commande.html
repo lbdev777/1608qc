@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0e0f0e">
+<meta name="robots" content="noindex">
+<title>Suivre ma commande — 1608</title>
+<script>document.documentElement.classList.add("qc-js")</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/checkout.css?v=easy-1">
+<link rel="stylesheet" href="assets/qc-polish.css?v=edition-02">
+<link rel="stylesheet" href="assets/hm-shop.css?v=hm-1">
+<script src="assets/catalog.js" defer></script>
+<script src="assets/site.js?v=edition-02" defer></script>
+<script src="assets/payment-config.js" defer></script>
+<script src="assets/suivi.js" defer></script>
+<script src="assets/qc-polish.js?v=edition-02" defer></script>
+</head>
+<body data-page="suivi">
+<div data-site-header></div>
+<main id="main" class="checkout-main">
+ <div class="container" style="max-width:640px">
+  <div class="checkout-intro"><div><span class="eyebrow">1608 / SUIVI</span><h1 class="display">MA COMMANDE.</h1><p>Entrez votre courriel et le numéro reçu à la caisse.</p></div></div>
+  <section class="checkout-section">
+   <div class="manual-fields">
+    <label>Courriel <input id="sv-email" type="email" autocomplete="email" maxlength="150" placeholder="vous@exemple.ca"></label>
+    <label>Numéro de commande <input id="sv-number" inputmode="numeric" maxlength="10" placeholder="3001"></label>
+   </div>
+   <button type="button" class="button dark" id="sv-go" style="margin-top:14px;width:100%">VOIR MA COMMANDE</button>
+   <p class="manual-helper" id="sv-msg" role="status"></p>
+  </section>
+  <section class="checkout-section" id="sv-result" hidden></section>
+ </div>
+</main>
+<div data-site-footer></div>
+</body>
+</html>

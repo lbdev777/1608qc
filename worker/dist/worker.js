@@ -8,8 +8,8 @@ const CATALOG={"orbite-noir":{"name":"ORBITE 1608","price":8900,"sizes":["S","M"
    4. L'administration exige un jeton Cloudflare Access valide (refus par défaut si non configuré).
    Aucun secret dans ce fichier : tout vient de `env` (secrets Cloudflare). */
 
-const STATUSES = ['Demande reçue','Total confirmé','Payé (Interac)','En production','Expédié','Livré','Annulé'];
-const OPEN_STATUSES = ['Demande reçue','Total confirmé','Payé (Interac)','En production'];
+const STATUSES = ['Commande reçue','Total confirmé','Payé (Interac)','En production','Expédié','Livré','Annulé'];
+const OPEN_STATUSES = ['Commande reçue','Total confirmé','Payé (Interac)','En production'];
 const MAX_BODY = 8192;
 const ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
 const te = new TextEncoder(), td = new TextDecoder();
@@ -26,10 +26,13 @@ const b64 = buf => { let s = ''; new Uint8Array(buf).forEach(b => s += String.fr
 const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const b64url = s => unb64(s.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(s.length / 4) * 4, '='));
 async function sha256hex(s) { return [...new Uint8Array(await crypto.subtle.digest('SHA-256', te.encode(s)))].map(b => b.toString(16).padStart(2, '0')).join(''); }
-function newOrderId() {
-  const r = crypto.getRandomValues(new Uint8Array(6));
-  return '1608-' + [...r].map(b => ALPHABET[b % ALPHABET.length]).join('');
+/* Numéro de commande séquentiel (3001, 3002, …) : le compteur est incrémenté de façon atomique dans D1. */
+async function nextOrderNumber(env) {
+  const r = await env.DB.prepare("UPDATE counter SET n=n+1 WHERE name='order' RETURNING n").first();
+  if (!r) throw new Error('compteur manquant');
+  return String(r.n);
 }
+async function emailHash(env, email) { return (await sha256hex((env.PII_KEY || '') + '|email|' + email)).slice(0, 40); }
 function origins(env) { return String(env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean); }
 function baseHeaders(extra = {}) {
   return { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer', ...extra };
@@ -135,7 +138,7 @@ function orderMessage(env, o, pii) {
   const cat = catalog();
   const n = items.reduce((t, i) => t + i.qty, 0);
   const lines = items.map(i => `• ${esc(cat[i.id]?.name || i.id)} — ${esc(i.size)} ×${i.qty}`).join('\n');
-  let t = `🆕 <b>Commande ${esc(o.id)}</b>\n${n} article${n > 1 ? 's' : ''} · <b>${money(o.total)}</b>` +
+  let t = `🆕 <b>Commande #${esc(o.id)}</b>\n${n} article${n > 1 ? 's' : ''} · <b>${money(o.total)}</b>` +
     (o.discount ? ` (rabais −${money(o.discount)})` : '') + `\n${lines}\n👤 ${esc(o.first_name)} · ${esc(o.city)}\n` +
     `⚠️ Total, livraison et taxes à confirmer avant le paiement Interac.`;
   if (env.NOTIFY_DETAILS === 'full' && pii) {
@@ -198,7 +201,7 @@ async function createOrder(req, env, ctx) {
   if (raw.length > MAX_BODY) return json({ error: 'Requête trop grande.' }, 413, cors);
   let body; try { body = JSON.parse(raw); } catch (_) { return json({ error: 'JSON invalide.' }, 400, cors); }
   const v = validateOrder(body);
-  if (v.spam) return json({ ok: true, id: '1608-' + 'XXXXXX' }, 200, cors);   // le robot croit avoir réussi
+  if (v.spam) return json({ ok: true, id: String(3000 + 100 + Math.floor(Math.random() * 800)) }, 200, cors);   // le robot croit avoir réussi
   if (v.error) return json({ error: v.error }, 400, cors);
   const ip = req.headers.get('cf-connecting-ip') || '';
   if (!(await turnstileOk(env, v.token, ip))) return json({ error: 'Vérification anti-robot échouée.' }, 403, cors);
@@ -214,18 +217,42 @@ async function createOrder(req, env, ctx) {
   if (byIp.c >= 5 || all.c >= 300) return json({ error: 'Trop de demandes. Réessaie dans quelques minutes.' }, 429, { ...cors, 'retry-after': '300' });
 
   const price = priceOrder(v.items);
-  const id = newOrderId(), at = nowIso();
+  const id = await nextOrderNumber(env), at = nowIso(), eh = await emailHash(env, v.customer.email);
   const pii = await encryptPII(env, v.customer);
   const first = v.customer.name.split(' ')[0].slice(0, 40);
   const stmts = [
-    env.DB.prepare('INSERT INTO orders(id,idem,created_at,updated_at,status,items_json,subtotal,discount,total,percent,first_name,city,pii_enc,ip_hash) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
-      .bind(id, v.idem, at, at, STATUSES[0], JSON.stringify(v.items), price.subtotal, price.discount, price.total, price.percent, first, v.customer.city, pii, ipHash),
-    env.DB.prepare('INSERT INTO events(order_id,at,type,note) VALUES(?,?,?,?)').bind(id, at, 'création', 'Demande reçue du site')
+    env.DB.prepare('INSERT INTO orders(id,idem,created_at,updated_at,status,items_json,subtotal,discount,total,percent,first_name,city,pii_enc,ip_hash,email_hash) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+      .bind(id, v.idem, at, at, STATUSES[0], JSON.stringify(v.items), price.subtotal, price.discount, price.total, price.percent, first, v.customer.city, pii, ipHash, eh),
+    env.DB.prepare('INSERT INTO events(order_id,at,type,note) VALUES(?,?,?,?)').bind(id, at, 'création', 'Commande reçue du site')
   ];
   for (const c of chatIds(env)) stmts.push(env.DB.prepare('INSERT INTO notifications(order_id,chat_id) VALUES(?,?)').bind(id, c));
   await env.DB.batch(stmts);                       // atomique : tout ou rien, AVANT la notification
   ctx.waitUntil(sendPending(env, id));
   return json({ ok: true, id, subtotal: price.subtotal, discount: price.discount, total: price.total, percent: price.percent }, 201, cors);
+}
+
+/* ---------- suivi par le client : courriel + numéro de commande (aucune coordonnée renvoyée) ---------- */
+async function orderStatus(req, env) {
+  const cors = corsFor(req, env);
+  const origin = req.headers.get('origin');
+  if (origin && !origins(env).includes(origin)) return json({ error: 'Origine refusée.' }, 403);
+  if (!/^application\/json/i.test(req.headers.get('content-type') || '')) return json({ error: 'Type de contenu invalide.' }, 415, cors);
+  const raw = await req.text();
+  if (raw.length > 1024) return json({ error: 'Requête trop grande.' }, 413, cors);
+  let b; try { b = JSON.parse(raw); } catch (_) { return json({ error: 'JSON invalide.' }, 400, cors); }
+  const email = clean(b && b.email, 150).toLowerCase(), number = clean(String(b && b.number || ''), 12).replace(/^#/, '');
+  if (!/^\d{4,8}$/.test(number) || !/^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: 'Entrez votre courriel et votre numéro de commande.' }, 400, cors);
+  const ipHash = (await sha256hex((req.headers.get('cf-connecting-ip') || '') + '|' + (env.IP_SALT || '1608'))).slice(0, 24);
+  const since = new Date(Date.now() - 600e3).toISOString();
+  const n = await env.DB.prepare('SELECT COUNT(*) c FROM lookups WHERE ip_hash=? AND at>?').bind(ipHash, since).first();
+  if (n.c >= 10) return json({ error: 'Trop d’essais. Réessayez dans quelques minutes.' }, 429, { ...cors, 'retry-after': '600' });
+  await env.DB.prepare('INSERT INTO lookups(ip_hash,at) VALUES(?,?)').bind(ipHash, nowIso()).run();
+  const o = await env.DB.prepare('SELECT id,created_at,updated_at,status,items_json,subtotal,discount,total FROM orders WHERE id=? AND email_hash=?').bind(number, await emailHash(env, email)).first();
+  if (!o) return json({ error: 'Aucune commande trouvée avec ce courriel et ce numéro.' }, 404, cors);
+  const cat = catalog();
+  const ev = (await env.DB.prepare("SELECT at,type FROM events WHERE order_id=? AND type LIKE 'statut%' ORDER BY at").bind(o.id).all()).results || [];
+  return json({ ok: true, id: o.id, status: o.status, created_at: o.created_at, updated_at: o.updated_at, subtotal: o.subtotal, discount: o.discount, total: o.total,
+    items: JSON.parse(o.items_json).map(i => ({ name: cat[i.id]?.name || i.id, size: i.size, qty: i.qty })), history: ev.map(e => ({ at: e.at, status: e.type.replace(/^statut → /, '') })) }, 200, cors);
 }
 
 /* ---------- administration ---------- */
@@ -272,7 +299,7 @@ async function adminRoute(req, env, url) {
     return json({ events: e });
   }
   if (req.method === 'GET' && parts[0] === 'stats') {
-    const s = await env.DB.prepare("SELECT COUNT(*) total, SUM(status='Demande reçue') nouvelles, SUM(status IN ('Payé (Interac)','En production','Expédié','Livré')) payees FROM orders").first();
+    const s = await env.DB.prepare("SELECT COUNT(*) total, SUM(status='Commande reçue') nouvelles, SUM(status IN ('Payé (Interac)','En production','Expédié','Livré')) payees FROM orders").first();
     const p = await env.DB.prepare('SELECT COUNT(*) c FROM notifications WHERE sent_at IS NULL').first();
     return json({ ...s, notifications_en_attente: p.c, telegram: !!env.TELEGRAM_BOT_TOKEN && chatIds(env).length > 0 });
   }
@@ -296,6 +323,14 @@ export default {
         if (req.method === 'POST') return await createOrder(req, env, ctx);
         return json({ error: 'Méthode non permise.' }, 405);
       }
+      if (url.pathname === '/api/order-status') {
+        if (req.method === 'OPTIONS') {
+          const c = corsFor(req, env);
+          return new Response(null, { status: 204, headers: { ...c, 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400' } });
+        }
+        if (req.method === 'POST') return await orderStatus(req, env);
+        return json({ error: 'Méthode non permise.' }, 405);
+      }
       if (url.pathname.startsWith('/api/admin/')) return await adminRoute(req, env, url);
       return json({ error: 'Introuvable.' }, 404);
     } catch (e) {
@@ -309,9 +344,9 @@ export default {
       const r = await sendPending(env);
       // Rappel : demande sans réponse depuis plus d'une heure.
       const old = new Date(Date.now() - 3600e3).toISOString();
-      const stale = (await env.DB.prepare("SELECT id,first_name,total FROM orders WHERE status='Demande reçue' AND reminded_at IS NULL AND created_at<? LIMIT 10").bind(old).all()).results || [];
+      const stale = (await env.DB.prepare("SELECT id,first_name,total FROM orders WHERE status='Commande reçue' AND reminded_at IS NULL AND created_at<? LIMIT 10").bind(old).all()).results || [];
       for (const o of stale) {
-        await broadcast(env, `⏰ <b>${esc(o.id)}</b> (${esc(o.first_name)}, ${money(o.total)}) attend toujours une réponse.`);
+        await broadcast(env, `⏰ <b>#${esc(o.id)}</b> (${esc(o.first_name)}, ${money(o.total)}) attend toujours une réponse.`);
         await env.DB.prepare('UPDATE orders SET reminded_at=? WHERE id=?').bind(nowIso(), o.id).run();
       }
       if (event.cron === '0 12 * * *') {

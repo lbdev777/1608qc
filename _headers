@@ -7,6 +7,10 @@
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-j066jg89mNA7/IR42T4q0zsXElaMzjE+xSxjxg2TiKM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.workers.dev https://api.1608qc.com https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self' mailto:; frame-ancestors 'none'
 /checkout
   Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-j066jg89mNA7/IR42T4q0zsXElaMzjE+xSxjxg2TiKM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.workers.dev https://api.1608qc.com https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self' mailto:; frame-ancestors 'none'
+/commande.html
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-j066jg89mNA7/IR42T4q0zsXElaMzjE+xSxjxg2TiKM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.workers.dev https://api.1608qc.com https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self' mailto:; frame-ancestors 'none'
+/commande
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-j066jg89mNA7/IR42T4q0zsXElaMzjE+xSxjxg2TiKM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.workers.dev https://api.1608qc.com https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self' mailto:; frame-ancestors 'none'
 /commandes.html
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.workers.dev https://api.1608qc.com https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self' mailto:; frame-ancestors 'none'
 /commandes
