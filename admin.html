@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration — 1608</title>
+<meta name="description" content="Tableau de bord interne de la boutique 1608 : catalogue, marges, commandes, lancement, santé du site.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/admin.css?v=adm-1">
+<script src="assets/catalog.js" defer></script>
+<script src="assets/payment-config.js" defer></script>
+<script src="assets/admin.js?v=adm-1" defer></script>
+</head>
+<body>
+<div class="adm-shell">
+  <aside class="adm-side" aria-label="Navigation de l’administration">
+    <a class="adm-brand" href="index.html"><b>1608</b><span>Administration</span></a>
+    <nav class="adm-nav" data-nav></nav>
+    <p class="adm-side-note">Page interne, <b>non protégée</b>. Aucun mot de passe ni clé ici : tes saisies restent dans ce navigateur.</p>
+    <a class="adm-back" href="index.html">← Retour à la boutique</a>
+  </aside>
+  <main class="adm-main" id="main">
+    <header class="adm-top">
+      <div><h1 data-title>Aperçu</h1><p data-sub></p></div>
+      <div class="adm-top-actions"><span class="adm-pill" data-pay-pill></span><button type="button" class="adm-btn" data-export-all>Sauvegarder (JSON)</button></div>
+    </header>
+    <div class="adm-notice" role="note"><b>À savoir.</b> Cette page n’a aucun accès sécurisé : n’importe qui connaissant l’adresse peut l’ouvrir. Elle ne contient donc que des données publiques du catalogue. <b>Les coûts, marges et commandes que tu y entres sont enregistrés uniquement dans ce navigateur</b>, jamais envoyés ni publiés. Avant de passer sur 1608qc.com, retire <code>admin.html</code> du site public ou protège-la.</div>
+    <div data-view></div>
+  </main>
+</div>
+<noscript><p style="padding:24px">Active JavaScript pour utiliser l’administration.</p></noscript>
+</body>
+</html>
