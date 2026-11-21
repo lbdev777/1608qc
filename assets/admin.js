@@ -12,6 +12,7 @@ const SECTIONS=[
  ['commandes','Commandes','Suivi manuel des demandes reçues par courriel, du premier contact à la livraison.'],
  ['guides','Guides de tailles','Couverture des guides par modèle.'],
  ['lancement','Lancement','Ce qu’il reste à confirmer avant d’ouvrir les commandes.'],
+ ['miseenligne','Mise en ligne','Plan pour tout remettre en ligne, étape par étape, sans rien activer à ta place.'],
  ['sante','Santé du site','Analyse automatique des pages, images et liens.'],
  ['activite','Activité GitHub','Derniers changements et branches du dépôt.'],
  ['notes','Notes & sauvegarde','Journal personnel, export et import de tes données.']
@@ -91,10 +92,11 @@ views.apercu=async()=>{
 };
 
 views.catalogue=async()=>{
- const g=await guideInfo();
- const rows=P.map(p=>{const gi=g.find(x=>x.id===p.id);return `<tr data-id="${p.id}"><td><img class="thumb" src="${esc(p.photos[0])}" alt=""></td><td><b>${esc(p.name)}</b> ${p.isNew?'<span class="tag new">NOUVEAU</span>':''}<br><span class="muted small">${esc(p.variant)}</span></td><td>${esc(catName[p.category]||p.category)}</td><td>${esc(p.ref||'—')}</td><td class="num">${money(p.price)}</td><td>${p.sizes.join(' · ')}</td><td>${p.photos.length}</td><td>${gi.has?'<span class="tag ok">oui</span>':'<span class="tag bad">non</span>'}</td><td><button class="adm-btn ghost sm" data-detail="${p.id}">Détails</button> <a class="adm-btn ghost sm" style="text-decoration:none;display:inline-flex;align-items:center" href="produit-${p.id}.html" target="_blank" rel="noopener">Fiche ↗</a></td></tr>`}).join('');
+ const g=await guideInfo();const v3=(await getText('assets/view360.js')).replace(/\/\*[\s\S]*?\*\//g,'');
+ const has360=id=>new RegExp("'"+id+"'\\s*:\\s*\\{\\s*frames").test(v3);
+ const rows=P.map(p=>{const gi=g.find(x=>x.id===p.id);return `<tr data-id="${p.id}"><td><img class="thumb" src="${esc(p.photos[0])}" alt=""></td><td><b>${esc(p.name)}</b> ${p.isNew?'<span class="tag new">NOUVEAU</span>':''}<br><span class="muted small">${esc(p.variant)}</span></td><td>${esc(catName[p.category]||p.category)}</td><td>${esc(p.ref||'—')}</td><td class="num">${money(p.price)}</td><td>${p.sizes.join(' · ')}</td><td>${p.photos.length}</td><td>${gi.has?'<span class="tag ok">oui</span>':'<span class="tag bad">non</span>'}</td><td>${has360(p.id)?'<span class="tag ok">360° réel</span>':'<span class="tag warn">devant / dos</span>'}</td><td><button class="adm-btn ghost sm" data-detail="${p.id}">Détails</button> <a class="adm-btn ghost sm" style="text-decoration:none;display:inline-flex;align-items:center" href="produit-${p.id}.html" target="_blank" rel="noopener">Fiche ↗</a></td></tr>`}).join('');
  return `<div class="tools"><input type="search" placeholder="Rechercher un modèle…" data-search aria-label="Rechercher"><select data-cat aria-label="Catégorie"><option value="">Toutes les catégories</option>${Object.entries(catName).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select><button class="adm-btn ghost" data-csv-cat>Exporter CSV</button></div>
- <div class="tbl-wrap"><table data-cattable><thead><tr><th></th><th>Modèle</th><th>Catégorie</th><th>Réf. fournisseur</th><th class="num">Prix</th><th>Tailles</th><th>Photos</th><th>Guide</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+ <div class="tbl-wrap"><table data-cattable><thead><tr><th></th><th>Modèle</th><th>Catégorie</th><th>Réf. fournisseur</th><th class="num">Prix</th><th>Tailles</th><th>Photos</th><th>Guide</th><th>Vue 3D</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
  <dialog data-dlg></dialog>`;
 };
 views.catalogue.bind=root=>{
@@ -147,8 +149,9 @@ views.simulateur.bind=root=>{
 views.commandes=async()=>{
  const opts=P.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
  const list=db.orders.slice().sort((a,b)=>b.date.localeCompare(a.date));
- const tbl=list.length?`<div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Date</th><th>Client</th><th>Articles</th><th class="num">Total articles</th><th>Statut</th><th></th></tr></thead><tbody>${list.map(o=>{const c=calc(orderLines(o));return `<tr data-o="${o.id}"><td><b>${esc(o.id)}</b></td><td>${dateFr(o.date)}</td><td>${esc(o.client)}<br><span class="muted small">${esc(o.contact||'')}${o.city?' · '+esc(o.city):''}</span></td><td>${o.items.map(i=>`${esc(prod(i.id)?.name||i.id)} ${esc(i.size)} ×${i.qty}`).join('<br>')}</td><td class="num">${money(c.total)}${c.discount?`<br><span class="muted small">rabais −${money(c.discount)}</span>`:''}</td><td><select data-status="${o.id}">${STATUSES.map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></td><td><button class="adm-btn ghost sm" data-edit="${o.id}">Modifier</button> <button class="adm-btn danger sm" data-del="${o.id}">Supprimer</button></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Aucune commande suivie. Ajoute chaque demande reçue par courriel pour suivre le paiement, la production et l’envoi.</div>';
- return `<div class="card" style="margin-bottom:14px"><p style="margin:0">La caisse ne crée pas encore de vraie commande : elle ouvre un brouillon de courriel. Ce tableau est ton <b>registre manuel</b>, enregistré dans ce navigateur seulement (sauvegarde-le avec l’export).</p></div>
+ const tbl=list.length?`<div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Date</th><th>Client</th><th>Articles</th><th class="num">Total articles</th><th>Statut</th><th></th></tr></thead><tbody>${list.map(o=>{const c=calc(orderLines(o));return `<tr data-o="${o.id}"><td><b>${esc(o.id)}</b></td><td>${dateFr(o.date)}</td><td>${esc(o.client)}<br><span class="muted small">${esc(o.contact||'')}${o.city?' · '+esc(o.city):''}</span></td><td>${o.items.map(i=>`${esc(prod(i.id)?.name||i.id)} ${esc(i.size)} ×${i.qty}`).join('<br>')}</td><td class="num">${money(c.total)}${c.discount?`<br><span class="muted small">rabais −${money(c.discount)}</span>`:''}</td><td><select data-status="${o.id}">${STATUSES.map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></td><td>${/^\S+@\S+\.\S+$/.test(o.contact||'')?`<a class="adm-btn ghost sm" style="text-decoration:none;display:inline-flex;align-items:center" href="mailto:${esc(o.contact)}?subject=${encodeURIComponent('1608 — commande '+o.id)}">Écrire</a> `:''}<button class="adm-btn ghost sm" data-edit="${o.id}">Modifier</button> <button class="adm-btn danger sm" data-del="${o.id}">Supprimer</button></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Aucune commande suivie. Ajoute chaque demande reçue par courriel pour suivre le paiement, la production et l’envoi.</div>';
+ const oe=(window.STORE_MANUAL_PAYMENT||{}).ordersEmail||'';
+ return `<div class="card" style="margin-bottom:14px">${oe?`<p style="margin:0 0 8px">Les demandes de la caisse arriveront à <b>${esc(oe)}</b> <button class="adm-btn ghost sm" data-copy="${esc(oe)}">Copier</button></p>`:''}<p style="margin:0">La caisse ne crée pas encore de vraie commande : elle ouvre un brouillon de courriel. Ce tableau est ton <b>registre manuel</b>, enregistré dans ce navigateur seulement (sauvegarde-le avec l’export).</p></div>
  <div class="tools"><button class="adm-btn" data-new>+ Nouvelle commande</button><button class="adm-btn ghost" data-from-cart>Créer depuis mon panier</button><select data-ofilter aria-label="Filtrer par statut"><option value="">Tous les statuts</option>${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select><button class="adm-btn ghost" data-csv-o>Exporter CSV</button></div>
  <div class="steps" aria-label="Étapes">${STATUSES.slice(0,6).map(s=>`<span>${s}</span>`).join('')}</div><br>${tbl}
  <dialog data-odlg></dialog><template data-opts>${opts}</template>`;
@@ -173,6 +176,7 @@ views.commandes.bind=root=>{
   function keep(){const fd=new FormData(f);['client','contact','city','status','tracking','note'].forEach(k=>cur[k]=fd.get(k)??cur[k])}};
   render();d.showModal()};
  root.addEventListener('click',e=>{
+  const cp=e.target.closest('[data-copy]');if(cp){navigator.clipboard?.writeText(cp.dataset.copy).then(()=>{cp.textContent='Copié ✓'});return}
   if(e.target.closest('[data-new]'))open();
   const ed=e.target.closest('[data-edit]');if(ed)open(db.orders.find(o=>o.id===ed.dataset.edit));
   const del=e.target.closest('[data-del]');if(del&&confirm('Supprimer cette commande du registre ?')){db.orders=db.orders.filter(o=>o.id!==del.dataset.del);save();route(true)}
@@ -206,6 +210,36 @@ views.lancement=async()=>{
 };
 views.lancement.bind=root=>root.addEventListener('change',e=>{const k=e.target.dataset.chk;if(k){db.checks[k]=e.target.checked;save();route(true)}});
 
+views.miseenligne=async()=>{
+ const pay=window.STORE_MANUAL_PAYMENT||{};const g=await guideInfo();
+ const [idx,co]=await Promise.all([getText('index.html'),getText('checkout.html')]);
+ const pre=[
+  [!!pay.interacEmail,'Adresse Interac configurée ('+(pay.interacEmail||'—')+')'],
+  [!!pay.ordersEmail,'Courriel de réception des commandes configuré'],
+  [g.every(x=>x.has),'Guides de tailles pour les '+P.length+' modèles'],
+  [P.every(p=>unit(p.id)),'Coûts fournisseur saisis (onglet Prix & marges)'],
+  [!!db.checks.lead,'Délai de livraison confirmé (étape cochée)'],
+  [!!db.checks.returns,'Conditions de retour validées (étape cochée)'],
+  [!!db.checks.sample,'Commande test Tapstitch passée (étape cochée)'],
+  [!!db.checks.admin,'admin.html retirée ou protégée (étape cochée)']];
+ const ready=pre.filter(x=>x[0]).length;
+ return `<div class="grid g2"><div class="card kpi"><b>${ready}/${pre.length}</b><span>vérifications prêtes</span>${bar(ready,pre.length)}<p class="small muted" style="margin-top:12px">Le paiement reste <b>${pay.enabled?'activé':'désactivé'}</b> (<code>enabled: ${!!pay.enabled}</code>). Il ne sera activé qu’avec ton feu vert explicite.</p></div>
+ <div class="card"><h2>Avant de commencer</h2>${pre.map(([ok,t])=>`<div class="row"><span>${ok?ico('ok','✓'):ico('idle','–')} ${esc(t)}</span><span class="tag ${ok?'ok':'warn'}">${ok?'prêt':'à faire'}</span></div>`).join('')}</div></div>
+ <div class="card" style="margin-top:14px"><h2>Plan de mise en ligne</h2><p class="small muted">Rien de ceci n’est exécuté par cette page. Chaque étape demande ton autorisation.</p>
+ <ol style="margin:0;padding-left:20px;line-height:1.7">
+ <li><b>Geler la version.</b> Choisir le dernier commit de <code>boutique-preview</code> à publier et le noter ici (Notes).</li>
+ <li><b>Tester sur github.io.</b> Téléphone réel, Safari et Firefox : accueil, fiche, guide de tailles, ajout rapide, panier, caisse (brouillon de courriel).</li>
+ <li><b>Envoyer un courriel test</b> depuis la caisse vers l’adresse des commandes et vérifier la réception. <a class="adm-btn ghost sm" style="text-decoration:none;display:inline-flex" href="mailto:${esc(pay.ordersEmail||'')}?subject=${encodeURIComponent('1608 — test de réception')}">Écrire à l’adresse des commandes</a></li>
+ <li><b>Retirer ou protéger <code>admin.html</code></b> avant que le dépôt serve le domaine public.</li>
+ <li><b>Sauvegarder la page d’attente actuelle</b> (<code>1608-PUBLIC</code>) : ne rien y modifier, noter son dernier commit pour pouvoir y revenir.</li>
+ <li><b>Basculer le domaine</b> 1608qc.com vers la boutique (réglages Pages / DNS). Seulement avec ton autorisation explicite.</li>
+ <li><b>Vérifier en ligne</b> avec l’onglet Santé du site, puis activer le paiement dans <code>payment-config.js</code> seulement une fois tout confirmé.</li>
+ <li><b>Retour arrière prévu :</b> remettre le domaine sur <code>1608-PUBLIC</code> (la page d’attente reste intacte). Aucune perte : les commandes viennent par courriel.</li></ol></div>
+ <div class="card" style="margin-top:14px"><h2>État de la configuration publique</h2>
+  <div class="row"><span>Mention « aperçu » dans la caisse</span><span class="tag ${/aperçu|apercu|configurer/i.test(co)?'warn':'ok'}">${/aperçu|apercu|configurer/i.test(co)?'encore affichée':'retirée'}</span></div>
+  <div class="row"><span>Bandeau « commandes pas encore ouvertes » (en-tête, toutes les pages)</span><span class="tag warn">à retirer à l’ouverture</span></div>
+  <p class="small muted">À l’ouverture, il faudra aussi retirer ces mentions d’aperçu : je le fais à ta demande, en même temps que l’activation.</p></div>`;
+};
 views.sante=async()=>`<div class="tools"><button class="adm-btn" data-run>Lancer l’analyse</button><span class="muted small" data-prog></span></div><div data-res><div class="empty">L’analyse charge chaque page, vérifie les titres, descriptions, images, liens et le poids des photos. Elle ne modifie rien.</div></div>`;
 views.sante.bind=root=>{
  $('[data-run]',root).addEventListener('click',async e=>{
