@@ -4,6 +4,6 @@ window.STORE_MANUAL_PAYMENT = Object.freeze({
   interacEmail: 'paiementsmillesixcenthuit@gmail.com',
   ordersEmail: 'paiementsmillesixcenthuit@gmail.com',
   // URL HTTPS publique du Worker de commandes (voir CLOUDFLARE-COMMANDES.md). Vide = ancien mode courriel.
-  apiUrl: '',
+  apiUrl: 'https://1608-orders.louisbeaulieu33.workers.dev',
   enabled: true
 });
