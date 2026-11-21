@@ -49,8 +49,8 @@ function showConfirmation(res){
  if(draft)draft.hidden=true;
  const st=$('[data-pay-status]');
  st.innerHTML='';
- const b=document.createElement('strong');b.textContent='Demande reçue ✓ Numéro : '+res.id;
- const p=document.createElement('span');p.textContent=' Gardez ce numéro. Nous vous écrivons avec le total confirmé (livraison et taxes incluses) avant tout virement Interac.';
+ const b=document.createElement('strong');b.textContent='Commande reçue ✓ Numéro : '+res.id;
+ const p=document.createElement('span');p.textContent=' Gardez ce numéro. Nous vous écrivons le montant exact à virer par Interac. Votre commande est confirmée dès réception du virement.';
  st.append(b,p);
 }
 
@@ -91,9 +91,9 @@ function render(){
  $('[data-bundle-discount-value]').textContent='−'+money(pricing.discount);
  const promoProgress=$('[data-bundle-progress]');if(promoProgress){promoProgress.hidden=true;promoProgress.textContent='';}
  $('[data-pay-button]').disabled=!canRequest||cart.length===0;
- $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'ENVOYER MA DEMANDE ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
+ $('[data-pay-button]').textContent=cart.length===0?'AJOUTER UN ARTICLE':canRequest?'COMMANDER ↗':'ADRESSE DE PAIEMENT À CONFIGURER';
  $('[data-pay-status]').textContent=canRequest
- ?'Après votre demande, attendez le total confirmé (articles, frais de livraison et taxes applicables) avant tout virement.'
+ ?'Nous vous écrivons le montant exact à virer (livraison et taxes incluses). Commande confirmée dès réception du virement Interac.'
  :'La réception des commandes n’est pas encore activée. Vous pouvez consulter le panier sans effectuer de paiement.';
 }
 function showRecipient(){
@@ -156,9 +156,9 @@ async function submitToApi(contact){
   writePending(readPending().filter(x=>x.idem!==entry.idem));
   cart=[];save();render();showConfirmation(res);return;
  }
- if(res.final){writePending(readPending().filter(x=>x.idem!==entry.idem));btn.disabled=false;st.textContent='Demande refusée : '+res.error+' Vérifiez vos informations.';return}
+ if(res.final){writePending(readPending().filter(x=>x.idem!==entry.idem));btn.disabled=false;st.textContent='Commande refusée : '+res.error+' Vérifiez vos informations.';return}
  btn.disabled=false;
- st.textContent='Connexion impossible pour le moment. Votre demande est gardée sur cet appareil et sera renvoyée automatiquement dès que la connexion revient (gardez cette page ouverte ou revenez sur le site). Vous pouvez aussi nous écrire à '+(validEmail(config.ordersEmail)?config.ordersEmail:'notre courriel')+'.';
+ st.textContent='Connexion impossible pour le moment. Votre commande est gardée sur cet appareil et sera renvoyée automatiquement dès que la connexion revient (gardez cette page ouverte ou revenez sur le site). Vous pouvez aussi nous écrire à '+(validEmail(config.ordersEmail)?config.ordersEmail:'notre courriel')+'.';
 }
 function prepareRequest(){
  if(!canRequest||cart.length===0)return;
@@ -172,8 +172,8 @@ function prepareRequest(){
  const body=[
   'Bonjour 1608,',
   '',
-  'Je souhaite faire confirmer la disponibilité et le total de cette demande de commande.',
-  'RÉFÉRENCE DE DEMANDE : '+reference,
+  'Je passe cette commande. Merci de m’écrire le montant exact à virer (livraison et taxes incluses).',
+  'RÉFÉRENCE DE COMMANDE : '+reference,
   '',
   ...lines,
   '',
@@ -187,15 +187,15 @@ function prepareRequest(){
   'Ville : '+contact.city,
   'Code postal : '+contact.postal.toUpperCase(),
   '',
-  'Veuillez me confirmer le total et les conditions de livraison avant que je fasse mon virement Interac.',
-  'Je comprends que ma demande n’est pas encore une commande acceptée.'
+  'Je ferai mon virement Interac dès que j’aurai reçu le montant exact.',
+  'Je comprends que ma commande est confirmée dès réception de mon virement Interac.'
  ].join('\n');
  const draft=$('[data-manual-draft]');draft.hidden=true;
  $('[data-order-summary]').value=body;
  const to=$('[data-draft-to]');if(to)to.textContent=config.ordersEmail;
- const gl=$('[data-gmail-link]');if(gl)gl.href='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(config.ordersEmail)+'&su='+encodeURIComponent('1608 — demande '+reference)+'&body='+encodeURIComponent(body);
+ const gl=$('[data-gmail-link]');if(gl)gl.href='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(config.ordersEmail)+'&su='+encodeURIComponent('1608 — commande '+reference)+'&body='+encodeURIComponent(body);
  const mh=$('[data-mail-help]');if(mh)mh.hidden=false;
- const uri='mailto:'+config.ordersEmail+'?subject='+encodeURIComponent('1608 — demande '+reference)+'&body='+encodeURIComponent(body);
+ const uri='mailto:'+config.ordersEmail+'?subject='+encodeURIComponent('1608 — commande '+reference)+'&body='+encodeURIComponent(body);
  // Le navigateur ouvre seulement un brouillon. L'envoi exige une action du client dans son logiciel.
  window.location.href=uri;
  $('[data-pay-status]').textContent='Votre courriel est prêt : appuyez sur Envoyer. Il ne s’est pas ouvert ? Utilisez un des choix ci-dessous.';
