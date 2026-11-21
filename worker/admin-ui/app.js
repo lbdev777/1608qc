@@ -26,8 +26,7 @@ function card(o){
  const ok=el('button','Enregistrer');
  ok.onclick=async()=>{ok.disabled=true;try{await api('orders/'+encodeURIComponent(o.id)+'/status',{method:'POST',body:JSON.stringify({status:sel.value,note:note.value})});await load()}catch(e){alert(e.message)}ok.disabled=false};
  row.append(sel,note,ok);
- const re=el('button','Renvoyer alerte');re.onclick=async()=>{re.disabled=true;try{await api('orders/'+encodeURIComponent(o.id)+'/notify',{method:'POST',body:'{}'});await load()}catch(e){alert(e.message)}re.disabled=false};
- row.append(re);li.append(row);return li;
+ li.append(row);return li;
 }
 function draw(){
  const f=$('#cm-filters');f.textContent='';

@@ -9,3 +9,10 @@ fs.mkdirSync(path.join(root, 'worker/dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'worker/dist/worker.js'), `const CATALOG=${JSON.stringify(cat)};\n${src}`);
 fs.writeFileSync(path.join(root, 'worker/catalog.json'), JSON.stringify(cat, null, 1));
 console.log('ok', Object.keys(cat).length, 'modèles');
+// --- Worker d'administration (privé) : intègre l'interface (HTML/JS/CSS) dans le code ---
+{
+  const ui = f => JSON.stringify(fs.readFileSync(path.join(root, 'worker/admin-ui', f), 'utf8'));
+  const a = fs.readFileSync(path.join(root, 'worker/src/admin.js'), 'utf8').replace('__HTML__', () => ui('index.html')).replace('__APP_JS__', () => ui('app.js')).replace('__APP_CSS__', () => ui('app.css'));
+  fs.writeFileSync(path.join(root, 'worker/dist/admin.js'), a);
+  console.log('admin ok');
+}
